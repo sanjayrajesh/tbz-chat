@@ -1,7 +1,23 @@
+plugins {
+    id 'base'
+    id 'com.palantir.docker' version '0.22.1'
+}
 
+defaultTasks 'build'
 
-sourceCompatibility = '11'
+allprojects {
+    group = 'ch.tbz'
+    version = '1.0.0'
+}
 
-groupId = 'ch.tbz.m151'
-artifactId = 'tbz-chat'
-version = '1.0.0'
+docker {
+    name "${project.name}:${project.version}"
+    dockerfile file('Dockerfile')
+    files 'tbz-chat-frontend/build', 'tbz-chat-backend/build'
+    dependsOn build as Task
+}
+
+build {
+    dependsOn ':tbz-chat-frontend:yarn_build', ':tbz-chat-backend:bootWar'
+    buildDir 'build'
+}

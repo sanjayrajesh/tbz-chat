@@ -1,0 +1,7 @@
+
+
+sourceCompatibility = '11'
+
+groupId = 'ch.tbz.m151'
+artifactId = 'tbz-chat'
+version = '1.0.0'

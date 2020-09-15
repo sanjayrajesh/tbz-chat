@@ -1,0 +1,3 @@
+root.projectName = 'tbz-chat'
+include 'tbz-chat-backend'
+include 'tbz-chat-frontend'

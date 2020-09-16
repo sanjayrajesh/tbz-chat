@@ -1,5 +1,5 @@
 plugins {
-    id 'application'
+    id 'base'
     id 'com.palantir.docker' version '0.22.1'
 }
 
@@ -17,7 +17,6 @@ docker {
     dependsOn build as Task
 }
 
-build {
-    dependsOn ':tbz-chat-backend:bootWar'
-    buildDir 'build'
+dockerfileZip {
+    enabled false
 }

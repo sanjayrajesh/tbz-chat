@@ -11,7 +11,6 @@ buildscript {
     }
 }
 
-apply plugin: 'base'
 apply plugin: 'com.moowork.node'
 
 node {
@@ -21,10 +20,26 @@ node {
     download = false
 }
 
-yarn_build {
+tasks.withType(YarnTask) {
     inputs.files fileTree('public')
     inputs.files fileTree('src')
 
     inputs.file 'package.json'
     inputs.file 'yarn.lock'
 }
+
+task build(type: YarnTask) {
+    args = ['build']
+}
+
+task test(type: YarnTask) {
+
+    environment CI: 'true'
+
+    args = ['test']
+
+    doFirst {
+        logger.lifecycle("Running yarn tests")
+    }
+}
+

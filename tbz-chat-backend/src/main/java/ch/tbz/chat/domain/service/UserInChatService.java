@@ -4,7 +4,7 @@ import ch.tbz.chat.domain.model.User;
 
 import java.util.Collection;
 
-public interface UserChatService {
+public interface UserInChatService {
 
     CollectionOperationResult<User> addUsersToChat(String chatId, Collection<String> userIds, User authenticated);
 

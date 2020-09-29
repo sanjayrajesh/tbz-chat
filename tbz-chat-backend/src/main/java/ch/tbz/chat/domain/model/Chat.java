@@ -2,11 +2,12 @@ package ch.tbz.chat.domain.model;
 
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Table(name = "chat")
 @Entity
@@ -14,28 +15,20 @@ public class Chat extends DomainEntity {
 
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_in_chat",
-            joinColumns = @JoinColumn(name = "chat_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> users;
+    @OneToMany(mappedBy = "chat")
+    private List<UserInChat> userInChats = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "chat_id")
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
 
-    public Chat() {
-        users = new HashSet<>();
-        messages = new ArrayList<>();
-    }
+    public Chat() {}
 
     @PersistenceConstructor
-    public Chat(String id, String name, Set<User> users, List<Message> messages) {
+    public Chat(String id, String name, List<UserInChat> userInChats, List<Message> messages) {
         super(id);
         this.name = name;
-        this.users = users;
+        this.userInChats = userInChats;
         this.messages = messages;
     }
 
@@ -48,12 +41,12 @@ public class Chat extends DomainEntity {
         return this;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public List<UserInChat> getUserInChats() {
+        return userInChats;
     }
 
-    public Chat setUsers(Set<User> users) {
-        this.users = users;
+    public Chat setUserInChats(List<UserInChat> userInChats) {
+        this.userInChats = userInChats;
         return this;
     }
 

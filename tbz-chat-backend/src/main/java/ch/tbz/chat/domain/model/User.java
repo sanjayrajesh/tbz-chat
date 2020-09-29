@@ -3,10 +3,10 @@ package ch.tbz.chat.domain.model;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "users")
 @Entity
@@ -20,21 +20,19 @@ public class User extends DomainEntity {
 
     private boolean enabled;
 
-    @ManyToMany(mappedBy = "users")
-    private Set<Chat> chats;
+    @OneToMany(mappedBy = "user")
+    private List<UserInChat> userInChats = new ArrayList<>();
 
-    public User() {
-        chats = new HashSet<>();
-    }
+    public User() {}
 
     @PersistenceConstructor
-    public User(String id, String email, String username, String password, boolean enabled, Set<Chat> chats) {
+    public User(String id, String email, String username, String password, boolean enabled, List<UserInChat> userInChats) {
         super(id);
         this.email = email;
         this.username = username;
         this.password = password;
         this.enabled = enabled;
-        this.chats = chats;
+        this.userInChats = userInChats;
     }
 
     public String getEmail() {
@@ -73,12 +71,12 @@ public class User extends DomainEntity {
         return this;
     }
 
-    public Set<Chat> getChats() {
-        return chats;
+    public List<UserInChat> getUserInChats() {
+        return userInChats;
     }
 
-    public User setChats(Set<Chat> chats) {
-        this.chats = chats;
+    public User setUserInChats(List<UserInChat> userInChats) {
+        this.userInChats = userInChats;
         return this;
     }
 }

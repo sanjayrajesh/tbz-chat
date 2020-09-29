@@ -31,6 +31,10 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     implementation 'org.postgresql:postgresql:42.2.5'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }
 
 test {

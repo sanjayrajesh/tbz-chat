@@ -20,15 +20,20 @@ public class Message extends DomainEntity {
     @JoinColumn(name = "author_id")
     private User author;
 
+    @ManyToOne
+    @JoinColumn(name = "chat_id")
+    private Chat chat;
+
     public Message() {
     }
 
     @PersistenceConstructor
-    public Message(String id, String body, LocalDateTime timestamp, User author) {
+    public Message(String id, String body, LocalDateTime timestamp, User author, Chat chat) {
         super(id);
         this.body = body;
         this.timestamp = timestamp;
         this.author = author;
+        this.chat = chat;
     }
 
     public String getBody() {
@@ -55,6 +60,15 @@ public class Message extends DomainEntity {
 
     public Message setAuthor(User author) {
         this.author = author;
+        return this;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public Message setChat(Chat chat) {
+        this.chat = chat;
         return this;
     }
 }

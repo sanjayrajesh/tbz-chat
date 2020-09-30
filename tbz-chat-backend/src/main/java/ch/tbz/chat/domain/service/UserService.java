@@ -7,6 +7,6 @@ import java.util.NoSuchElementException;
 
 public interface UserService extends UserDetailsService, CrudService<User> {
 
-    User activateAccount(String verificationToken, String password) throws NoSuchElementException;
+    User activateAccount(String verificationToken, User user) throws NoSuchElementException;
 
 }

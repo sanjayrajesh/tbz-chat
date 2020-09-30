@@ -15,6 +15,8 @@ create table users
     constraint pk_users primary key (id)
 );
 
+create index users_email on users (email);
+
 create table verification_token
 (
     id      character varying(36)  not null unique,
@@ -65,3 +67,19 @@ create table user_in_chat
 insert into role (id, name)
 values ('f0337fba-4b72-4490-a236-a3330ce0712a', 'MEMBER'),
        ('70ced881-066a-4e6d-bb52-ed1105c39bde', 'ADMINISTRATOR');
+
+insert into users (id, email, username, password, enabled)
+values ('user_1', 'user1@example.com', 'User 1', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
+       ('user_2', 'user2@example.com', 'User 2', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
+       ('user_3', 'user3@example.com', 'User 3', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
+       ('user_4', 'user4@example.com', 'User 4', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true);
+
+insert into chat (id, name)
+values ('chat_1', 'Chat 1'),
+       ('chat_2', 'Chat 2');
+
+insert into user_in_chat (id, chat_id, user_id, role_id)
+values ('user_in_chat_1', 'chat_1', 'user_1', '70ced881-066a-4e6d-bb52-ed1105c39bde'),
+       ('user_in_chat_2', 'chat_1', 'user_2', 'f0337fba-4b72-4490-a236-a3330ce0712a'),
+       ('user_in_chat_3', 'chat_2', 'user_1', 'f0337fba-4b72-4490-a236-a3330ce0712a'),
+       ('user_in_chat_4', 'chat_2', 'user_2', '70ced881-066a-4e6d-bb52-ed1105c39bde');

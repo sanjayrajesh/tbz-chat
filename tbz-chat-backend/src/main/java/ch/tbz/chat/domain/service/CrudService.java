@@ -13,6 +13,8 @@ public interface CrudService<T extends DomainEntity> {
 
     T create(T entity);
 
+    T save(T entity);
+
     T updateById(String id, T entity) throws NoSuchElementException;
 
     void deleteById(String id) throws NoSuchElementException;

@@ -1,9 +1,10 @@
 package ch.tbz.chat.domain.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -16,10 +17,11 @@ public class Chat extends DomainEntity {
     private String name;
 
     @OneToMany(mappedBy = "chat")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<UserInChat> userInChats = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "chat_id")
+    @OneToMany(mappedBy = "chat")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Message> messages = new ArrayList<>();
 
     public Chat() {}

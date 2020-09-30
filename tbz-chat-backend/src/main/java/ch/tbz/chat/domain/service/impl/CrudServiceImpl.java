@@ -8,11 +8,11 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public abstract class CrudServiceImpl<T extends DomainEntity> implements CrudService<T> {
+public abstract class CrudServiceImpl<T extends DomainEntity, R extends DomainEntityRepository<T>> implements CrudService<T> {
 
-    protected final DomainEntityRepository<T> repository;
+    protected final R repository;
 
-    public CrudServiceImpl(DomainEntityRepository<T> repository) {
+    public CrudServiceImpl(R repository) {
         this.repository = repository;
     }
 
@@ -56,6 +56,11 @@ public abstract class CrudServiceImpl<T extends DomainEntity> implements CrudSer
 
     protected T postCreate(T entity) {
         return entity;
+    }
+
+    @Override
+    public T save(T entity) {
+        return repository.save(entity);
     }
 
     @Override

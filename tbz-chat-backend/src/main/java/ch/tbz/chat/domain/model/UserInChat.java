@@ -26,6 +26,12 @@ public class UserInChat extends DomainEntity {
     public UserInChat() {
     }
 
+    public UserInChat(User user, Chat chat, Role role) {
+        this.user = user;
+        this.chat = chat;
+        this.role = role;
+    }
+
     @PersistenceConstructor
     public UserInChat(String id, User user, Chat chat, Role role) {
         super(id);

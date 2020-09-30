@@ -1,5 +1,7 @@
 package ch.tbz.chat.domain.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.Entity;
@@ -21,6 +23,7 @@ public class User extends DomainEntity {
     private boolean enabled;
 
     @OneToMany(mappedBy = "user")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<UserInChat> userInChats = new ArrayList<>();
 
     public User() {}

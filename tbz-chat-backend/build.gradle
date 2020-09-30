@@ -21,6 +21,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.flywaydb:flyway-core'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -35,8 +36,25 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // MapStruct
+    implementation "org.mapstruct:mapstruct:1.4.0.Final"
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.0.Final"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.4.0.Final"
+
+    // JWT
+    implementation "io.jsonwebtoken:jjwt:0.9.1"
 }
 
 test {
     useJUnitPlatform()
+}
+
+compileJava {
+    dependsOn processResources
+
+    options.compilerArgs += [
+            '-Amapstruct.unmappedTargetPolicy=IGNORE',
+            '-Amapstruct.defaultComponentModel=spring'
+    ]
 }

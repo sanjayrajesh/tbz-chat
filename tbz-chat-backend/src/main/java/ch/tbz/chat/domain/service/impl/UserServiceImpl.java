@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
+public class UserServiceImpl extends CrudServiceImpl<User, UserRepository> implements UserService {
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final InvitationService invitationService;
@@ -34,12 +34,12 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
 
     @Override
     protected Collection<User> queryFindAll() {
-        return ((UserRepository) repository).findAllByEnabledTrue();
+        return repository.findAllByEnabledTrue();
     }
 
     @Override
     protected Optional<User> queryFindById(String id) {
-        return ((UserRepository) repository).findByIdAndEnabledTrue(id);
+        return repository.findByIdAndEnabledTrue(id);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> optional = ((UserRepository) repository).findByEmailAndEnabledTrue(email);
+        Optional<User> optional = repository.findByEmailAndEnabledTrue(email);
 
         if(optional.isPresent()) {
             return new UserDetailsImpl(optional.get());
@@ -68,12 +68,13 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     }
 
     @Override
-    public User activateAccount(String verificationToken, String password) throws NoSuchElementException {
+    public User activateAccount(String verificationToken, User userValues) throws NoSuchElementException {
         VerificationToken token = verificationTokenService.findByToken(verificationToken);
 
         User user = token.getUser();
 
-        user.setPassword(passwordEncoder.encode(password)).setEnabled(true);
+        user.setPassword(passwordEncoder.encode(userValues.getPassword())).setEnabled(true);
+        user.setUsername(userValues.getUsername());
 
         user = repository.save(user);
 

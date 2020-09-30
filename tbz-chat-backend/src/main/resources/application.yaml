@@ -10,3 +10,8 @@ spring:
     baseline-on-migrate: true
   profiles:
     active: dev
+springdoc:
+  swagger-ui:
+    url: /api-docs.yaml
+    operations-sorter: method
+    tags-sorter: alpha

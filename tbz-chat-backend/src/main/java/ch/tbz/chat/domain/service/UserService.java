@@ -9,4 +9,6 @@ public interface UserService extends UserDetailsService, CrudService<User> {
 
     User activateAccount(String verificationToken, User user) throws NoSuchElementException;
 
+    void changePassword(User user, String oldPassword, String newPassword);
+
 }

@@ -1,6 +1,7 @@
 package ch.tbz.chat.domain.controller;
 
 import ch.tbz.chat.domain.datatransfer.MappingStrategy;
+import ch.tbz.chat.domain.datatransfer.UpdatePasswordDTO;
 import ch.tbz.chat.domain.datatransfer.user.UserDTO;
 import ch.tbz.chat.domain.datatransfer.user.UserMapper;
 import ch.tbz.chat.domain.model.User;
@@ -36,6 +37,13 @@ public class UserController {
     @GetMapping("/own")
     public ResponseEntity<UserDTO> getAuthenticated(@AuthenticationPrincipal(expression = "user") User user) {
         return new ResponseEntity<>(userMappingStrategy.map(user), HttpStatus.OK);
+    }
+
+    @PutMapping("/own/password")
+    public ResponseEntity<Void> changePassword(@RequestBody @Valid UpdatePasswordDTO updatePassword, @AuthenticationPrincipal(expression = "user") User user) {
+        userService.changePassword(user, updatePassword.getOldPassword(), updatePassword.getNewPassword());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

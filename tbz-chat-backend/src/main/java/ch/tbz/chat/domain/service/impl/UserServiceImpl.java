@@ -7,6 +7,7 @@ import ch.tbz.chat.domain.repository.UserRepository;
 import ch.tbz.chat.domain.service.InvitationService;
 import ch.tbz.chat.domain.service.UserService;
 import ch.tbz.chat.domain.service.VerificationTokenService;
+import ch.tbz.chat.exception.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -81,5 +82,16 @@ public class UserServiceImpl extends CrudServiceImpl<User, UserRepository> imple
         verificationTokenService.delete(token);
 
         return user;
+    }
+
+    @Override
+    public void changePassword(User user, String oldPassword, String newPassword) {
+        if(passwordEncoder.matches(oldPassword, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+
+            save(user);
+        } else {
+            throw new ConflictException("Incorrect password");
+        }
     }
 }

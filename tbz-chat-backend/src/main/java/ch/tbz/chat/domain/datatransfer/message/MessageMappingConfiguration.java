@@ -7,9 +7,15 @@ import lombok.Setter;
 public class MessageMappingConfiguration {
 
     private boolean withChatId;
+    private boolean withAuthorId;
 
     public MessageMappingConfiguration withChatId() {
         this.withChatId = true;
+        return this;
+    }
+
+    public MessageMappingConfiguration withAuthorId() {
+        this.withAuthorId = true;
         return this;
     }
 

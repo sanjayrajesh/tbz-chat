@@ -1,5 +1,6 @@
 package ch.tbz.chat.domain.controller;
 
+import ch.tbz.chat.domain.datatransfer.MappingStrategy;
 import ch.tbz.chat.domain.datatransfer.user.UserDTO;
 import ch.tbz.chat.domain.datatransfer.user.UserMapper;
 import ch.tbz.chat.domain.datatransfer.user.UserMappingStrategyFactory;
@@ -16,12 +17,12 @@ import javax.validation.Valid;
 public class VerificationController {
 
     private final UserService userService;
-    private final UserMappingStrategyFactory userMappingStrategyFactory;
+    private final MappingStrategy<UserDTO, User> userMappingStrategy;
     private final UserMapper userMapper;
 
     public VerificationController(UserService userService, UserMappingStrategyFactory userMappingStrategyFactory, UserMapper userMapper) {
         this.userService = userService;
-        this.userMappingStrategyFactory = userMappingStrategyFactory;
+        this.userMappingStrategy = userMappingStrategyFactory.getStrategy();
         this.userMapper = userMapper;
     }
 
@@ -29,7 +30,7 @@ public class VerificationController {
     public ResponseEntity<UserDTO> activateAccount(@PathVariable String token, @RequestBody @Valid UserDTO.WithPassword userDTO) {
         User user = userService.activateAccount(token, userMapper.user(userDTO));
 
-        return new ResponseEntity<>(userMappingStrategyFactory.getStrategy().map(user), HttpStatus.OK);
+        return new ResponseEntity<>(userMappingStrategy.map(user), HttpStatus.OK);
     }
 
 }

@@ -1,7 +1,7 @@
 package ch.tbz.chat.config;
 
+import ch.tbz.chat.domain.datatransfer.MappingStrategy;
 import ch.tbz.chat.domain.datatransfer.user.UserDTO;
-import ch.tbz.chat.domain.datatransfer.user.UserMappingStrategyFactory;
 import ch.tbz.chat.domain.model.User;
 import ch.tbz.chat.domain.model.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,14 +24,14 @@ import java.util.Date;
 
 public class LoginHandler extends AbstractAuthenticationProcessingFilter {
 
-    private final UserMappingStrategyFactory userMappingStrategyFactory;
+    private final MappingStrategy<UserDTO, User> userMappingStrategy;
     private final ObjectMapper objectMapper;
     private final JWTProperties jwtProperties;
 
-    public LoginHandler(RequestMatcher requiresAuthenticationRequestMatcher, AuthenticationManager authenticationManager, UserMappingStrategyFactory userMappingStrategyFactory, JWTProperties jwtProperties) {
+    public LoginHandler(RequestMatcher requiresAuthenticationRequestMatcher, AuthenticationManager authenticationManager, MappingStrategy<UserDTO, User> userMappingStrategy, JWTProperties jwtProperties) {
         super(requiresAuthenticationRequestMatcher);
         setAuthenticationManager(authenticationManager);
-        this.userMappingStrategyFactory = userMappingStrategyFactory;
+        this.userMappingStrategy = userMappingStrategy;
         this.jwtProperties = jwtProperties;
         this.objectMapper = new ObjectMapper();
     }
@@ -63,9 +62,7 @@ public class LoginHandler extends AbstractAuthenticationProcessingFilter {
         response.addHeader("Access-Control-Expose-Headers", jwtProperties.getHeaderName());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        UserDTO userDTO = userMappingStrategyFactory
-                .getStrategy(conf -> conf.withChats(chatConf -> chatConf.withMessages().withUsers(userConf -> userConf.withRole())))
-                .map(authenticated);
+        UserDTO userDTO = userMappingStrategy.map(authenticated);
 
         objectMapper.writeValue(response.getOutputStream(), userDTO);
     }

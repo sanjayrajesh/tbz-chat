@@ -2,7 +2,6 @@ package ch.tbz.chat.domain.controller;
 
 import ch.tbz.chat.domain.datatransfer.MappingStrategy;
 import ch.tbz.chat.domain.datatransfer.chat.ChatDTO;
-import ch.tbz.chat.domain.datatransfer.userinchat.chat.UserInChatToChatMappingStrategyFactory;
 import ch.tbz.chat.domain.model.Chat;
 import ch.tbz.chat.domain.model.User;
 import ch.tbz.chat.domain.model.UserInChat;
@@ -21,22 +20,17 @@ import javax.validation.Valid;
 @RequestMapping("/chats")
 public class ChatController {
 
-    private final UserInChatToChatMappingStrategyFactory chatMappingStrategyFactory;
     private final UserInChatService userInChatService;
+    private final MappingStrategy<ChatDTO, UserInChat> chatMappingStrategy;
 
-    public ChatController(UserInChatToChatMappingStrategyFactory chatMappingStrategyFactory, UserInChatService userInChatService) {
-        this.chatMappingStrategyFactory = chatMappingStrategyFactory;
+    public ChatController(MappingStrategy<ChatDTO, UserInChat> chatMappingStrategy, UserInChatService userInChatService) {
         this.userInChatService = userInChatService;
+        this.chatMappingStrategy = chatMappingStrategy;
     }
 
     @PostMapping
     public ResponseEntity<ChatDTO> createChat(@RequestBody @Valid ChatDTO.Creation chatDTO, @AuthenticationPrincipal(expression = "user") User authenticated) {
         UserInChat userInChat = userInChatService.createChat(new Chat().setName(chatDTO.getName()), chatDTO.getUserIds(), authenticated);
-
-        MappingStrategy<ChatDTO, UserInChat> chatMappingStrategy = chatMappingStrategyFactory
-                .getStrategy(
-                        conf -> conf.withUsers().withMessages()
-                );
 
         return new ResponseEntity<>(chatMappingStrategy.map(userInChat), HttpStatus.CREATED);
     }

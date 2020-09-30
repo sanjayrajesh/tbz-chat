@@ -6,16 +6,14 @@ import ch.tbz.chat.domain.datatransfer.chat.ChatDTO;
 import ch.tbz.chat.domain.datatransfer.message.MessageMappingStrategyFactory;
 import ch.tbz.chat.domain.datatransfer.userinchat.user.UserInChatToUserMappingStrategyFactory;
 import ch.tbz.chat.domain.model.UserInChat;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UserInChatToChatMappingStrategyFactoryImpl extends MappingStrategyFactoryAdapter<ChatDTO, UserInChat, UserInChatToChatMappingConfiguration> implements UserInChatToChatMappingStrategyFactory {
 
     private final UserInChatToChatMapper mapper;
     private final MessageMappingStrategyFactory messageMappingStrategyFactory;
     private UserInChatToUserMappingStrategyFactory userMappingStrategyFactory;
 
-    UserInChatToChatMappingStrategyFactoryImpl(UserInChatToChatMapper mapper, MessageMappingStrategyFactory messageMappingStrategyFactory) {
+    public UserInChatToChatMappingStrategyFactoryImpl(UserInChatToChatMapper mapper, MessageMappingStrategyFactory messageMappingStrategyFactory) {
         super(UserInChatToChatMappingConfiguration::new, mapper);
         this.mapper = mapper;
         this.messageMappingStrategyFactory = messageMappingStrategyFactory;

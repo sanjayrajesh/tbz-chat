@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Service
+@Service("userInChatService")
 public class UserInChatServiceImpl extends CrudServiceImpl<UserInChat, UserInChatRepository> implements UserInChatService {
 
     private final UserService userService;

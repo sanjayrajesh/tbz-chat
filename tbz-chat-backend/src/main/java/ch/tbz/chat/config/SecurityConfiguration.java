@@ -17,6 +17,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -71,6 +76,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Bean
   public static BCryptPasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of("*"));
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+    configuration.setAllowCredentials(true);
+    configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+
+    UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
+    configurationSource.registerCorsConfiguration("/**", configuration);
+
+    return configurationSource;
   }
 
   @Bean

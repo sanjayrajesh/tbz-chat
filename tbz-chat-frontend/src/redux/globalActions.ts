@@ -2,7 +2,6 @@ import { ThunkAction } from "redux-thunk";
 import Chat from "../models/Chat";
 import Message from "../models/Message";
 import User from "../models/User";
-import UserInChat from "../models/UserInChat";
 import LoginService, { LoginRequest } from "../services/LoginService";
 import EntityMap from "../util/EntityMap";
 import { authFailure, authSuccess } from "./auth/authActions";
@@ -11,7 +10,6 @@ import moment from 'moment';
 import { setChats } from "./chat/chatActions";
 import { setUsers } from "./user/userActions";
 import { setMessages } from "./message/messageActions";
-import { setUserInChats } from "./userInChat/userInChatActions";
 
 export const login: (login: LoginRequest) => ThunkAction<Promise<void>, RootState, void, RootAction> = login => async dispatch => {
     try {
@@ -22,14 +20,14 @@ export const login: (login: LoginRequest) => ThunkAction<Promise<void>, RootStat
         let chats: EntityMap<Chat> = {};
         let users: EntityMap<User> = {};
         let messages: EntityMap<Message> = {};
-        let userInChats: UserInChat[] = [];
 
         userResponse.data.chats.forEach(chatResponse => {
             const chat: Chat = {
                 id: chatResponse.id,
                 name: chatResponse.name,
                 role: chatResponse.role,
-                messageIds: []
+                messageIds: [],
+                users: []
             }
 
             chatResponse.users.forEach(userResponse => {
@@ -40,9 +38,8 @@ export const login: (login: LoginRequest) => ThunkAction<Promise<void>, RootStat
                 }
 
                 users[user.id] = user;
-                userInChats.push({
+                chat.users.push({
                     userId: user.id,
-                    chatId: chat.id,
                     role: userResponse.role
                 })
             })
@@ -63,7 +60,6 @@ export const login: (login: LoginRequest) => ThunkAction<Promise<void>, RootStat
         dispatch(setChats(chats));
         dispatch(setUsers(users));
         dispatch(setMessages(messages));
-        dispatch(setUserInChats(userInChats));
 
     } catch (err) {
         dispatch(authFailure());

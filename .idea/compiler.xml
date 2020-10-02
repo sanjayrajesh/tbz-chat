@@ -8,7 +8,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.4.0.Final/277eb5449d5eeeeb3851c372973d6fa8f41ed5fe/mapstruct-processor-1.4.0.Final.jar" />
         </processorPath>
-        <module name="tbz-chat.tbz-chat-backend.test" />
+        <module name="tbz-chat-backend_test" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -19,7 +19,7 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.12/48e4e5d60309ebd833bc528dcf77668eab3cd72c/lombok-1.18.12.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.4.0.Final/277eb5449d5eeeeb3851c372973d6fa8f41ed5fe/mapstruct-processor-1.4.0.Final.jar" />
         </processorPath>
-        <module name="tbz-chat.tbz-chat-backend.main" />
+        <module name="tbz-chat-backend_main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11" />

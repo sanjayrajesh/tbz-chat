@@ -1,6 +1,5 @@
 import Role from "../models/Role";
 import api from "./api";
-import Response from "./Response";
 
 export interface CreateUserRequest {
     email: string;
@@ -35,11 +34,14 @@ export interface UserResponse {
     }[];
 }
 
-const create = (user: CreateUserRequest): Response<CreateUserResponse> =>
+const create = (user: CreateUserRequest) =>
     api.post<CreateUserResponse>("/users", user);
+
+const getOwn = () => api.get<UserResponse>("/users/own");
 
 const UserService = {
     create,
+    getOwn
 };
 
 export default UserService;

@@ -1,5 +1,6 @@
 import User from "../../models/User";
-import AuthAction, { AUTH_FAILURE, AUTH_SUCCESS } from "./authActionTypes";
+import { UserResponse } from "../../services/UserService";
+import AuthAction, { AUTH_FAILURE, AUTH_SUCCESS, LOGIN_FAILURE, LOGIN_SUCCESS } from "./authActionTypes";
 
 const AUTH_TOKEN_KEY = '0e272236-e76c-4022-8475-7540e794fd44';
 
@@ -9,38 +10,46 @@ const setAuthToken = (token: string) => localStorage.setItem(AUTH_TOKEN_KEY, tok
 
 const clearAuthToken = () => localStorage.removeItem(AUTH_TOKEN_KEY);
 
-type AuthStatus = 'PENDING' | 'AUTHENTICATED' | 'FAILURE'
+export type AuthStatus = 'PENDING' | 'AUTHENTICATED' | 'AUTH_FAILURE' | 'LOGIN_FAILURE'
 
 type AuthState = {
-    user?: User,
     status: AuthStatus
+} | {
+    status: 'AUTHENTICATED',
+    user: User
 }
 
 const initialState: AuthState = {
-    user: undefined,
     status: 'PENDING'
+}
+
+const handleSuccess = (user: UserResponse): AuthState => {
+    const {id, email, username} = user;
+
+    return {
+        user: {id, email, username},
+        status: 'AUTHENTICATED'
+    }
 }
 
 const authReducer = (state: AuthState | undefined = initialState, action: AuthAction): AuthState => {
     switch (action.type) {
-        case AUTH_SUCCESS:
+        case LOGIN_SUCCESS:
             const response = action.payload.response;
             setAuthToken(response.headers['authorization']);
 
-            const {id, email, username} = response.data;
-
+            return handleSuccess(response.data);
+        case LOGIN_FAILURE:
             return {
-                user: {
-                    id, email, username
-                },
-                status: 'AUTHENTICATED'
+                status: 'LOGIN_FAILURE'
             }
+        case AUTH_SUCCESS:
+            return handleSuccess(action.payload.response.data);
         case AUTH_FAILURE:
             clearAuthToken();
 
             return {
-                user: undefined,
-                status: 'FAILURE'
+                status: 'AUTH_FAILURE'
             }
         default:
             return state;

@@ -8,8 +8,11 @@ import useAuthStatus from "../../util/hooks/useAuthStatus";
 import useLanguage from "../../util/hooks/useLanguage";
 import useThunkDispatch from "../../util/hooks/useThunkDispatch";
 import ActionButton from "../atoms/ActionButton";
+import Center from "../atoms/Center";
 import PasswordField from "../atoms/input/PasswordField";
 import TextField from "../atoms/input/TextField";
+import Paper from "../atoms/Paper";
+import Page from "../Page";
 
 const initialValues: LoginRequest = {
   email: "",
@@ -29,7 +32,7 @@ export const setInitialRequest = (request: string) => {
 const useStyle = makeStyles((theme) => ({
   errorText: {
     height: "1rem",
-    color: theme.palette.error.main
+    color: theme.palette.error.main,
   },
 }));
 
@@ -51,47 +54,49 @@ const LoginPage = () => {
   }
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      {({ isSubmitting }) => (
-        <Form>
-          <Grid container spacing={2} direction="column">
-            <Grid item container direction="row" spacing={2}>
-              <Grid item>
-                <TextField
-                  name="email"
-                  label={getString("email")}
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item>
-                <PasswordField
-                  name="password"
-                  label={getString("password")}
-                  autoComplete="currentPassword"
-                />
-              </Grid>
-            </Grid>
-            <Grid item>
-              <div className={classes.errorText}>
-                {authStatus === "LOGIN_FAILURE" ? (
-                  <Typography>{getString("login.failure")}</Typography>
-                ) : null}
-              </div>
-            </Grid>
-            <Grid item>
-              <ActionButton
-                loading={isSubmitting}
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                {getString("login")}
-              </ActionButton>
-            </Grid>
-          </Grid>
-        </Form>
-      )}
-    </Formik>
+    <Page title={getString("login")}>
+      <Center>
+        <Paper>
+          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            {({ isSubmitting }) => (
+              <Form>
+                <Grid container spacing={2} direction="column">
+                  <Grid item>
+                    <TextField
+                      name="email"
+                      label={getString("email")}
+                      autoComplete="email"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <PasswordField
+                      name="password"
+                      label={getString("password")}
+                      autoComplete="currentPassword"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <div className={classes.errorText}>
+                      {authStatus === "LOGIN_FAILURE" ? (
+                        <Typography>{getString("login.failure")}</Typography>
+                      ) : null}
+                    </div>
+                  </Grid>
+                  <Grid item>
+                    <ActionButton
+                      loading={isSubmitting}
+                      type="submit"
+                    >
+                      {getString("login")}
+                    </ActionButton>
+                  </Grid>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
+        </Paper>
+      </Center>
+    </Page>
   );
 };
 

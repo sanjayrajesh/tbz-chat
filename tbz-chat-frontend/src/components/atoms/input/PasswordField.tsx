@@ -3,10 +3,14 @@ import TextField, { TextFieldProps } from "./TextField";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import { IconButton } from "@material-ui/core";
+import useLanguage from "../../../util/hooks/useLanguage";
 
 type PasswordFieldProps = Omit<TextFieldProps, "type" | "InputProps">;
 
 const PasswordField = (props: PasswordFieldProps) => {
+
+  const getString = useLanguage();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = useCallback(
@@ -20,8 +24,8 @@ const PasswordField = (props: PasswordFieldProps) => {
       type={showPassword ? "text" : "password"}
       InputProps={{
         endAdornment: (
-          <IconButton onClick={toggleShowPassword}>
-            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          <IconButton title={showPassword ? getString("hide.password") : getString("show.password")} onClick={toggleShowPassword}>
+            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
           </IconButton>
         ),
       }}

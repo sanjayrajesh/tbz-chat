@@ -12,8 +12,9 @@ const clearAuthToken = () => localStorage.removeItem(AUTH_TOKEN_KEY);
 
 export type AuthStatus = 'PENDING' | 'AUTHENTICATED' | 'AUTH_FAILURE' | 'LOGIN_FAILURE'
 
-type AuthState = {
-    status: AuthStatus
+export type AuthState = {
+    status: AuthStatus,
+    user?: undefined
 } | {
     status: 'AUTHENTICATED',
     user: User

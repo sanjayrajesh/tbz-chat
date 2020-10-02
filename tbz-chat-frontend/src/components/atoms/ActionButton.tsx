@@ -44,4 +44,9 @@ const ActionButton = (props: ActionButtonProps) => {
   );
 };
 
+ActionButton.defaultProps = {
+  variant: "contained",
+  color: "primary"
+}
+
 export default ActionButton;

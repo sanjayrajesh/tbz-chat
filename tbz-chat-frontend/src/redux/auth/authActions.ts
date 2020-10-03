@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { UserResponse } from "../../services/UserService";
-import AuthAction, { AUTH_FAILURE, AUTH_SUCCESS, LOGIN_FAILURE, LOGIN_SUCCESS } from "./authActionTypes";
+import AuthAction, { AUTH_FAILURE, AUTH_SUCCESS, LOGIN_FAILURE, LOGIN_SUCCESS, LOGOUT } from "./authActionTypes";
 
 export const authSuccess = (response: AxiosResponse<UserResponse>): AuthAction => ({
     type: AUTH_SUCCESS,
@@ -22,4 +22,8 @@ export const loginSuccess = (response: AxiosResponse<UserResponse>): AuthAction 
 
 export const loginFailure = (): AuthAction => ({
     type: LOGIN_FAILURE
+})
+
+export const logout = (): AuthAction => ({
+    type: LOGOUT
 })

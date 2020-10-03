@@ -1,6 +1,6 @@
 import User from "../../models/User";
 import { UserResponse } from "../../services/UserService";
-import AuthAction, { AUTH_FAILURE, AUTH_SUCCESS, LOGIN_FAILURE, LOGIN_SUCCESS } from "./authActionTypes";
+import AuthAction, { AUTH_FAILURE, AUTH_SUCCESS, LOGIN_FAILURE, LOGIN_SUCCESS, LOGOUT } from "./authActionTypes";
 
 const AUTH_TOKEN_KEY = '0e272236-e76c-4022-8475-7540e794fd44';
 
@@ -47,6 +47,12 @@ const authReducer = (state: AuthState | undefined = initialState, action: AuthAc
         case AUTH_SUCCESS:
             return handleSuccess(action.payload.response.data);
         case AUTH_FAILURE:
+            clearAuthToken();
+
+            return {
+                status: 'AUTH_FAILURE'
+            }
+        case LOGOUT:
             clearAuthToken();
 
             return {

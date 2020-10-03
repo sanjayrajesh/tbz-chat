@@ -40,6 +40,14 @@ const dictionary: Dictionary = {
     "register.with.email": {
         en: "Register with your email address",
         de: "Registrieren Sie sich mit Ihrer E-Mail Adresse"
+    },
+    logout: {
+        en: "Logout",
+        de: "Abmelden"
+    },
+    profile: {
+        en: "Profile",
+        de: "Profil"
     }
 }
 

@@ -5,6 +5,7 @@ export const AUTH_SUCCESS = 'AUTH_SUCCESS'
 export const AUTH_FAILURE = 'AUTH_FAILURE'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_FAILURE = 'LOGIN_FAILURE'
+export const LOGOUT = 'LOGOUT'
 
 type AuthSuccess = {
     type: typeof AUTH_SUCCESS,
@@ -28,6 +29,10 @@ type LoginFailure = {
     type: typeof LOGIN_FAILURE
 }
 
-type AuthAction = AuthSuccess | AuthFailure | LoginSuccess | LoginFailure
+type Logout = {
+    type: typeof LOGOUT
+}
+
+type AuthAction = AuthSuccess | AuthFailure | LoginSuccess | LoginFailure | Logout
 
 export default AuthAction;

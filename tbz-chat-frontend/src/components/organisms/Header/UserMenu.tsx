@@ -1,12 +1,11 @@
 import React, { useCallback, useState } from 'react'
 import User from '../../../models/User'
 import useLanguage from '../../../util/hooks/useLanguage';
-import Button from '../../atoms/Button';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { ListItemText, makeStyles, Menu, MenuItem } from '@material-ui/core';
+import { ListItemText, makeStyles, Menu, MenuItem, Button } from '@material-ui/core';
 import useThunkDispatch from '../../../util/hooks/useThunkDispatch';
 import { logout } from '../../../redux/auth/authActions';
 import { useHistory } from 'react-router-dom';

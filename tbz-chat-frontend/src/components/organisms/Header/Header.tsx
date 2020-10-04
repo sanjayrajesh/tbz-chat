@@ -1,40 +1,49 @@
 import { AppBar, makeStyles, Toolbar, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import useAuthState from "../../../util/hooks/useAuthState";
 import UserButtons from "./UserButtons";
-import UserMenu from "./UserMenu";
 
 const APP_NAME = "TBZ Chat";
 
 type HeaderProps = {
-  title: string;
+    title: string;
 };
 
 const useStyle = makeStyles((theme) => ({
-  root: {},
+    toolbar: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "baseline",
+    },
+    brand: {
+        flexGrow: 1,
+    },
 }));
 
 const Header = (props: HeaderProps) => {
-  const { title } = props;
+    const { title } = props;
 
-  const classes = useStyle();
-  const { user, status } = useAuthState();
+    const classes = useStyle();
+    const { user, status } = useAuthState();
 
-  useEffect(() => {
-    document.title = APP_NAME + " | " + title;
-  }, [title]);
+    useEffect(() => {
+        document.title = APP_NAME + " | " + title;
+    }, [title]);
 
-  return (
-    <AppBar className={classes.root} position="static" elevation={5}>
-      <Toolbar>
-        <Typography variant="h3">{APP_NAME}</Typography>
-        {status === 'AUTHENTICATED' ? (
-          <UserButtons user={user!} />
-        ) : null}
-      </Toolbar>
-    </AppBar>
-  );
+    return (
+        <AppBar position="static" elevation={5}>
+            <Toolbar className={classes.toolbar}>
+                <div className={classes.brand}>
+                    <Typography variant="h3">{APP_NAME}</Typography>
+                </div>
+                <div>
+                    {status === "AUTHENTICATED" ? (
+                        <UserButtons user={user!} />
+                    ) : null}
+                </div>
+            </Toolbar>
+        </AppBar>
+    );
 };
 
 export default Header;

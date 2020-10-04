@@ -3,7 +3,6 @@ import { Form, Formik, FormikHelpers } from 'formik'
 import React, { useCallback } from 'react'
 import { CreateUserRequest } from '../../../services/UserService'
 import useLanguage from '../../../util/hooks/useLanguage'
-import useThunkDispatch from '../../../util/hooks/useThunkDispatch'
 import ActionButton from '../../atoms/ActionButton'
 import Center from '../../atoms/Center'
 import TextField from '../../atoms/input/TextField'
@@ -17,11 +16,10 @@ const initialValues: CreateUserRequest = {
 const RegisterPage = () => {
 
     const getString = useLanguage();
-    const dispatch = useThunkDispatch();
 
     const handleSubmit = useCallback((values: CreateUserRequest, helpers: FormikHelpers<CreateUserRequest>) => {
-
-    }, [dispatch]);
+        
+    }, []);
 
     return (
         <Page title={getString("register")}>

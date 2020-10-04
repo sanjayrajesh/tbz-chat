@@ -41,8 +41,8 @@ const dictionary: Dictionary = {
         en: "Register with your email address",
         de: "Registrieren Sie sich mit Ihrer E-Mail Adresse"
     },
-    logout: {
-        en: "Logout",
+    "sign.out": {
+        en: "Sign out",
         de: "Abmelden"
     },
     profile: {

@@ -10,6 +10,9 @@ type HeaderProps = {
 };
 
 const useStyle = makeStyles((theme) => ({
+    root: {
+
+    },
     toolbar: {
         display: "flex",
         flexDirection: "row",
@@ -31,7 +34,7 @@ const Header = (props: HeaderProps) => {
     }, [title]);
 
     return (
-        <AppBar position="static" elevation={5}>
+        <AppBar className={classes.root} position="static" elevation={5}>
             <Toolbar className={classes.toolbar}>
                 <div className={classes.brand}>
                     <Typography variant="h3">{APP_NAME}</Typography>

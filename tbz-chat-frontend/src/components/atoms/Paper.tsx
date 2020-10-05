@@ -5,13 +5,16 @@ import {
   PaperProps as MuiPaperProps,
   Typography,
 } from "@material-ui/core";
+import clsx from "clsx";
 
-type PaperProps = MuiPaperProps;
+type PaperProps = MuiPaperProps & {
+  padding?: number
+}
 
 const useStyle = makeStyles((theme) => ({
   root: {
     width: theme.breakpoints.width("sm") * 0.75,
-    padding: theme.spacing(4),
+    padding: (props: PaperProps) => theme.spacing(props.padding!),
   },
   title: {
       fontWeight: theme.typography.fontWeightMedium,
@@ -19,11 +22,11 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const Paper = (props: PaperProps) => {
-  const classes = useStyle();
-  const { children, title, ...rest } = props;
+  const classes = useStyle(props);
+  const { children, title, className, ...rest } = props;
 
   return (
-    <MuiPaper {...rest} className={classes.root}>
+    <MuiPaper {...rest} className={clsx(classes.root, className)}>
       {title ? (
         <Typography className={classes.title} variant="h5" gutterBottom>
           {title}
@@ -36,6 +39,7 @@ const Paper = (props: PaperProps) => {
 
 Paper.defaultProps = {
   elevation: 5,
-};
+  padding: 4
+} as PaperProps;
 
 export default Paper;

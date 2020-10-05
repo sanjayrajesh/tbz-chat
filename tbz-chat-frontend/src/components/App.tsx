@@ -5,9 +5,10 @@ import { authenticateFromToken } from "../redux/globalActions";
 import useThunkDispatch from "../util/hooks/useThunkDispatch";
 import { LanguageContextProvider } from "./context/LanguageContext";
 import { ThemeContextProvider } from "./context/ThemeContext";
-import ChatPage from "./pages/ChatPage";
+import ChatPage from "./pages/ChatPage/ChatPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import TestPage from "./pages/TestPage";
 import Route from "./Route";
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
             <LanguageContextProvider>
                 <BrowserRouter>
                     <Switch>
+                        <Route path="/test" component={TestPage} />
                         <Route exact path="/login" component={LoginPage} />
                         <Route
                             exact

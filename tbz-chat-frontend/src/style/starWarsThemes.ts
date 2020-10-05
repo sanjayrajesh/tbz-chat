@@ -125,8 +125,6 @@ const createStarWarsTheme = (main: string, light: string) => {
             MuiCssBaseline: {
                 "@global": {
                     ".page": {
-                        width: "100vw",
-                        height: "100vh",
                         position: "relative",
                         "&:before": {
                             content: '""',
@@ -143,6 +141,7 @@ const createStarWarsTheme = (main: string, light: string) => {
             },
             MuiAppBar: {
                 root: {
+                    paddingBottom: "32px",
                     "&>div": {
                         background: "none",
                         position: "relative",
@@ -156,6 +155,9 @@ const createStarWarsTheme = (main: string, light: string) => {
                         },
                     },
                 },
+                colorPrimary: {
+                    backgroundColor: "transparent"
+                }
             },
             MuiLink: {
                 root: {

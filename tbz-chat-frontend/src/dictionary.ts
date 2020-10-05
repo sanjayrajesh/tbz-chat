@@ -48,6 +48,10 @@ const dictionary: Dictionary = {
     profile: {
         en: "Profile",
         de: "Profil"
+    },
+    "search.chats": {
+        en: "Search chats",
+        de: "Chats suchen"
     }
 }
 

@@ -7,16 +7,24 @@ type PageProps = {
     children: ReactNode;
 };
 
-const HEADER_HEIGHT = "80px";
-
 const useStyle = makeStyles((theme) => ({
-    header: {
-        height: HEADER_HEIGHT,
+    root: {
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
     },
-    contentWrapper: {},
+    pageWrapper: {
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        margin: theme.spacing(4, 0)
+    },
+    header: {
+        margin: 0,
+    },
     content: {
         position: "relative",
-        height: `calc(100vh - ${HEADER_HEIGHT} - 2*${theme.spacing(4)}px)`,
+        flexGrow: 1,
     },
 }));
 
@@ -27,11 +35,13 @@ const Page = (props: PageProps) => {
     return (
         <div className={"page"}>
             <Container maxWidth="md">
-                <div className={classes.header}>
-                    <Header title={title} />
-                </div>
-                <div className={classes.contentWrapper}>
-                    <main className={classes.content}>{children}</main>
+                <div className={classes.root}>
+                    <div className={classes.pageWrapper}>
+                        <div className={classes.header}>
+                            <Header title={title} />
+                        </div>
+                        <main className={classes.content}>{children}</main>
+                    </div>
                 </div>
             </Container>
         </div>

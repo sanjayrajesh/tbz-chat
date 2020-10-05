@@ -2,6 +2,9 @@ import { List, ListItem, ListItemText, makeStyles } from '@material-ui/core'
 import clsx from 'clsx';
 import React, { useEffect } from 'react'
 import moment from 'moment';
+import { useSelector } from 'react-redux';
+import { getFilteredChatPreviews } from '../../../redux/chat/chatSelectors';
+import useLanguage from '../../../util/hooks/useLanguage';
 
 type ChatListProps = {
     filter: string,
@@ -18,6 +21,7 @@ const useStyle = makeStyles(theme => ({
     }
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dummyChats = [
     {
         id: "1",
@@ -32,9 +36,10 @@ const dummyChats = [
 
 const ChatList = (props: ChatListProps) => {
 
-    const {className} = props;
+    const {className, filter} = props;
     const classes = useStyle();
-    const chats = dummyChats;
+    const chats = useSelector(getFilteredChatPreviews(filter));
+    const getString = useLanguage();
 
     useEffect(() => {
         console.log("chats", chats);
@@ -45,7 +50,7 @@ const ChatList = (props: ChatListProps) => {
             <List className={classes.grow}>
                 {chats.map(chat => (
                     <ListItem key={chat.id}>
-                        <ListItemText primary={chat.name} secondary={chat.latestMessage && chat.latestMessage.authorName + ": " + chat.latestMessage.body} />
+                        <ListItemText primary={chat.name} secondary={chat.latestMessage ? chat.latestMessage.authorName + ": " + chat.latestMessage.body : getString("no.messages")} />
                     </ListItem>
                 ))}
             </List>

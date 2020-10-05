@@ -52,6 +52,10 @@ const dictionary: Dictionary = {
     "search.chats": {
         en: "Search chats",
         de: "Chats suchen"
+    },
+    "no.messages": {
+        en: "No messages",
+        de: "Keine Nachrichten"
     }
 }
 

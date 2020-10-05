@@ -1,5 +1,5 @@
 import { MuiThemeProvider } from '@material-ui/core'
-import React, { createContext, ReactNode, useCallback, useState } from 'react'
+import React, { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import themes, { ThemeKey } from '../../style/themes';
 
 type ThemeContextProps = {
@@ -18,11 +18,15 @@ const ThemeContext = createContext(initialValue);
 
 export const ThemeContextProvider = (props: ThemeContextProps) => {
 
-    const [theme, setThemeInternal] = useState(themes['default']);
+    const [theme, setThemeInternal] = useState(themes['starWarsDark']);
 
     const setTheme = useCallback((theme: ThemeKey) => {
         setThemeInternal(themes[theme])
     }, []);
+
+    useEffect(() => {
+        console.log("theme", theme);
+    }, [theme]);
 
     return (
         <ThemeContext.Provider value={{setTheme}}>

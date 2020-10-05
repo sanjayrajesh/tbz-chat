@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getAuthToken } from '../redux/auth/authReducer';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080'
+    baseURL: 'http://172.20.10.2:8080'
 })
 
 api.interceptors.request.use(

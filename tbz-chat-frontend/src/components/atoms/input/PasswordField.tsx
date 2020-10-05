@@ -24,7 +24,7 @@ const PasswordField = (props: PasswordFieldProps) => {
       type={showPassword ? "text" : "password"}
       InputProps={{
         endAdornment: (
-          <IconButton tabIndex={-1} title={showPassword ? getString("hide.password") : getString("show.password")} onClick={toggleShowPassword}>
+          <IconButton size="small" tabIndex={-1} title={showPassword ? getString("hide.password") : getString("show.password")} onClick={toggleShowPassword}>
             {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
           </IconButton>
         ),

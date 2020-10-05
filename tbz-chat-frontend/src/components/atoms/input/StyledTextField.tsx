@@ -11,7 +11,6 @@ const StyledTextField = (props: StyledTextFieldProps) => {
 
 StyledTextField.defaultProps = {
     fullWidth: true,
-    variant: "outlined"
 } as StyledTextFieldProps
 
 export default StyledTextField

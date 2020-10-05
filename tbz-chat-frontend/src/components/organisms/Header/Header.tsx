@@ -1,7 +1,7 @@
 import { AppBar, makeStyles, Toolbar, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import useAuthState from "../../../util/hooks/useAuthState";
-import UserButtons from "./UserButtons";
+import UserMenu from "./UserMenu";
 
 const APP_NAME = "TBZ Chat";
 
@@ -38,7 +38,7 @@ const Header = (props: HeaderProps) => {
                 </div>
                 <div>
                     {status === "AUTHENTICATED" ? (
-                        <UserButtons user={user!} />
+                        <UserMenu user={user!} />
                     ) : null}
                 </div>
             </Toolbar>

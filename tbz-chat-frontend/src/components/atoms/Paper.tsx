@@ -13,7 +13,6 @@ type PaperProps = MuiPaperProps & {
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    width: theme.breakpoints.width("sm") * 0.75,
     padding: (props: PaperProps) => theme.spacing(props.padding!),
   },
   title: {

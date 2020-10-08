@@ -1,6 +1,9 @@
 import { Moment } from "moment";
 import { createSelector } from "reselect";
+import Chat from "../../models/Chat";
 import Entity from "../../models/Entity";
+import Role from "../../models/Role";
+import User from "../../models/User";
 import Selector from "../../util/Selector";
 import SelectorCreator from "../../util/SelectorCreator";
 
@@ -58,4 +61,31 @@ const _getFilteredChatPreviews: SelectorCreator<ChatPreview[], string> = filter 
 export const getFilteredChatPreviews = createSelector(
     [_getFilteredChatPreviews],
     previews => previews
+)
+
+const _getSelectedChat: Selector<Chat | undefined> = state => state.chats.selected ? state.chats.byId[state.chats.selected] : undefined
+
+export const getSelectedChat = createSelector(
+    [_getSelectedChat],
+    chat => chat
+);
+
+export interface UserInChat extends User {
+    role: Role
+}
+
+const _getSelectedChatMembers: Selector<UserInChat[] | undefined> = state => {
+    if(!state.chats.selected) return undefined;
+
+    const chat = state.chats.byId[state.chats.selected];
+
+    return chat.users.map(userInChat => ({
+        role: userInChat.role,
+        ...state.users.byId[userInChat.userId]
+    }))
+}
+
+export const getSelectedChatMembers = createSelector(
+    [_getSelectedChatMembers],
+    members => members
 )

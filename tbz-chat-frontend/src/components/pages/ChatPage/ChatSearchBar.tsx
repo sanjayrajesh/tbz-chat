@@ -1,6 +1,7 @@
-import { TextField } from "@material-ui/core";
+import { makeStyles, TextField } from "@material-ui/core";
 import React, { Dispatch, SetStateAction, useCallback } from "react";
 import useLanguage from "../../../util/hooks/useLanguage";
+import SearchIcon from "@material-ui/icons/Search";
 
 type ChatSearchBarProps = {
     filter: string;
@@ -8,9 +9,16 @@ type ChatSearchBarProps = {
     className?: string;
 };
 
+const useStyle = makeStyles((theme) => ({
+    textfield: {
+        
+    },
+}));
+
 const ChatSearchBar = (props: ChatSearchBarProps) => {
-    const { filter, setFilter, className } = props;
+    const { filter, setFilter } = props;
     const getString = useLanguage();
+    const classes = useStyle();
 
     const handleChange = useCallback(
         (e: any) => {
@@ -20,14 +28,17 @@ const ChatSearchBar = (props: ChatSearchBarProps) => {
     );
 
     return (
-        <div className={className}>
-            <TextField
-                placeholder={getString("search.chats")}
-                value={filter}
-                onChange={handleChange}
-                fullWidth
-            />
-        </div>
+        <TextField
+            placeholder={getString("search.chats")}
+            value={filter}
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+                endAdornment: <SearchIcon fontSize="small" />,
+            }}
+            className={classes.textfield}
+            type="search"
+        />
     );
 };
 

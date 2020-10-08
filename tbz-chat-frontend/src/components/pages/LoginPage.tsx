@@ -34,6 +34,9 @@ const useStyle = makeStyles((theme) => ({
     height: "1rem",
     color: theme.palette.error.main,
   },
+  paper: {
+    width: theme.breakpoints.width("sm") * 0.75,
+  }
 }));
 
 const LoginPage = () => {
@@ -56,7 +59,7 @@ const LoginPage = () => {
   return (
     <Page title={getString("login")}>
       <Center>
-        <Paper>
+        <Paper className={classes.paper}>
           <Formik initialValues={initialValues} onSubmit={handleSubmit}>
             {({ isSubmitting }) => (
               <Form>

@@ -2,7 +2,7 @@ import { createMuiTheme } from "@material-ui/core";
 
 const defaultTheme = createMuiTheme({
     palette: {
-        type: 'light'
+        type: 'dark'
     },
     overrides: {
         MuiLink: {

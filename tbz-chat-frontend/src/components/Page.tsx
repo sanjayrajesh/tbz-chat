@@ -34,7 +34,7 @@ const Page = (props: PageProps) => {
 
     return (
         <div className={"page"}>
-            <Container maxWidth="md">
+            <Container maxWidth="lg">
                 <div className={classes.root}>
                     <div className={classes.pageWrapper}>
                         <div className={classes.header}>

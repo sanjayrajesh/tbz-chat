@@ -56,6 +56,26 @@ const dictionary: Dictionary = {
     "no.messages": {
         en: "No messages",
         de: "Keine Nachrichten"
+    },
+    "select.a.chat": {
+        en: "Select a chat to view it's messages",
+        de: "Wählen sie einen Chat aus, um dessen Nachrichten zu sehen"
+    },
+    members: {
+        en: "Members",
+        de: "Mitglieder"
+    },
+    administrator: {
+        en: "Administrator",
+        de: "Administrator"
+    },
+    "make.administrator": {
+        en: "Make administrator",
+        de: "Zum Administrator machen"
+    },
+    "remove.from.chat": {
+        en: "Remove from chat",
+        de: "Aus Chat entfernen"
     }
 }
 

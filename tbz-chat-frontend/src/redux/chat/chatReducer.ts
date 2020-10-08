@@ -1,13 +1,53 @@
+import moment, { Moment } from "moment";
 import Chat from "../../models/Chat";
+import Entity from "../../models/Entity";
+import { ADMINISTRATOR } from "../../models/Role";
 import { UserResponse } from "../../services/UserService";
 import EntityMap from "../../util/EntityMap";
 import EntityState, { createInitialState } from "../../util/EntityState";
 import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
 import { RootAction } from "../rootReducer";
+import { MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
 
-export type ChatState = EntityState<Chat>
+export type ChatState = EntityState<Chat> & {
+    selected?: string
+}
 
 const initialState: ChatState = createInitialState();
+
+interface ChatResponse extends Entity {
+    messages: {
+        timestamp: string
+    }[]
+}
+
+const getLatestTimestamp = (chat: ChatResponse): Moment | undefined => {
+    if(chat.messages.length === 0) return undefined
+
+    return chat.messages.map(message => ({
+        ...message, timestamp: moment(message.timestamp)
+    })).reduce((prev, current) => {
+        if(current.timestamp.isAfter(prev.timestamp)) return current;
+        else return prev;
+    }).timestamp
+}
+
+const getLatestChat = (chats: ChatResponse[]): string | undefined => {
+
+    if(chats.length === 0) {
+        return undefined;
+    }
+
+    const chatsWithLatestMessage = chats.map(chat => ({
+        id: chat.id,
+        timestamp: getLatestTimestamp(chat)
+    }))
+
+    return chatsWithLatestMessage.reduce((prev, current) => {
+        if(current.timestamp && current.timestamp.isAfter(prev.timestamp)) return current;
+         else return prev;
+    }).id
+}
 
 const populateFromUserResponse = (state: ChatState, response: UserResponse): ChatState => {
     let byId: EntityMap<Chat> = {};
@@ -38,7 +78,25 @@ const populateFromUserResponse = (state: ChatState, response: UserResponse): Cha
     return {
         ...state,
         byId,
-        allIds: Object.keys(byId)
+        allIds: Object.keys(byId),
+        selected: getLatestChat(response.chats)
+    }
+}
+
+const removeUser = (state: ChatState, payload: {userId: string, chatId: string}): ChatState => {
+
+    const {userId, chatId} = payload;
+
+    const chat = state.byId[chatId];
+
+    chat.users = chat.users.filter(user => user.userId !== userId);
+
+    return {
+        ...state,
+        byId: {
+            ...state.byId,
+            [chatId]: chat
+        }
     }
 }
 
@@ -47,6 +105,24 @@ const chatReducer = (state: ChatState | undefined = initialState, action: RootAc
         case AUTH_SUCCESS:
         case LOGIN_SUCCESS:
             return populateFromUserResponse(state, action.payload.response.data)
+        case SELECT_CHAT:
+            return {
+                ...state,
+                selected: action.payload.id
+            }
+        case MAKE_ADMINISTRATOR:
+            const {userId, chatId} = action.payload
+
+            let byId = state.byId;
+
+            byId[chatId].users.filter(user => user.userId === userId).forEach(user => user.role = ADMINISTRATOR);
+
+            return {
+                ...state,
+                byId
+            }
+        case REMOVE_FROM_CHAT:
+            return removeUser(state, action.payload);
         default:
             return state;
     }

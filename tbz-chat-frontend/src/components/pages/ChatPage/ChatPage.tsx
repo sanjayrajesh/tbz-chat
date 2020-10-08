@@ -1,8 +1,12 @@
-import { Grid, makeStyles, Toolbar, Typography } from "@material-ui/core";
+import {
+    makeStyles,
+    Toolbar,
+} from "@material-ui/core";
 import React, { useState } from "react";
 import Chat from "../../../models/Chat";
 import useLanguage from "../../../util/hooks/useLanguage";
 import Paper from "../../atoms/Paper";
+import ActiveChat from "../../organisms/ActiveChat/ActiveChat";
 import Page from "../../Page";
 import ChatList from "./ChatList";
 import ChatSearchBar from "./ChatSearchBar";
@@ -29,58 +33,57 @@ const useStyle = makeStyles((theme) => ({
         height: "100%",
         width: "100%",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
     },
-    chatList: {
+    container: {
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "row",
+    },
+    chats: {
+        borderRight: `2px solid ${theme.palette.divider}`,
+        flex: 1,
         height: "100%",
     },
+    toolbar: {
+        borderBottom: `2px solid ${theme.palette.divider}`,
+        padding: theme.spacing(0, 2),
+    },
     activeChat: {
-        background: "lightgreen",
+        height: "100%",
+        flex: 3,
     },
-    toolbarElement: {
-        margin: theme.spacing(0, 2),
+    activeChatMessages: {
+        padding: theme.spacing(2),
     },
-    grow: {
-        flexGrow: 1
-    }
 }));
 
 const ChatPage = () => {
     const getString = useLanguage();
     const classes = useStyle();
-
     const [filter, setFilter] = useState("");
 
     return (
         <Page title={getString("chats")}>
             <Paper className={classes.paper} square padding={0}>
-                <Toolbar disableGutters>
-                    <Grid container direction="row" alignItems="baseline">
-                        <Grid item sm={4}>
+                <div className={classes.container}>
+                    <div className={classes.chats}>
+                        <Toolbar className={classes.toolbar}>
                             <ChatSearchBar
                                 filter={filter}
                                 setFilter={setFilter}
-                                className={classes.toolbarElement}
                             />
-                        </Grid>
-                        <Grid item sm>
-                            <div className={classes.toolbarElement}>
-                                <Typography>Active Chat Toolbar</Typography>
-                            </div>
-                        </Grid>
-                    </Grid>
-                </Toolbar>
-                <Grid container direction="row" className={classes.grow}>
-                    <Grid item sm={4}>
-                        <ChatList
-                            filter={filter}
-                            className={classes.chatList}
-                        />
-                    </Grid>
-                    <Grid item sm>
-                        Active Chat Messages
-                    </Grid>
-                </Grid>
+                        </Toolbar>
+                        <ChatList filter={filter} />
+                    </div>
+                    <ActiveChat
+                        className={classes.activeChat}
+                        classes={{
+                            toolbar: classes.toolbar,
+                            messages: classes.activeChatMessages
+                        }}
+                    />
+                </div>
             </Paper>
         </Page>
     );

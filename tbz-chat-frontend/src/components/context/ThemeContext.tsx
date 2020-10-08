@@ -18,7 +18,7 @@ const ThemeContext = createContext(initialValue);
 
 export const ThemeContextProvider = (props: ThemeContextProps) => {
 
-    const [theme, setThemeInternal] = useState(themes['starWarsDark']);
+    const [theme, setThemeInternal] = useState(themes['default']);
 
     const setTheme = useCallback((theme: ThemeKey) => {
         setThemeInternal(themes[theme])

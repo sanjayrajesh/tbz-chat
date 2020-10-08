@@ -1,10 +1,12 @@
 import { List, ListItem, ListItemText, makeStyles } from '@material-ui/core'
 import clsx from 'clsx';
-import React, { useEffect } from 'react'
-import moment from 'moment';
+import React from 'react'
 import { useSelector } from 'react-redux';
+import { selectChat } from '../../../redux/chat/chatActions';
 import { getFilteredChatPreviews } from '../../../redux/chat/chatSelectors';
+import { RootState } from '../../../redux/rootReducer';
 import useLanguage from '../../../util/hooks/useLanguage';
+import useThunkDispatch from '../../../util/hooks/useThunkDispatch';
 
 type ChatListProps = {
     filter: string,
@@ -18,21 +20,11 @@ const useStyle = makeStyles(theme => ({
     },
     grow: {
         flexGrow: 1
+    },
+    chatItem: {
+        borderBottom: `2px solid ${theme.palette.divider}`
     }
 }));
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const dummyChats = [
-    {
-        id: "1",
-        name: "Chat 1",
-        latestMessage: {
-            authorName: "John",
-            timestamp: moment(),
-            body: "Hi there!"
-        }
-    }
-];
 
 const ChatList = (props: ChatListProps) => {
 
@@ -40,16 +32,18 @@ const ChatList = (props: ChatListProps) => {
     const classes = useStyle();
     const chats = useSelector(getFilteredChatPreviews(filter));
     const getString = useLanguage();
+    const dispatch = useThunkDispatch();
+    const selected = useSelector((state: RootState) => state.chats.selected);
 
-    useEffect(() => {
-        console.log("chats", chats);
-    }, [chats]);
+    const handleSelectChat = (id: string) => () => {
+        dispatch(selectChat(id));
+    } 
 
     return (
         <div className={clsx(className, classes.root)}>
-            <List className={classes.grow}>
+                <List disablePadding className={classes.grow}>
                 {chats.map(chat => (
-                    <ListItem key={chat.id}>
+                    <ListItem selected={chat.id === selected} button key={chat.id} onClick={handleSelectChat(chat.id)} className={classes.chatItem}>
                         <ListItemText primary={chat.name} secondary={chat.latestMessage ? chat.latestMessage.authorName + ": " + chat.latestMessage.body : getString("no.messages")} />
                     </ListItem>
                 ))}

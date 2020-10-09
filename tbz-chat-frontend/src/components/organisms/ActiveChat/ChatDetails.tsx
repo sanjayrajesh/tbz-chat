@@ -38,7 +38,7 @@ const ChatDetails = (props: ChatDetailsProps) => {
             </Toolbar>
             <List disablePadding>
                 {members!.map(member => (
-                    <ChatMember actions={chat!.role === ADMINISTRATOR && user?.id !== member.id && member.role !== ADMINISTRATOR} member={member} />
+                    <ChatMember key={member.id} actions={chat!.role === ADMINISTRATOR && user?.id !== member.id && member.role !== ADMINISTRATOR} member={member} />
                 ))}
             </List>
         </>

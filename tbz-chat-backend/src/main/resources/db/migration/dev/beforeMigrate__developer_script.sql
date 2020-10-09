@@ -65,21 +65,30 @@ create table user_in_chat
 );
 
 insert into role (id, name)
-values ('f0337fba-4b72-4490-a236-a3330ce0712a', 'MEMBER'),
-       ('70ced881-066a-4e6d-bb52-ed1105c39bde', 'ADMINISTRATOR');
+values ('member', 'MEMBER'),
+       ('administrator', 'ADMINISTRATOR');
 
 insert into users (id, email, username, password, enabled)
-values ('user_1', 'user1@example.com', 'User 1', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
-       ('user_2', 'user2@example.com', 'User 2', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
-       ('user_3', 'user3@example.com', 'User 3', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
-       ('user_4', 'user4@example.com', 'User 4', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true);
+values ('spectator', 'spectator@cinema.com', 'Spectator', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
+       ('kenobi', 'kenobi@republic.com', 'Obi-Wan Kenobi', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
+       ('grievous', 'grievous@seperatist.com', 'General Grievous', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
+       ('windu', 'windu@republic.com', 'Mace Windu', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true),
+       ('sidious', 'sidious@sith.com', 'Darth Sidious', '$2a$10$L714YQTSEMZoW6MVnZ1Od.XsLA0T/Q8kkFAxpNH2wOKx3sXefh7hu', true);
 
 insert into chat (id, name)
-values ('chat_1', 'Chat 1'),
-       ('chat_2', 'Chat 2');
+values ('utapau', 'Utapau'),
+       ('coruscant', 'Coruscant');
 
 insert into user_in_chat (id, chat_id, user_id, role_id)
-values ('user_in_chat_1', 'chat_1', 'user_1', '70ced881-066a-4e6d-bb52-ed1105c39bde'),
-       ('user_in_chat_2', 'chat_1', 'user_2', 'f0337fba-4b72-4490-a236-a3330ce0712a'),
-       ('user_in_chat_3', 'chat_2', 'user_1', 'f0337fba-4b72-4490-a236-a3330ce0712a'),
-       ('user_in_chat_4', 'chat_2', 'user_2', '70ced881-066a-4e6d-bb52-ed1105c39bde');
+values ('utapau_spectator', 'utapau', 'spectator', 'administrator'),
+       ('utapau_kenobi', 'utapau', 'kenobi', 'member'),
+       ('utapau_grievous', 'utapau', 'grievous', 'member'),
+       ('coruscant_spectator', 'coruscant', 'spectator', 'administrator'),
+       ('coruscant_windu', 'coruscant', 'windu', 'member'),
+       ('coruscant_sidious', 'coruscant', 'sidious', 'member');
+
+insert into message (id, body, chat_id, author_id, timestamp)
+values ('message_1', 'Hello there!', 'utapau', 'kenobi', '2020-10-09 12:30:00'),
+       ('message_2', 'General Kenobi!', 'utapau', 'grievous', '2020-10-09 12:31:00'),
+       ('message_3', 'The senate will decide your fate', 'coruscant', 'windu', '2020-10-09 12:32:00'),
+       ('message_4', 'I AM the senate!', 'coruscant', 'sidious', '2020-10-09 12:33:00');

@@ -5,6 +5,7 @@ import EntityState, { createInitialState } from "../../util/EntityState";
 import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
 import { RootAction } from "../rootReducer";
 import moment from 'moment';
+import { POST_MESSAGE } from "./messageActionTypes";
 
 type MessageState = EntityState<Message>
 
@@ -35,6 +36,21 @@ const messageReducer = (state: MessageState | undefined = initialState, action: 
         case AUTH_SUCCESS:
         case LOGIN_SUCCESS:
             return populateFromUserResponse(state, action.payload.response.data)
+        case POST_MESSAGE:
+            const message = action.payload.message
+
+            let byId = state.byId;
+
+            byId[message.id] = {
+                ...message,
+                timestamp: moment(message.timestamp)
+            }
+
+            return {
+                ...state,
+                byId,
+                allIds: Object.keys(byId)
+            }
         default:
             return state;
     }

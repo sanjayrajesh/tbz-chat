@@ -1,24 +1,15 @@
-import { makeStyles, TextField, Typography } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import clsx from "clsx";
-import { Moment } from "moment";
 import React from "react";
 import { useSelector } from "react-redux";
 import { getSelectedChatMessages } from "../../../redux/message/messageSelectors";
-import useAuthState from "../../../util/hooks/useAuthState";
 import useLanguage from "../../../util/hooks/useLanguage";
 import Center from "../../atoms/Center";
 import Message from "./Message";
+import MessagePrompt from "./MessagePrompt";
 
 type ChatMessagesProps = {
     className?: string;
-};
-
-type MessageProps = {
-    message: {
-        timestamp: Moment;
-        body: string;
-        authorName: string;
-    };
 };
 
 const useStyle = makeStyles((theme) => ({
@@ -28,7 +19,8 @@ const useStyle = makeStyles((theme) => ({
     },
     messages: {
         flexGrow: 1,
-        padding: theme.spacing(2, 6)
+        padding: theme.spacing(2, 6),
+        width: "100%"
     },
 }));
 
@@ -52,7 +44,7 @@ const ChatMessages = (props: ChatMessagesProps) => {
                         <Message key={message.id} message={message} />
                     ))}
                 </div>
-                <TextField fullWidth placeholder={getString("enter.a.message")} />
+                <MessagePrompt />
             </div>
         );
 };

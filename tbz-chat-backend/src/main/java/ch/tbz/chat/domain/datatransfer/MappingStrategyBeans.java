@@ -50,7 +50,7 @@ public class MappingStrategyBeans {
     @Bean
     public MappingStrategy<MessageDTO, Message> messageMappingStrategy(MessageMappingStrategyFactory messageMappingStrategyFactory) {
         return messageMappingStrategyFactory.getStrategy(
-                conf -> conf.withChatId()
+                conf -> conf.withChatId().withAuthorId()
         );
     }
 

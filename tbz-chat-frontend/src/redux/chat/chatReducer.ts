@@ -2,10 +2,12 @@ import moment, { Moment } from "moment";
 import Chat from "../../models/Chat";
 import Entity from "../../models/Entity";
 import { ADMINISTRATOR } from "../../models/Role";
+import { PostMessageResponse } from "../../services/MessageService";
 import { UserResponse } from "../../services/UserService";
 import EntityMap from "../../util/EntityMap";
 import EntityState, { createInitialState } from "../../util/EntityState";
 import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
+import { POST_MESSAGE } from "../message/messageActionTypes";
 import { RootAction } from "../rootReducer";
 import { MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
 
@@ -100,6 +102,20 @@ const removeUser = (state: ChatState, payload: {userId: string, chatId: string})
     }
 }
 
+const addMessage = (state: ChatState, message: PostMessageResponse): ChatState => {
+    let chat = state.byId[message.chatId];
+
+    chat.messageIds = [...chat.messageIds, message.id];
+
+    return {
+        ...state,
+        byId: {
+            ...state.byId,
+            [chat.id]: chat
+        }
+    }
+}
+
 const chatReducer = (state: ChatState | undefined = initialState, action: RootAction): ChatState => {
     switch (action.type) {
         case AUTH_SUCCESS:
@@ -123,6 +139,8 @@ const chatReducer = (state: ChatState | undefined = initialState, action: RootAc
             }
         case REMOVE_FROM_CHAT:
             return removeUser(state, action.payload);
+        case POST_MESSAGE:
+            return addMessage(state, action.payload.message);
         default:
             return state;
     }

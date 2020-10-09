@@ -315,6 +315,8 @@ paths:
                     format: date-time
                   chatId:
                     type: string
+                  authorId:
+                    type: string
       requestBody:
         content:
           application/json:
@@ -323,9 +325,6 @@ paths:
               properties:
                 body:
                   type: string
-                timestamp:
-                  type: string
-                  format: date-time
               required:
                 - body
       tags:

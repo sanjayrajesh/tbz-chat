@@ -33,7 +33,8 @@ const useStyle = makeStyles((theme) => ({
         width: "60%"
     },
     messages: {
-        flexGrow: 1
+        flexGrow: 1,
+        background: theme.palette.action.selected
     },
     details: {
         width: 0,

@@ -99,9 +99,9 @@ const _getSelectedChatMembers: Selector<UserInChat[] | undefined> = (state) => {
 
     const chat = state.chats.byId[state.chats.selected];
 
-    return chat.users.map((userInChat) => ({
-        role: userInChat.role,
-        ...state.users.byId[userInChat.userId],
+    return Object.entries(chat.users).map(([userId, role]) => ({
+        ...state.users.byId[userId],
+        role
     }));
 };
 

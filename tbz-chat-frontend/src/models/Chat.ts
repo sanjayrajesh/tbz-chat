@@ -1,6 +1,5 @@
 import Entity from "./Entity";
 import Role from "./Role";
-import UserInChat from "./UserInChat";
 
 export interface CreateChat {
     name: string,
@@ -11,7 +10,9 @@ interface Chat extends Entity {
     name: string,
     role: Role,
     messageIds: string[],
-    users: UserInChat[]
+    users: {
+        [userId: string]: Role
+    }
 }
 
 export default Chat;

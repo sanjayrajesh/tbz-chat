@@ -60,14 +60,11 @@ const populateFromUserResponse = (state: ChatState, response: UserResponse): Cha
             name: chatResponse.name,
             role: chatResponse.role,
             messageIds: [],
-            users: []
+            users: {}
         }
 
         chatResponse.users.forEach(userResponse => {
-            chat.users.push({
-                userId: userResponse.id,
-                role: userResponse.role
-            })
+            chat.users[userResponse.id] = userResponse.role
         })
 
         chatResponse.messages.forEach(messageResponse => {
@@ -91,7 +88,7 @@ const removeUser = (state: ChatState, payload: {userId: string, chatId: string})
 
     const chat = state.byId[chatId];
 
-    chat.users = chat.users.filter(user => user.userId !== userId);
+    delete chat.users[userId];
 
     return {
         ...state,
@@ -131,7 +128,7 @@ const chatReducer = (state: ChatState | undefined = initialState, action: RootAc
 
             let byId = state.byId;
 
-            byId[chatId].users.filter(user => user.userId === userId).forEach(user => user.role = ADMINISTRATOR);
+            byId[chatId].users[userId] = ADMINISTRATOR;
 
             return {
                 ...state,

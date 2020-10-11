@@ -11,23 +11,6 @@ import Page from "../../Page";
 import ChatList from "./ChatList";
 import ChatSearchBar from "./ChatSearchBar";
 
-export const dummyChats: Chat[] = [
-    {
-        id: "1",
-        messageIds: [],
-        role: "ADMINISTRATOR",
-        name: "Chat 1",
-        users: [],
-    },
-    {
-        id: "2",
-        messageIds: [],
-        role: "MEMBER",
-        name: "Chat 22222222222",
-        users: [],
-    },
-];
-
 const useStyle = makeStyles((theme) => ({
     paper: {
         height: "100%",

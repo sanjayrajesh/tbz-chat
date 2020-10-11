@@ -1,4 +1,4 @@
-import { Container, makeStyles } from "@material-ui/core";
+import { Box, Container } from "@material-ui/core";
 import React, { ReactNode, useEffect } from "react";
 import Header from "./organisms/Header/Header";
 
@@ -13,27 +13,8 @@ type PageProps = {
     children: ReactNode;
 };
 
-const useStyle = makeStyles((theme) => ({
-    root: {
-        height: "100vh",
-        padding: theme.spacing(4, 0)
-    },
-    pageWrapper: {
-        height: "100%",
-    },
-    header: {
-        margin: 0,
-        height: "64px"
-    },
-    content: {
-        position: "relative",
-        height: "calc(100% - 64px)"
-    },
-}));
-
 const Page = (props: PageProps) => {
     const { title, children } = props;
-    const classes = useStyle();
 
     useEffect(() => {
         setPageTitle(title)
@@ -42,14 +23,14 @@ const Page = (props: PageProps) => {
     return (
         <div className={"page"}>
             <Container maxWidth="lg">
-                <div className={classes.root}>
-                    <div className={classes.pageWrapper}>
-                        <div className={classes.header}>
+                <Box height="100vh" py={4}>
+                    <Box height={1}>
+                        <Box margin={0} height={64}>
                             <Header title={title} />
-                        </div>
-                        <main className={classes.content}>{children}</main>
-                    </div>
-                </div>
+                        </Box>
+                        <Box component="main" position="relative" height="calc(100% - 64px)">{children}</Box>
+                    </Box>
+                </Box>
             </Container>
         </div>
     );

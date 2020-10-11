@@ -1,5 +1,4 @@
-import { makeStyles, Typography } from "@material-ui/core";
-import clsx from "clsx";
+import { Box, Typography } from "@material-ui/core";
 import React from "react";
 import { useSelector } from "react-redux";
 import { getSelectedChatMessages } from "../../../redux/message/messageSelectors";
@@ -12,27 +11,9 @@ type ChatMessagesProps = {
     className?: string;
 };
 
-const useStyle = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-        flexDirection: "column"
-    },
-    messages: {
-        padding: theme.spacing(2, 6),
-        width: "100%",
-        flexGrow: 1,
-        maxHeight: "calc(100% - 80px)",
-        overflow: "auto"
-    },
-    messagePrompt: {
-        height: "80px"
-    }
-}));
-
 const ChatMessages = (props: ChatMessagesProps) => {
     const { className } = props;
     const messages = useSelector(getSelectedChatMessages);
-    const classes = useStyle();
     const getString = useLanguage();
 
     if (!messages)
@@ -43,14 +24,16 @@ const ChatMessages = (props: ChatMessagesProps) => {
         );
     else
         return (
-            <div className={clsx(classes.root, className)}>
-                <div className={classes.messages}>
+            <Box display="flex" flexDirection="column" className={className}>
+                <Box py={2} px={6} width={1} flexGrow={1} maxHeight="calc(100% - 80px)" overflow="auto">
                     {messages.map(message => (
                         <Message key={message.id} message={message} />
                     ))}
-                </div>
-                <MessagePrompt className={classes.messagePrompt} />
-            </div>
+                </Box>
+                <Box clone height={80}>
+                    <MessagePrompt />
+                </Box>
+            </Box>
         );
 };
 

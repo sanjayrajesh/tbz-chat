@@ -1,5 +1,4 @@
-import { List, makeStyles, Toolbar, Typography } from '@material-ui/core'
-import clsx from 'clsx';
+import { List, Toolbar, Typography } from '@material-ui/core'
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { ADMINISTRATOR } from '../../../models/Role';
@@ -14,16 +13,7 @@ type ChatDetailsProps = {
     }
 }
 
-const useStyle = makeStyles(theme => ({
-    toolbar: {
-        width: "100%",
-        overflowX: "hidden"
-    }
-}));
-
 const ChatDetails = (props: ChatDetailsProps) => {
-
-    const classes = useStyle();
     const getString = useLanguage();
     const members = useSelector(getSelectedChatMembers);
     const chat = useSelector(getSelectedChat);
@@ -31,7 +21,7 @@ const ChatDetails = (props: ChatDetailsProps) => {
 
     return (
         <>
-            <Toolbar className={clsx(props.classes.toolbar, classes.toolbar)}>
+            <Toolbar className={props.classes.toolbar}>
                 <Typography variant="h5">
                     {getString("members")}
                 </Typography>

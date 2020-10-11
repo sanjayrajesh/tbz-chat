@@ -3,7 +3,6 @@ import {
     Toolbar,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import Chat from "../../../models/Chat";
 import useLanguage from "../../../util/hooks/useLanguage";
 import Paper from "../../atoms/Paper";
 import ActiveChat from "../../organisms/ActiveChat/ActiveChat";

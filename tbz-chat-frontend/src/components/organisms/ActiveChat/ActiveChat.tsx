@@ -1,4 +1,4 @@
-import { IconButton, makeStyles, Toolbar, Typography } from "@material-ui/core";
+import { Box, IconButton, makeStyles, Toolbar, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -19,19 +19,12 @@ type ActiveChatProps = {
 };
 
 const useStyle = makeStyles((theme) => ({
-    root: {
-        display: "flex"
-    },
     messagesContainer: {
         width: "100%",
         transition: theme.transitions.create("width", {duration: theme.transitions.duration.enteringScreen, easing: theme.transitions.easing.easeInOut}),
     },
     messagesSmall: {
         width: "60%"
-    },
-    messages: {
-        height: "calc(100% - 64px)",
-        background: theme.palette.action.selected
     },
     details: {
         width: 0,
@@ -43,9 +36,6 @@ const useStyle = makeStyles((theme) => ({
         borderLeft: `2px solid ${theme.palette.divider}`,
         width: "40%"
     },
-    chatName: {
-        flex: 1
-    }
 }));
 
 const ActiveChat = (props: ActiveChatProps) => {
@@ -64,14 +54,16 @@ const ActiveChat = (props: ActiveChatProps) => {
     }, [chat]);
 
     return (
-        <div className={clsx(className, classes.root)}>
+        <Box className={className} display="flex">
             <div className={clsx(classes.messagesContainer, {[classes.messagesSmall]: detailsOpen})}>
                 <Toolbar className={props.classes.toolbar}>
                     {chat ? (
                         <>
-                            <Typography variant="h5" className={classes.chatName}>
+                            <Box flex={1}>
+                            <Typography variant="h5">
                                 {chat.name}
                             </Typography>
+                            </Box>
                             <IconButton onClick={toggleDetailsOpen}>
                                 {detailsOpen ? <RightIcon /> : <LeftIcon/>}
                             </IconButton>
@@ -82,12 +74,14 @@ const ActiveChat = (props: ActiveChatProps) => {
                         </Typography>
                     )}
                 </Toolbar>
-                <ChatMessages className={classes.messages} />
+                <Box clone height="calc(100% - 64px)" bgcolor="background.default">
+                <ChatMessages />
+                </Box>
             </div>
             <div className={clsx(classes.details, {[classes.detailsOpen]: detailsOpen})}>
                 <ChatDetails classes={{toolbar: props.classes.toolbar}} />
             </div>
-        </div>
+        </Box>
     );
 };
 

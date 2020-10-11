@@ -1,8 +1,18 @@
-import { ListItem, ListItemText, makeStyles, Menu, MenuItem, Typography } from "@material-ui/core";
+import {
+    Box,
+    ListItem,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Typography,
+} from "@material-ui/core";
 import React, { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import { ADMINISTRATOR } from "../../../models/Role";
-import { makeAdministrator, removeFromChat } from "../../../redux/chat/chatActions";
+import {
+    makeAdministrator,
+    removeFromChat,
+} from "../../../redux/chat/chatActions";
 import { getSelectedChat, UserInChat } from "../../../redux/chat/chatSelectors";
 import useLanguage from "../../../util/hooks/useLanguage";
 import useThunkDispatch from "../../../util/hooks/useThunkDispatch";
@@ -12,29 +22,19 @@ type ChatMemberProps = {
     actions?: boolean;
 };
 
-const useStyle = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-    },
-    grow: {
-        flex: 1,
-    },
-}));
-
 type ContentProps = {
     member: UserInChat;
 };
 
 const Content = (props: ContentProps) => {
     const { member } = props;
-    const classes = useStyle();
     const getString = useLanguage();
 
     return (
         <Fragment>
-            <Typography className={classes.grow}>
-                {member.username || member.email}
-            </Typography>
+            <Box flexGrow={1}>
+                <Typography>{member.username || member.email}</Typography>
+            </Box>
             {member.role === ADMINISTRATOR ? (
                 <Typography color="textSecondary">
                     {getString("administrator")}
@@ -44,19 +44,16 @@ const Content = (props: ContentProps) => {
     );
 };
 
-const Simple = (props: ContentProps) => {
-    const classes = useStyle();
-
-    return (
-        <ListItem className={classes.root}>
+const Simple = (props: ContentProps) => (
+    <Box clone display="flex">
+        <ListItem>
             <Content {...props} />
         </ListItem>
-    );
-};
+    </Box>
+);
 
 const Actions = (props: ContentProps) => {
     const { member } = props;
-    const classes = useStyle();
     const getString = useLanguage();
     const [anchorEl, setAnchorEl] = useState(null);
     const chat = useSelector(getSelectedChat);
@@ -67,10 +64,10 @@ const Actions = (props: ContentProps) => {
 
     const handleMakeAdministrator = () => {
         dispatch(makeAdministrator(member.id, chat!.id)).finally(handleClose);
-    }
+    };
     const handleRemoveFromChat = () => {
         dispatch(removeFromChat(member.id, chat!.id)).finally(handleClose);
-    }
+    };
 
     return (
         <Fragment>
@@ -81,19 +78,31 @@ const Actions = (props: ContentProps) => {
                 getContentAnchorEl={null}
                 anchorOrigin={{
                     horizontal: "left",
-                    vertical: "bottom"
+                    vertical: "bottom",
                 }}
             >
                 <MenuItem button>
-                    <ListItemText primary={getString("make.administrator")} onClick={handleMakeAdministrator} />
+                    <ListItemText
+                        primary={getString("make.administrator")}
+                        onClick={handleMakeAdministrator}
+                    />
                 </MenuItem>
                 <MenuItem>
-                    <ListItemText primary={getString("remove.from.chat")} onClick={handleRemoveFromChat} />
+                    <ListItemText
+                        primary={getString("remove.from.chat")}
+                        onClick={handleRemoveFromChat}
+                    />
                 </MenuItem>
             </Menu>
-            <ListItem selected={Boolean(anchorEl)} button className={classes.root} onClick={handleClick}>
-                <Content member={member} />
-            </ListItem>
+            <Box clone display="flex">
+                <ListItem
+                    selected={Boolean(anchorEl)}
+                    button
+                    onClick={handleClick}
+                >
+                    <Content member={member} />
+                </ListItem>
+            </Box>
         </Fragment>
     );
 };

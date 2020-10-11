@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Typography } from "@material-ui/core";
+import { Box, Grid, makeStyles, Typography } from "@material-ui/core";
 import { Form, Formik, FormikHelpers } from "formik";
 import React, { useCallback } from "react";
 import { Redirect } from "react-router-dom";
@@ -30,10 +30,6 @@ export const setInitialRequest = (request: string) => {
 };
 
 const useStyle = makeStyles((theme) => ({
-  errorText: {
-    height: "1rem",
-    color: theme.palette.error.main,
-  },
   paper: {
     width: theme.breakpoints.width("sm") * 0.75,
   }
@@ -79,11 +75,11 @@ const LoginPage = () => {
                     />
                   </Grid>
                   <Grid item>
-                    <div className={classes.errorText}>
+                    <Box height="1rem" color="error.main">
                       {authStatus === "LOGIN_FAILURE" ? (
                         <Typography>{getString("login.failure")}</Typography>
                       ) : null}
-                    </div>
+                    </Box>
                   </Grid>
                   <Grid item>
                     <ActionButton

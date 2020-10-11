@@ -1,5 +1,10 @@
-import { List, ListItem, ListItemText, makeStyles } from "@material-ui/core";
-import clsx from "clsx";
+import {
+    Box,
+    List,
+    ListItem,
+    ListItemText,
+    makeStyles,
+} from "@material-ui/core";
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectChat } from "../../../redux/chat/chatActions";
@@ -14,9 +19,6 @@ type ChatListProps = {
 };
 
 const useStyle = makeStyles((theme) => ({
-    root: {
-        overflow: "auto",
-    },
     chatItem: {
         borderBottom: `2px solid ${theme.palette.divider}`,
     },
@@ -35,28 +37,30 @@ const ChatList = (props: ChatListProps) => {
     };
 
     return (
-        <List disablePadding className={clsx(classes.root, className)}>
-            {chats.map((chat) => (
-                <ListItem
-                    selected={chat.id === selected}
-                    button
-                    key={chat.id}
-                    onClick={handleSelectChat(chat.id)}
-                    className={classes.chatItem}
-                >
-                    <ListItemText
-                        primary={chat.name}
-                        secondary={
-                            chat.latestMessage
-                                ? chat.latestMessage.authorName +
-                                  ": " +
-                                  chat.latestMessage.body
-                                : getString("no.messages")
-                        }
-                    />
-                </ListItem>
-            ))}
-        </List>
+        <Box clone className={className} overflow="auto">
+            <List disablePadding>
+                {chats.map((chat) => (
+                    <ListItem
+                        selected={chat.id === selected}
+                        button
+                        key={chat.id}
+                        onClick={handleSelectChat(chat.id)}
+                        className={classes.chatItem}
+                    >
+                        <ListItemText
+                            primary={chat.name}
+                            secondary={
+                                chat.latestMessage
+                                    ? chat.latestMessage.authorName +
+                                      ": " +
+                                      chat.latestMessage.body
+                                    : getString("no.messages")
+                            }
+                        />
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
     );
 };
 

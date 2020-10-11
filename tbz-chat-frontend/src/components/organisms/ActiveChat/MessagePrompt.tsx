@@ -22,7 +22,7 @@ const useStyle = makeStyles((theme) => ({
     inputWrapper: {
         borderRadius: theme.spacing(3),
         padding: theme.spacing(1, 2),
-        background: theme.palette.action.selected,
+        background: theme.palette.grey[700],
         flexGrow: 1,
         display: "flex",
         alignContent: "center",

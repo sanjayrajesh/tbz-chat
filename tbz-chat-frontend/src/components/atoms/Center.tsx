@@ -1,25 +1,16 @@
-import { Grid, makeStyles } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import React, { ReactNode } from 'react'
 
 type CenterProps = {
     children: ReactNode
 }
 
-const useStyle = makeStyles(theme => ({
-    root: {
-        width: '100%',
-        height: '100%',
-    }
-}));
-
 const Center = (props: CenterProps) => {
 
-    const classes = useStyle();
-
     return (
-        <Grid container justify="center" alignContent="center" alignItems="center" className={classes.root} >
+        <Box display="flex" flexWrap="wrap" boxSizing="border-box" flexDirection="row" justifyContent="center" alignContent="center" alignItems="center" width={1} height={1} >
             {props.children}
-        </Grid>
+        </Box>
     )
 }
 

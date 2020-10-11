@@ -8,30 +8,9 @@ import ChatList from "./ChatList";
 import ChatSearchBar from "./ChatSearchBar";
 
 const useStyle = makeStyles((theme) => ({
-    container: {
-        height: "100%",
-        display: "flex",
-        flexDirection: "row",
-    },
-    chats: {
-        borderRight: `2px solid ${theme.palette.divider}`,
-        flex: 1,
-        height: "100%",
-    },
     toolbar: {
         borderBottom: `2px solid ${theme.palette.divider}`,
         padding: theme.spacing(0, 2),
-    },
-    activeChat: {
-        height: "100%",
-        flex: 3,
-    },
-    activeChatMessages: {
-        padding: theme.spacing(2),
-    },
-    chatList: {
-        height: "100%",
-        maxHeight: "calc(100% - 64px)",
     },
 }));
 

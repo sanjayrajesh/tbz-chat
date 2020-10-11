@@ -15,7 +15,7 @@ const useStyle = makeStyles((theme) => ({
     toolbar: {
         display: "flex",
         flexDirection: "row",
-        alignItems: "baseline",
+        alignItems: "center",
     },
     brand: {
         flexGrow: 1,

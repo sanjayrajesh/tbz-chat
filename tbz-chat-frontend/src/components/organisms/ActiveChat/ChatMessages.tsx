@@ -15,13 +15,18 @@ type ChatMessagesProps = {
 const useStyle = makeStyles((theme) => ({
     root: {
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "column"
     },
     messages: {
-        flexGrow: 1,
         padding: theme.spacing(2, 6),
-        width: "100%"
+        width: "100%",
+        flexGrow: 1,
+        maxHeight: "calc(100% - 80px)",
+        overflow: "auto"
     },
+    messagePrompt: {
+        height: "80px"
+    }
 }));
 
 const ChatMessages = (props: ChatMessagesProps) => {
@@ -44,7 +49,7 @@ const ChatMessages = (props: ChatMessagesProps) => {
                         <Message key={message.id} message={message} />
                     ))}
                 </div>
-                <MessagePrompt />
+                <MessagePrompt className={classes.messagePrompt} />
             </div>
         );
 };

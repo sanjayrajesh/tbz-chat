@@ -32,11 +32,9 @@ const useStyle = makeStyles((theme) => ({
     paper: {
         height: "100%",
         width: "100%",
-        display: "flex",
-        flexDirection: "column",
     },
     container: {
-        flexGrow: 1,
+        height: "100%",
         display: "flex",
         flexDirection: "row",
     },
@@ -56,6 +54,10 @@ const useStyle = makeStyles((theme) => ({
     activeChatMessages: {
         padding: theme.spacing(2),
     },
+    chatList: {
+        height: "100%",
+        maxHeight: "calc(100% - 64px)"
+    }
 }));
 
 const ChatPage = () => {
@@ -74,7 +76,7 @@ const ChatPage = () => {
                                 setFilter={setFilter}
                             />
                         </Toolbar>
-                        <ChatList filter={filter} />
+                        <ChatList className={classes.chatList} filter={filter} />
                     </div>
                     <ActiveChat
                         className={classes.activeChat}

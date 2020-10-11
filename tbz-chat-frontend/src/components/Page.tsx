@@ -16,21 +16,18 @@ type PageProps = {
 const useStyle = makeStyles((theme) => ({
     root: {
         height: "100vh",
-        display: "flex",
-        flexDirection: "column",
+        padding: theme.spacing(4, 0)
     },
     pageWrapper: {
-        flexGrow: 1,
-        display: "flex",
-        flexDirection: "column",
-        margin: theme.spacing(4, 0)
+        height: "100%",
     },
     header: {
         margin: 0,
+        height: "64px"
     },
     content: {
         position: "relative",
-        flexGrow: 1,
+        height: "calc(100% - 64px)"
     },
 }));
 

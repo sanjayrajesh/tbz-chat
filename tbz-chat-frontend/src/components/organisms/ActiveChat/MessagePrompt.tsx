@@ -1,11 +1,16 @@
 import { IconButton, makeStyles } from "@material-ui/core";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import SendIcon from "@material-ui/icons/Send";
 import useThunkDispatch from "../../../util/hooks/useThunkDispatch";
 import { postMessage } from "../../../redux/message/messageActions";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/rootReducer";
 import useLanguage from "../../../util/hooks/useLanguage";
+import clsx from "clsx";
+
+type MessagePromptProps = {
+    className?: string;
+}
 
 const useStyle = makeStyles((theme) => ({
     root: {
@@ -32,7 +37,8 @@ const useStyle = makeStyles((theme) => ({
     },
 }));
 
-const MessagePrompt = () => {
+const MessagePrompt = (props: MessagePromptProps) => {
+    const {className} = props;
     const classes = useStyle();
     const [input, setInput] = useState("");
     const dispatch = useThunkDispatch();
@@ -53,7 +59,7 @@ const MessagePrompt = () => {
     };
 
     return (
-            <form className={classes.root} onSubmit={handleSubmit}>
+            <form className={clsx(classes.root, className)} onSubmit={handleSubmit}>
                 <div className={classes.inputWrapper}>
                     <input
                         className={classes.input}

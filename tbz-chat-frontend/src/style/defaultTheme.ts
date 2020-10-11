@@ -1,6 +1,6 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 
-const defaultTheme = createMuiTheme({
+let defaultTheme = createMuiTheme({
     palette: {
         type: 'dark'
     },
@@ -9,8 +9,24 @@ const defaultTheme = createMuiTheme({
             root: {
                 cursor: "pointer"
             }
+        },
+        MuiCssBaseline: {
+            "@global": {
+                "::-webkit-scrollbar": {
+                    width: "8px",
+                },
+                "::-webkit-scrollbar-track": {
+                    background: "transparent"
+                },
+                "::-webkit-scrollbar-thumb": {
+                    background: "rgba(0, 0, 0, 0.2)",
+                    borderRadius: "4px",
+                },
+            }
         }
     }
 });
 
-export default defaultTheme;
+defaultTheme = responsiveFontSizes(defaultTheme);
+
+export default defaultTheme

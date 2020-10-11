@@ -24,16 +24,13 @@ const useStyle = makeStyles((theme) => ({
     },
     messagesContainer: {
         width: "100%",
-        height: "inherit",
         transition: theme.transitions.create("width", {duration: theme.transitions.duration.enteringScreen, easing: theme.transitions.easing.easeInOut}),
-        display: "flex",
-        flexDirection: "column"
     },
     messagesSmall: {
         width: "60%"
     },
     messages: {
-        flexGrow: 1,
+        height: "calc(100% - 64px)",
         background: theme.palette.action.selected
     },
     details: {

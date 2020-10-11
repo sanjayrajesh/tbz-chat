@@ -76,6 +76,10 @@ const dictionary: Dictionary = {
     "remove.from.chat": {
         en: "Remove from chat",
         de: "Aus Chat entfernen"
+    },
+    "type.a.message": {
+        en: "Type a message",
+        de: "Schreiben Sie eine Nachricht"
     }
 }
 

@@ -1,7 +1,4 @@
-import {
-    makeStyles,
-    Toolbar,
-} from "@material-ui/core";
+import { Box, makeStyles, Toolbar } from "@material-ui/core";
 import React, { useState } from "react";
 import useLanguage from "../../../util/hooks/useLanguage";
 import Paper from "../../atoms/Paper";
@@ -11,10 +8,6 @@ import ChatList from "./ChatList";
 import ChatSearchBar from "./ChatSearchBar";
 
 const useStyle = makeStyles((theme) => ({
-    paper: {
-        height: "100%",
-        width: "100%",
-    },
     container: {
         height: "100%",
         display: "flex",
@@ -38,8 +31,8 @@ const useStyle = makeStyles((theme) => ({
     },
     chatList: {
         height: "100%",
-        maxHeight: "calc(100% - 64px)"
-    }
+        maxHeight: "calc(100% - 64px)",
+    },
 }));
 
 const ChatPage = () => {
@@ -49,26 +42,38 @@ const ChatPage = () => {
 
     return (
         <Page title={getString("chats")}>
-            <Paper className={classes.paper} square padding={0}>
-                <div className={classes.container}>
-                    <div className={classes.chats}>
-                        <Toolbar className={classes.toolbar}>
-                            <ChatSearchBar
-                                filter={filter}
-                                setFilter={setFilter}
+            <Box clone width={1} height={1}>
+                <Paper square padding={0}>
+                    <Box height={1} display="flex" flexDirection="row">
+                        <Box
+                            border={2}
+                            borderLeft={0}
+                            borderTop={0}
+                            borderBottom={0}
+                            borderColor="divider"
+                            flex={1}
+                            height={1}
+                        >
+                            <Toolbar className={classes.toolbar}>
+                                <ChatSearchBar
+                                    filter={filter}
+                                    setFilter={setFilter}
+                                />
+                            </Toolbar>
+                            <Box clone height={1} maxHeight="calc(100% - 64px)">
+                                <ChatList filter={filter} />
+                            </Box>
+                        </Box>
+                        <Box clone height={1} flex={3} >
+                            <ActiveChat
+                                classes={{
+                                    toolbar: classes.toolbar,
+                                }}
                             />
-                        </Toolbar>
-                        <ChatList className={classes.chatList} filter={filter} />
-                    </div>
-                    <ActiveChat
-                        className={classes.activeChat}
-                        classes={{
-                            toolbar: classes.toolbar,
-                            messages: classes.activeChatMessages
-                        }}
-                    />
-                </div>
-            </Paper>
+                        </Box>
+                    </Box>
+                </Paper>
+            </Box>
         </Page>
     );
 };

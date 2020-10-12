@@ -9,3 +9,19 @@ spring:
     jpa:
         hibernate:
             ddl-auto: validate
+mail:
+    debug: true
+    host: smtp.gmail.com
+    port: 587
+    username: noreply.tbz.chat@gmail.com
+    password: tbz-chat
+    smtp:
+        auth: true
+        starttls:
+            enable: true
+    transport:
+        protocol: smtp
+    from: TBZ-Chat
+invitation:
+    base-url: http://localhost:3000/activate-account
+    subject: Welcome to TBZ-Chat

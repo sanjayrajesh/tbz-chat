@@ -1,10 +1,6 @@
-type Dictionary = {
-    [key: string]: {
-        [language: string]: string
-    }
-}
+import { Language } from "./language";
 
-const dictionary: Dictionary = {
+const dictionary = {
     email: {
         en: "Email",
         de: "E-Mail"
@@ -33,17 +29,41 @@ const dictionary: Dictionary = {
         en: "Chats",
         de: "Chats"
     },
-    register: {
-        en: "Register",
-        de: "Registrieren"
+    "sign.in": {
+        en: "Sign in",
+        de: "Anmelden"
     },
-    "register.with.email": {
-        en: "Register with your email address",
-        de: "Registrieren Sie sich mit Ihrer E-Mail Adresse"
+    "sign.in.link": {
+        en: "Already have an account? Sign in instead",
+        de: "Sie haben bereits einen Account? Melden Sie sich an"
     },
     "sign.out": {
         en: "Sign out",
         de: "Abmelden"
+    },
+    "sign.up": {
+        en: "Sign up",
+        de: "Account erstellen"
+    },
+    "sign.up.link": {
+        en: "Don't have an account yet? Sign up instead",
+        de: "Sie haben noch keinen Account? Erstellen Sie einen neuen"
+    },
+    "sign.up.with.email": {
+        en: "Sign up with your email address",
+        de: "Registrieren Sie sich mit Ihrer E-Mail Adresse"
+    },
+    "sign.up.success": {
+        en: "Sign up successful",
+        de: "Account erfolgreich erstellt"
+    },
+    "invitation.sent.1": {
+        en: "An invitation was sent to ",
+        de: "Es wurde eine Einladung an "
+    },
+    "invitation.sent.2": {
+        en: "",
+        de: " verschickt"
     },
     profile: {
         en: "Profile",
@@ -100,7 +120,13 @@ const dictionary: Dictionary = {
     confirm: {
         en: "Confirm",
         de: "Bestätigen"
+    },
+}
+
+export type Dictionary = {
+    [K in keyof typeof dictionary]: {
+        [L in Language]: string
     }
 }
 
-export default dictionary
+export default dictionary as Dictionary

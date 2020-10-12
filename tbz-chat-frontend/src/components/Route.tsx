@@ -1,7 +1,6 @@
 import React from 'react'
-import { Redirect, Route as DomRoute, RouteProps as DomRouteProps, useLocation } from 'react-router-dom'
+import { Redirect, Route as DomRoute, RouteProps as DomRouteProps } from 'react-router-dom'
 import useAuthStatus from '../util/hooks/useAuthStatus'
-import { setInitialRequest } from './pages/LoginPage';
 
 type RouteProps = DomRouteProps & {
     secure?: boolean
@@ -11,9 +10,6 @@ const Route = (props: RouteProps) => {
 
     const {secure} = props;
     const authStatus = useAuthStatus();
-    const location = useLocation();
-
-    setInitialRequest(location.pathname);
 
     if(authStatus === 'PENDING') {
         return (

@@ -25,10 +25,9 @@ const App = () => {
                 <BrowserRouter>
                     <Switch>
                         <Route path="/test" component={TestPage} />
-                        <Route exact path="/login" component={LoginPage} />
+                        <Route path="/login" component={LoginPage} />
                         <Route
-                            exact
-                            path="/register"
+                            path="/sign-up"
                             component={RegisterPage}
                         />
                         <Route secure exact path="/" component={ChatPage} />

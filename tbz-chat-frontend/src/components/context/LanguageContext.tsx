@@ -1,8 +1,9 @@
 import React, { createContext, ReactNode, useState } from 'react'
+import { Language } from '../../language/language';
 
 type LanguageContextValue = {
-    language: string,
-    setLanguage: (language: string) => void
+    language: Language,
+    setLanguage: (language: Language) => void
 }
 
 const initialValue: LanguageContextValue = {
@@ -18,7 +19,7 @@ type LanguageContextProviderProps = {
 
 export const LanguageContextProvider = (props: LanguageContextProviderProps) => {
 
-    const [language, setLanguage] = useState('en');
+    const [language, setLanguage] = useState<Language>('en');
 
     return (
         <LanguageContext.Provider value={{language, setLanguage}}>

@@ -18,7 +18,7 @@ const useStyle = makeStyles((theme) => ({
   title: {
       fontWeight: theme.typography.fontWeightMedium,
   }
-}));
+}), { name: "Paper"});
 
 const Paper = (props: PaperProps) => {
   const classes = useStyle(props);

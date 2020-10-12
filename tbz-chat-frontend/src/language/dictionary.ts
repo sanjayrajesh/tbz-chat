@@ -5,6 +5,10 @@ const dictionary = {
         en: "Email",
         de: "E-Mail"
     },
+    username: {
+        en: "Username",
+        de: "Benutzername"
+    },
     password: {
         en: "Password",
         de: "Passwort"
@@ -69,6 +73,10 @@ const dictionary = {
         en: "Profile",
         de: "Profil"
     },
+    "my.profile": {
+        en: "My profile",
+        de: "Mein Profil"
+    },
     "search.chats": {
         en: "Search chats",
         de: "Chats suchen"
@@ -121,6 +129,10 @@ const dictionary = {
         en: "Confirm",
         de: "Bestätigen"
     },
+    back: {
+        en: "Back",
+        de: "Zurück"
+    }
 }
 
 export type Dictionary = {

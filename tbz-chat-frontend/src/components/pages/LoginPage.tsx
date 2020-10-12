@@ -24,7 +24,7 @@ export const useStyle = makeStyles((theme) => ({
     paper: {
         width: theme.breakpoints.width("sm") * 0.75,
     },
-}));
+}), {name: "LoginPage"});
 
 const LoginPage = () => {
     const getString = useLanguage();

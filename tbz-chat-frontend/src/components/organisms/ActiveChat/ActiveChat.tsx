@@ -48,7 +48,7 @@ const useStyle = makeStyles((theme) => ({
         borderLeft: `2px solid ${theme.palette.divider}`,
         width: "40%",
     },
-}));
+}), {name: "MuiActiveChat"});
 
 const ActiveChat = (props: ActiveChatProps) => {
     const { className } = props;

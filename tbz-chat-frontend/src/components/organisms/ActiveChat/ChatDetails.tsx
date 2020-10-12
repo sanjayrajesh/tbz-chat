@@ -39,7 +39,7 @@ const useStyle = makeStyles((theme) => ({
             justifyContent: "flex-start"
         }
     },
-}));
+}), {name: "MuiChatDetails"});
 
 const ChatDetails = (props: ChatDetailsProps) => {
     const getString = useLanguage();

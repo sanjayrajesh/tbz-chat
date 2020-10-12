@@ -7,6 +7,7 @@ import { LanguageContextProvider } from "./context/LanguageContext";
 import { ThemeContextProvider } from "./context/ThemeContext";
 import ChatPage from "./pages/ChatPage/ChatPage";
 import LoginPage from "./pages/LoginPage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import TestPage from "./pages/TestPage";
 import Route from "./Route";
@@ -30,6 +31,7 @@ const App = () => {
                             path="/sign-up"
                             component={RegisterPage}
                         />
+                        <Route secure path="/profile" component={ProfilePage} />
                         <Route secure exact path="/" component={ChatPage} />
                     </Switch>
                 </BrowserRouter>

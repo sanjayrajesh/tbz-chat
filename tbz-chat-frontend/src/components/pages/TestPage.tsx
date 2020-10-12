@@ -1,37 +1,60 @@
-import { makeStyles } from '@material-ui/core'
-import React from 'react'
-
-const useStyle = makeStyles(theme => ({
-    root: {
-        height: "100vh",
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    header: {
-        background: theme.palette.primary.main,
-        padding: theme.spacing(10),
-    },
-    content: {
-        flexGrow: 1,
-        margin: theme.spacing(4),
-        background: 'purple'
-    }
-}));
+import { Box, Container, Grid } from "@material-ui/core";
+import React from "react";
+import Button from "../atoms/Button";
+import StyledTextField from "../atoms/input/StyledTextField";
 
 const TestPage = () => {
-
-    const classes = useStyle();
-
     return (
-        <div className={classes.root}>
-            <header className={classes.header}>
-                Header
-            </header>
-            <main className={classes.content}>
+        <Container>
+            <Box p={4}>
+                <Grid container direction="row" spacing={2}>
+                    <Grid item>
+                        <StyledTextField label={"Standard"} />
+                    </Grid>
+                    <Grid item>
+                        <StyledTextField disabled label={"Disabled"} />
+                    </Grid>
+                    <Grid item>
+                        <StyledTextField
+                            readOnly
+                            value="Readonly"
+                            label={"Readonly"}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Button variant="contained" color="primary">
+                            Enabled
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="contained" color="primary" disabled>
+                            Disabled
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="text" color="primary">
+                            Enabled
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="text" color="primary" disabled>
+                            Disabled
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" color="primary">
+                            Enabled
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" color="primary" disabled>
+                            Disabled
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Box>
+        </Container>
+    );
+};
 
-            </main>
-        </div>
-    )
-}
-
-export default TestPage
+export default TestPage;

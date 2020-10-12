@@ -5,21 +5,27 @@ import React from "react";
 import useAuthState from "../../../util/hooks/useAuthState";
 
 const useStyle = makeStyles((theme) => ({
-    root: (isOwn: boolean) => ({
+    root: {
         display: "flex",
-        flexDirection: isOwn ? "row-reverse" : "row",
         "&:not(:last-child)": {
-            marginBottom: theme.spacing(3),
+            marginBottom: theme.spacing(3)
         },
-    }),
-    content: (isOwn: boolean) => ({
+        flexDirection: "row",
+        "&$own": {
+            flexDirection: "row-reverse",
+        }
+    },
+    content: {
         maxWidth: "65%",
         padding: theme.spacing(1),
         borderRadius: theme.spacing(1),
-        background: isOwn
-            ? theme.palette.success.dark
-            : theme.palette.info.main,
-    }),
+        background: theme.palette.info.main
+    },
+    own: {
+        "& $content": {
+            background: theme.palette.success.dark
+        }
+    },
     authorName: {
         fontWeight: theme.typography.fontWeightBold,
     },
@@ -29,7 +35,7 @@ const useStyle = makeStyles((theme) => ({
     body: {
         whiteSpace: "pre-wrap",
     },
-}));
+}), {name: "Message"});
 
 type MessageProps = {
     message: {
@@ -46,10 +52,10 @@ const Message = (props: MessageProps) => {
     } = props;
     const { user } = useAuthState();
     const isOwn = user!.id === authorId;
-    const classes = useStyle(isOwn);
+    const classes = useStyle();
 
     return (
-        <div className={clsx(classes.root)}>
+        <div className={clsx(classes.root, {[classes.own]: isOwn})}>
             <div className={classes.content}>
                 {!isOwn ? (
                     <Typography className={classes.authorName}>

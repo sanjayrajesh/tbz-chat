@@ -9,7 +9,9 @@ const useStyle = makeStyles((theme) => ({
     spinner: {
         color: theme.palette.primary.contrastText,
     },
-}));
+}), {
+    name: "MuiActionButton",
+});
 
 const ActionButton = (props: ActionButtonProps) => {
     const { loading } = props;

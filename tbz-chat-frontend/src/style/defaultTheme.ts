@@ -1,32 +1,38 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 
-let defaultTheme = createMuiTheme({
-    palette: {
-        type: 'dark'
-    },
-    overrides: {
-        MuiLink: {
-            root: {
-                cursor: "pointer"
-            }
-        },
-        MuiCssBaseline: {
-            "@global": {
-                "::-webkit-scrollbar": {
-                    width: "8px",
+const createTheme = (type: "light" | "dark") =>
+    responsiveFontSizes(
+        createMuiTheme({
+            palette: {
+                type: type,
+            },
+            overrides: {
+                MuiLink: {
+                    root: {
+                        cursor: "pointer",
+                    },
                 },
-                "::-webkit-scrollbar-track": {
-                    background: "transparent"
+                MuiCssBaseline: {
+                    "@global": {
+                        "::-webkit-scrollbar": {
+                            width: "8px",
+                        },
+                        "::-webkit-scrollbar-track": {
+                            background: "transparent",
+                        },
+                        "::-webkit-scrollbar-thumb": {
+                            background: "rgba(0, 0, 0, 0.2)",
+                            borderRadius: "4px",
+                        },
+                    },
                 },
-                "::-webkit-scrollbar-thumb": {
-                    background: "rgba(0, 0, 0, 0.2)",
-                    borderRadius: "4px",
-                },
-            }
-        }
-    }
-});
+            },
+        })
+    );
 
-defaultTheme = responsiveFontSizes(defaultTheme);
+const defaultTheme = {
+    light: createTheme("light"),
+    dark: createTheme("dark")
+}
 
-export default defaultTheme
+export default defaultTheme;

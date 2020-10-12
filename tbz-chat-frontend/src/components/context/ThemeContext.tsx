@@ -5,14 +5,15 @@ import React, {
     useCallback,
     useState,
 } from "react";
-import themes, { ThemeKey } from "../../style/themes";
+import defaultTheme from "../../style/defaultTheme";
+import { Variant } from "../../style/themes";
 
 type ThemeContextProps = {
     children: ReactNode;
 };
 
 type ThemeContextValue = {
-    setTheme: (theme: ThemeKey) => void;
+    setTheme: (theme: Variant) => void;
 };
 
 const initialValue: ThemeContextValue = {
@@ -22,10 +23,10 @@ const initialValue: ThemeContextValue = {
 const ThemeContext = createContext(initialValue);
 
 export const ThemeContextProvider = (props: ThemeContextProps) => {
-    const [theme, setThemeInternal] = useState(themes["default"]);
+    const [theme, setThemeInternal] = useState(defaultTheme.light);
 
-    const setTheme = useCallback((theme: ThemeKey) => {
-        setThemeInternal(themes[theme]);
+    const setTheme = useCallback((theme: Variant) => {
+        setThemeInternal(defaultTheme[theme]);
     }, []);
 
     return (

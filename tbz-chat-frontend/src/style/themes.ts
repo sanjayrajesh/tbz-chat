@@ -1,14 +1,9 @@
-import { Theme } from "@material-ui/core";
 import defaultTheme from "./defaultTheme";
 import starWarsThemes from './starWarsThemes';
 
-export type ThemeKey = 'starWarsLight' | 'starWarsDark' | 'default';
+export type Variant = "light" | "dark";
 
-type Themes = {
-    [key in ThemeKey]: Theme
-}
-
-const themes: Themes = {
+const themes = {
     default: defaultTheme,
     starWarsDark: starWarsThemes.dark,
     starWarsLight: starWarsThemes.light

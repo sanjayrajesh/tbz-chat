@@ -26,7 +26,7 @@ const useStyle = makeStyles((theme) => ({
     dialogActions: {
         padding: theme.spacing(1, 3)
     }
-}));
+}), { name: "MuiDangerAction" });
 
 const isPromise = (value: any): value is Promise<void> =>
     value instanceof Promise;

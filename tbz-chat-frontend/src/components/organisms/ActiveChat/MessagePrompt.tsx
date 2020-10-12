@@ -35,7 +35,7 @@ const useStyle = makeStyles((theme) => ({
         color: theme.palette.primary.contrastText,
         fontSize: theme.typography.h6.fontSize,
     },
-}));
+}), {name: "MessagePrompt"});
 
 const MessagePrompt = (props: MessagePromptProps) => {
     const {className} = props;

@@ -1,7 +1,7 @@
 import { ThunkAction } from "redux-thunk";
 import ChatService from "../../services/ChatService";
 import { RootAction, RootState } from "../rootReducer";
-import ChatAction, { MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
+import ChatAction, { LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
 
 export const selectChat = (id: string): ChatAction => ({
     type: SELECT_CHAT,
@@ -26,10 +26,21 @@ const _removeFromChat = (userId: string, chatId: string): ChatAction => ({
     }
 })
 
+const _leaveChat = (chatId: string): ChatAction => ({
+    type: LEAVE_CHAT,
+    payload: {
+        chatId
+    }
+})
+
 export const makeAdministrator: (userId: string, chatId: string) => ThunkAction<Promise<void>, RootState, void, RootAction> = (userId, chatId) => dispatch => ChatService.makeAdministrator(userId, chatId).then(() => {
     dispatch(_makeAdministrator(userId, chatId));
 })
 
 export const removeFromChat: (userId: string, chatId: string) => ThunkAction<Promise<void>, RootState, void, RootAction> = (userId, chatId) => dispatch => ChatService.removeFromChat(userId, chatId).then(() => {
     dispatch(_removeFromChat(userId, chatId));
+})
+
+export const leaveChat: (chatId: string) => ThunkAction<Promise<void>, RootState, void, RootAction> = chatId => dispatch => ChatService.leaveChat(chatId).then(() => {
+    dispatch(_leaveChat(chatId));
 })

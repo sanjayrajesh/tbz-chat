@@ -1,5 +1,5 @@
 import { Box, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { getSelectedChatMessages } from "../../../redux/message/messageSelectors";
 import useLanguage from "../../../util/hooks/useLanguage";
@@ -15,6 +15,11 @@ const ChatMessages = (props: ChatMessagesProps) => {
     const { className } = props;
     const messages = useSelector(getSelectedChatMessages);
     const getString = useLanguage();
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({behavior: "smooth"}); //TODO imperative handle for external scrolling
+    }, [messages]);
 
     if (!messages)
         return (
@@ -29,6 +34,7 @@ const ChatMessages = (props: ChatMessagesProps) => {
                     {messages.map(message => (
                         <Message key={message.id} message={message} />
                     ))}
+                    <div ref={scrollRef} />
                 </Box>
                 <Box clone height={80}>
                     <MessagePrompt />

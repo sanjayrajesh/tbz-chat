@@ -9,7 +9,7 @@ import EntityState, { createInitialState } from "../../util/EntityState";
 import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
 import { POST_MESSAGE } from "../message/messageActionTypes";
 import { RootAction } from "../rootReducer";
-import { MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
+import { LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
 
 export type ChatState = EntityState<Chat> & {
     selected?: string
@@ -95,7 +95,8 @@ const removeUser = (state: ChatState, payload: {userId: string, chatId: string})
         byId: {
             ...state.byId,
             [chatId]: chat
-        }
+        },
+        selected: undefined
     }
 }
 
@@ -110,6 +111,22 @@ const addMessage = (state: ChatState, message: PostMessageResponse): ChatState =
             ...state.byId,
             [chat.id]: chat
         }
+    }
+}
+
+const leaveChat = (state: ChatState, chatId: string): ChatState => {
+
+    let byId = state.byId;
+
+    delete byId[chatId];
+
+    const allIds = Object.keys(byId);
+
+    return {
+        ...state,
+        byId,
+        allIds,
+        selected: allIds[0]
     }
 }
 
@@ -138,6 +155,8 @@ const chatReducer = (state: ChatState | undefined = initialState, action: RootAc
             return removeUser(state, action.payload);
         case POST_MESSAGE:
             return addMessage(state, action.payload.message);
+        case LEAVE_CHAT:
+            return leaveChat(state, action.payload.chatId);
         default:
             return state;
     }

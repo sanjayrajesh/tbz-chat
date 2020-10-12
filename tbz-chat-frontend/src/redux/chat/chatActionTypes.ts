@@ -1,6 +1,7 @@
 export const SELECT_CHAT = 'SELECT_CHAT'
 export const MAKE_ADMINISTRATOR = 'MAKE_ADMINISTRATOR'
 export const REMOVE_FROM_CHAT = 'REMOVE_FROM_CHAT'
+export const LEAVE_CHAT = 'LEAVE_CHAT'
 
 type SelectChat = {
     type: typeof SELECT_CHAT,
@@ -25,6 +26,13 @@ type RemoveFromChat = {
     }
 }
 
-type ChatAction = SelectChat | MakeAdministrator | RemoveFromChat;
+type LeaveChat = {
+    type: typeof LEAVE_CHAT,
+    payload: {
+        chatId: string
+    }
+}
+
+type ChatAction = SelectChat | MakeAdministrator | RemoveFromChat | LeaveChat;
 
 export default ChatAction

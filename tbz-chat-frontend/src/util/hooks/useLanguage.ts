@@ -9,13 +9,15 @@ type Key = keyof Dictionary;
 const useLanguage = () => {
     const {language} = useContext(LanguageContext);
 
-    const getString = useCallback((key: Key) => {
+    const getString = useCallback((key: Key, ...args: string[]) => {
         const languageItem = dictionary[key];
 
         if(languageItem) {
-            const itemValue = languageItem[language];
+            let itemValue = languageItem[language];
 
             if(itemValue) {
+                args.forEach(arg => itemValue = itemValue.replace("{}", arg));
+
                 return itemValue
             }
         }

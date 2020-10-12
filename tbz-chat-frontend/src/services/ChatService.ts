@@ -10,9 +10,12 @@ const makeAdministrator = (userId: string, chatId: string) => api.put<MakeAdmini
 
 const removeFromChat = (userId: string, chatId: string) => api.delete<undefined>(`/chats/${chatId}/users/${userId}`);
 
+const leaveChat = (chatId: string) => api.delete<undefined>(`users/own/chats/${chatId}`);
+
 const ChatService = {
     makeAdministrator,
-    removeFromChat
+    removeFromChat,
+    leaveChat
 }
 
 export default ChatService

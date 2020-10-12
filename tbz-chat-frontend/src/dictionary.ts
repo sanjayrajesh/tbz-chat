@@ -80,6 +80,26 @@ const dictionary: Dictionary = {
     "type.a.message": {
         en: "Type a message",
         de: "Schreiben Sie eine Nachricht"
+    },
+    details: {
+        en: "Details",
+        de: "Details"
+    },
+    "leave.chat": {
+        en: "Leave chat",
+        de: "Chat verlassen"
+    },
+    "confirm.leave.chat": {
+        en: "Leave chat \"{}\"?",
+        de: "Chat \"{}\" verlassen?"
+    },
+    cancel: {
+        en: "Cancel",
+        de: "Abbrechen"
+    },
+    confirm: {
+        en: "Confirm",
+        de: "Bestätigen"
     }
 }
 

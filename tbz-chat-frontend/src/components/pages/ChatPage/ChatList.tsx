@@ -32,11 +32,10 @@ const ChatList = (props: ChatListProps) => {
         <Box clone className={className} overflow="auto">
             <List disablePadding>
                 {chats.map((chat) => (
-                    <Box clone border={2} borderTop={0} borderLeft={0} borderRight={0} borderColor="divider">
+                    <Box clone border={2} borderTop={0} borderLeft={0} borderRight={0} borderColor="divider" key={chat.id}>
                         <ListItem
                             selected={chat.id === selected}
                             button
-                            key={chat.id}
                             onClick={handleSelectChat(chat.id)}
                         >
                             <ListItemText

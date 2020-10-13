@@ -5,6 +5,7 @@ import { authenticateFromToken } from "../redux/globalActions";
 import useThunkDispatch from "../util/hooks/useThunkDispatch";
 import { LanguageContextProvider } from "./context/LanguageContext";
 import { ThemeContextProvider } from "./context/ThemeContext";
+import AccountActivationPage from "./pages/AccountActivationPage/AccountActivationPage";
 import ChatPage from "./pages/ChatPage/ChatPage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
@@ -32,6 +33,7 @@ const App = () => {
                             component={RegisterPage}
                         />
                         <Route secure path="/profile" component={ProfilePage} />
+                        <Route path="/activate-account/:token" component={AccountActivationPage} />
                         <Route secure exact path="/" component={ChatPage} />
                     </Switch>
                 </BrowserRouter>

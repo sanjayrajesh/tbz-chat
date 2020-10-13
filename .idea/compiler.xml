@@ -3,7 +3,25 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.4.0.Final/277eb5449d5eeeeb3851c372973d6fa8f41ed5fe/mapstruct-processor-1.4.0.Final.jar" />
+        </processorPath>
+        <module name="tbz-chat-backend.test" />
+      </profile>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <option name="mapstruct.defaultComponentModel" value="spring" />
+        <option name="mapstruct.unmappedTargetPolicy" value="IGNORE" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.3.3.RELEASE/f8b44f9409b969d4320ce1caff727bd5b85e513e/spring-boot-configuration-processor-2.3.3.RELEASE.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.12/48e4e5d60309ebd833bc528dcf77668eab3cd72c/lombok-1.18.12.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.4.0.Final/277eb5449d5eeeeb3851c372973d6fa8f41ed5fe/mapstruct-processor-1.4.0.Final.jar" />
+        </processorPath>
+        <module name="tbz-chat-backend.main" />
+      </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.6" />
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>

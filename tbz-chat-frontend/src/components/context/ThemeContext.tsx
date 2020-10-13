@@ -23,7 +23,7 @@ const initialValue: ThemeContextValue = {
 const ThemeContext = createContext(initialValue);
 
 export const ThemeContextProvider = (props: ThemeContextProps) => {
-    const [theme, setThemeInternal] = useState(defaultTheme.light);
+    const [theme, setThemeInternal] = useState(defaultTheme.dark);
 
     const setTheme = useCallback((theme: Variant) => {
         setThemeInternal(defaultTheme[theme]);

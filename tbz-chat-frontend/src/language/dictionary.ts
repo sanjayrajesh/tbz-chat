@@ -13,6 +13,10 @@ const dictionary = {
         en: "Password",
         de: "Passwort"
     },
+    "confirm.password": {
+        en: "Confirm password",
+        de: "Passwort wiederholen"
+    },
     login: {
         en: "Login",
         de: "Anmelden"
@@ -132,6 +136,14 @@ const dictionary = {
     back: {
         en: "Back",
         de: "Zurück"
+    },
+    "activate.account": {
+        en: "Activate account",
+        de: "Account aktivieren"
+    },
+    "activate.your.account": {
+        en: "Activate your account",
+        de: "Aktivieren Sie ihren Account"
     }
 }
 

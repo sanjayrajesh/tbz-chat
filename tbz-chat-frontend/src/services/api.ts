@@ -1,8 +1,16 @@
 import axios from 'axios';
 import { getAuthToken } from '../redux/auth/authReducer';
 
+declare global {
+    interface Window {
+        _env_: {
+            REACT_APP_BASE_URL?: string
+        }
+    }
+}
+
 const api = axios.create({
-    baseURL: 'http://172.20.10.2:8080'
+    baseURL: process.env.NODE_ENV === "production" ? window._env_.REACT_APP_BASE_URL : process.env.REACT_APP_BASE_URL
 })
 
 api.interceptors.request.use(

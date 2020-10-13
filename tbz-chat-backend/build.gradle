@@ -5,6 +5,9 @@ plugins {
     id 'war'
 }
 
+group = 'ch.tbz'
+version = '1.0.0'
+
 sourceCompatibility = '11'
 
 configurations {

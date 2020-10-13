@@ -1,0 +1,25 @@
+version: '3'
+services:
+  database:
+    image: postgres:11-alpine
+    container_name: tbz-chat-database
+    ports:
+      - 5431:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tbz_chat
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_BASE_URL: 'http://localhost/api'
+    container_name: tbz-chat-app
+    ports:
+      - 80:8080
+    depends_on:
+      - database
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://database:5432/tbz_chat'
+      INVITATION_BASE_URL: 'http://localhost/activate-account'

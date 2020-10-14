@@ -26,7 +26,7 @@ const App = () => {
             <LanguageContextProvider>
                 <BrowserRouter>
                     <Switch>
-                        <Route path="/test" component={TestPage} />
+                        <Route secure path="/test" component={TestPage} />
                         <Route path="/login" component={LoginPage} />
                         <Route
                             path="/sign-up"

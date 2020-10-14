@@ -8,6 +8,7 @@ import ch.tbz.chat.domain.service.InvitationService;
 import ch.tbz.chat.domain.service.UserService;
 import ch.tbz.chat.domain.service.VerificationTokenService;
 import ch.tbz.chat.exception.ConflictException;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,13 +25,15 @@ public class UserServiceImpl extends CrudServiceImpl<User, UserRepository> imple
     private final BCryptPasswordEncoder passwordEncoder;
     private final InvitationService invitationService;
     private final VerificationTokenService verificationTokenService;
+    private final Logger logger;
 
     @Autowired
-    public UserServiceImpl(UserRepository repository, BCryptPasswordEncoder passwordEncoder, InvitationService invitationService, VerificationTokenService verificationTokenService) {
+    public UserServiceImpl(UserRepository repository, BCryptPasswordEncoder passwordEncoder, InvitationService invitationService, VerificationTokenService verificationTokenService, Logger logger) {
         super(repository);
         this.passwordEncoder = passwordEncoder;
         this.invitationService = invitationService;
         this.verificationTokenService = verificationTokenService;
+        this.logger = logger;
     }
 
     @Override
@@ -93,5 +96,17 @@ public class UserServiceImpl extends CrudServiceImpl<User, UserRepository> imple
         } else {
             throw new ConflictException("Incorrect password");
         }
+    }
+
+    @Override
+    public Collection<User> search(String query) {
+
+        logger.debug("======================================= Query: {} ===========================================", query);
+
+        if(query.isBlank()) {
+            query = null;
+        }
+
+        return repository.findAllByEmailOrUsername(query);
     }
 }

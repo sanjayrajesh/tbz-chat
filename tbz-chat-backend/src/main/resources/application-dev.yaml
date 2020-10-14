@@ -25,3 +25,7 @@ mail:
 invitation:
     base-url: http://localhost:3000/activate-account
     subject: Welcome to TBZ-Chat
+logging:
+    level:
+        org.hibernate.SQL: DEBUG
+        org.hibernate.type: TRACE

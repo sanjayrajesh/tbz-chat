@@ -1,6 +1,6 @@
 import { InputLabelProps as MuiInputLabelProps, makeStyles, OutlinedInputProps, TextField, TextFieldProps } from '@material-ui/core'
 import clsx from 'clsx';
-import React from 'react'
+import React, { forwardRef } from 'react'
 
 type StyledTextFieldProps = Omit<TextFieldProps, "variant" | "color"> & {
     readOnly?: boolean;
@@ -32,7 +32,7 @@ const useStyle = makeStyles(theme => {
     }
 }, {name: "TextField"});
 
-const StyledTextField = (props: StyledTextFieldProps) => {
+const StyledTextField = forwardRef<HTMLDivElement, StyledTextFieldProps>((props: StyledTextFieldProps, ref) => {
 
     const {className, readOnly, InputLabelProps, InputProps, ...rest} = props;
     const classes = useStyle();
@@ -48,9 +48,9 @@ const StyledTextField = (props: StyledTextFieldProps) => {
     }
 
     return (
-        <TextField {...rest} variant="outlined" color="primary" className={clsx({[classes.readonly]: readOnly})} classes={{root: classes.root}} InputLabelProps={_InputLabelProps} InputProps={_InputProps} />
+        <TextField {...rest} ref={ref} variant="outlined" color="primary" className={clsx({[classes.readonly]: readOnly})} classes={{root: classes.root}} InputLabelProps={_InputLabelProps} InputProps={_InputProps} />
     )
-}
+})
 
 StyledTextField.defaultProps = {
     fullWidth: true,

@@ -1,4 +1,5 @@
 import Role from "../models/Role";
+import User from "../models/User";
 import api from "./api";
 
 export interface CreateUserRequest {
@@ -39,9 +40,12 @@ const create = (user: CreateUserRequest) =>
 
 const getOwn = () => api.get<UserResponse>("/users/own");
 
+const search = (query: string, excludeChatId?: string) => api.get<User[]>("/users/search", {params: {q: query, excludeChatId}})
+
 const UserService = {
     create,
-    getOwn
+    getOwn,
+    search
 };
 
 export default UserService;

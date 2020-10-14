@@ -4,6 +4,7 @@ import ch.tbz.chat.domain.datatransfer.MappingStrategy;
 import ch.tbz.chat.domain.datatransfer.UpdatePasswordDTO;
 import ch.tbz.chat.domain.datatransfer.user.UserDTO;
 import ch.tbz.chat.domain.datatransfer.user.UserMapper;
+import ch.tbz.chat.domain.datatransfer.user.UserMappingStrategyFactory;
 import ch.tbz.chat.domain.model.User;
 import ch.tbz.chat.domain.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/users")
@@ -19,11 +21,13 @@ public class UserController {
 
     private final UserService userService;
     private final MappingStrategy<UserDTO, User> userMappingStrategy;
+    private final UserMappingStrategyFactory userMappingStrategyFactory;
     private final UserMapper userMapper;
 
-    public UserController(UserService userService, MappingStrategy<UserDTO, User> userMappingStrategy, UserMapper userMapper) {
+    public UserController(UserService userService, MappingStrategy<UserDTO, User> userMappingStrategy, UserMappingStrategyFactory userMappingStrategyFactory, UserMapper userMapper) {
         this.userService = userService;
         this.userMappingStrategy = userMappingStrategy;
+        this.userMappingStrategyFactory = userMappingStrategyFactory;
         this.userMapper = userMapper;
     }
 
@@ -37,6 +41,15 @@ public class UserController {
     @GetMapping("/own")
     public ResponseEntity<UserDTO> getAuthenticated(@AuthenticationPrincipal(expression = "user") User user) {
         return new ResponseEntity<>(userMappingStrategy.map(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Collection<? extends UserDTO>> search(@RequestParam("q") String query, @RequestParam(required = false) String excludeChatId) {
+        Collection<User> users = userService.search(query);
+
+        MappingStrategy<UserDTO, User> mappingStrategy = userMappingStrategyFactory.getStrategy();
+
+        return new ResponseEntity<>(mappingStrategy.map(users), HttpStatus.OK);
     }
 
     @PutMapping("/own/password")

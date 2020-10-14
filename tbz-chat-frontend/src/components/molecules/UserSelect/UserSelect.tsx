@@ -1,25 +1,27 @@
 import {
-    Box,
     Checkbox,
     Chip,
     ClickAwayListener,
-    ListItemIcon,
+    List,
+    ListItem,
+    ListItemSecondaryAction,
     ListItemText,
     makeStyles,
-    MenuItem,
     Popper,
 } from "@material-ui/core";
 import { useField } from "formik";
 import React, {
-    KeyboardEvent,
+    ChangeEvent,
+    FocusEvent,
+    useCallback,
     useEffect,
-    useLayoutEffect,
+    useMemo,
     useReducer,
-    useRef,
     useState,
 } from "react";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import UserService from "../../../services/UserService";
+import useRenderCount from "../../../util/hooks/useRenderCount";
 import StyledTextField from "../../atoms/input/StyledTextField";
 import { TextFieldProps } from "../../atoms/input/TextField";
 import Paper from "../../atoms/Paper";
@@ -27,14 +29,12 @@ import {
     displayQueryResult,
     initState,
     selectUser,
+    unselectLastUser,
     unselectUser,
     userSelectReducer,
 } from "./userSelectReducer";
 
-type UserSelectProps = Pick<
-    TextFieldProps,
-    "className" | "label" | "name" | "placeholder"
->;
+type UserSelectProps = Pick<TextFieldProps, "className" | "label" | "name">;
 
 const useStyle = makeStyles(
     (theme) => ({
@@ -44,55 +44,166 @@ const useStyle = makeStyles(
         },
         popper: {
             zIndex: theme.zIndex.modal,
-            width: "100%",
+        },
+        listItem: {
+            "&.MuiListItem-secondaryAction": {
+                paddingLeft: theme.spacing(6),
+                paddingRight: 0,
+            },
+        },
+        listItemSecondaryAction: {
+            left: theme.spacing(1),
+            right: "auto",
+        },
+        listItemText: {},
+        textField: {
+            "& .MuiInputBase-root": {
+                display: "flex",
+                flexWrap: "wrap",
+                padding: theme.spacing(1.5, "14px"),
+                "& .MuiInputBase-input": {
+                    flexGrow: 1,
+                    minWidth: "min-content",
+                    width: 0,
+                    padding: "6.5px 0",
+                },
+            },
+        },
+        selectedUser: {
+            paddingRight: theme.spacing(1),
         },
     }),
     { name: "UserSelect" }
 );
 
 const UserSelect = (props: UserSelectProps) => {
-    const { name, className, label, placeholder } = props;
+
+    useRenderCount("UserSelect");
+
+    const { name, className, label } = props;
     const classes = useStyle();
-    const [field, meta, helpers] = useField(name);
-    const [query, setQuery] = useState("");
+    const [field,, helpers] = useField(name);
     const [state, dispatch] = useReducer(
         userSelectReducer,
         field.value,
         initState
     );
-    const inputRef = useRef<HTMLDivElement>(null);
-    const [anchorEl, setAnchorEl] = useState<any>(null);
+    const [query, setQuery] = useState("");
     const [focused, setFocused] = useState(false);
+    const open = useMemo(() => Object.keys(state.displayed).length > 0, [
+        state.displayed,
+    ]);
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+    const [inputRef, setInputRef] = useState<HTMLDivElement | null>(null);
 
-    const handleChangeQuery = (e: any) => {
-        setQuery(e.target.value);
-    };
+    const handleQueryChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            setQuery(e.target.value);
+        },
+        []
+    );
 
-    const handleSearch = (key: string, e: KeyboardEvent) => {
-        console.log(e);
+    const handleClear = useCallback(() => {
+        setQuery("");
+        dispatch(displayQueryResult([]));
+    }, []);
 
-        if (query.replace(/ /g, "").length > 0) {
-            UserService.search(query).then((res) => {
-                dispatch(displayQueryResult(res.data));
+    const handleBackspace = useCallback(() => {
+        if(!query) {
+            dispatch(unselectLastUser());
+        }
+    }, [query]);
+
+    const handleFocus = useCallback((e: any) => {
+        setFocused(true);
+    }, []);
+
+    const handleClickAway = useCallback(
+        (e: any) => {
+            setFocused(false);
+            handleClear();
+            field.onBlur({
+                ...e,
+                target: {
+                    ...e.target,
+                    name,
+                },
             });
-        }
-    };
+        },
+        // eslint-disable-next-line
+        [name, handleClear]
+    );
 
-    const selectHandler = (id: string, close?: boolean) => (e: any) => {
-        inputRef.current?.focus();
-        dispatch(selectUser(id));
+    const handleTextFieldBlur = useCallback(
+        (e: FocusEvent) => {
+            if (!open) {
+                handleClickAway(e);
+            }
+        },
+        [open, handleClickAway]
+    );
 
-        if(close) {
-            handleBlur(e);
-        } else {
-            e.preventDefault();
-        }
-    };
+    const getSelectHandler = useCallback(
+        (id: string, clearOnSelect: boolean) => (e: any) => {
+            dispatch(selectUser(id));
 
-    const unselectHandler = (id: string) => () => {
-        inputRef.current?.focus();
-        dispatch(unselectUser(id));
-    };
+            if (clearOnSelect) {
+                handleClear();
+            }
+
+            inputRef?.focus();
+        },
+        [handleClear, inputRef]
+    );
+
+    const getDeleteHandler = useCallback(
+        (id: string) => (e: any) => {
+            dispatch(unselectUser(id));
+
+            inputRef?.focus();
+        },
+        [inputRef]
+    );
+
+    const displayedUsers = useMemo(
+        () =>
+            Object.values(state.displayed).map((user) => (
+                <ListItem
+                    className={classes.listItem}
+                    key={user.id}
+                    button
+                    onClick={getSelectHandler(user.id, true)}
+                >
+                    <ListItemText
+                        className={classes.listItemText}
+                        primary={user.username || user.email}
+                        secondary={user.username ? user.email : undefined}
+                    />
+                    <ListItemSecondaryAction
+                        className={classes.listItemSecondaryAction}
+                    >
+                        <Checkbox
+                            checked={user.selected}
+                            onChange={getSelectHandler(user.id, false)}
+                        />
+                    </ListItemSecondaryAction>
+                </ListItem>
+            )),
+        [state, classes, getSelectHandler]
+    );
+
+    const selectedUsers = useMemo(
+        () =>
+            Object.values(state.selected).map((user) => (
+                <div key={user.id} className={classes.selectedUser}>
+                    <Chip
+                        label={user.username || user.email}
+                        onDelete={getDeleteHandler(user.id)}
+                    />
+                </div>
+            )),
+        [state, getDeleteHandler, classes]
+    );
 
     useEffect(() => {
         let isMounted = true;
@@ -104,86 +215,62 @@ const UserSelect = (props: UserSelectProps) => {
                 }
             });
         } else {
-            dispatch(displayQueryResult([]));
+            handleClear();
         }
 
         return () => {
             isMounted = false;
         };
-    }, [query]);
+    }, [query, handleClear]);
 
-    const handleBlur = (e: any) => {
-        setFocused(false);
-        setQuery("");
-        field.onBlur(e);
-    };
+    useEffect(() => {
+        helpers.setValue(Object.values(state.selected));
+        // eslint-disable-next-line
+    }, [state.hash])
 
     return (
-        <ClickAwayListener onClickAway={handleBlur}>
-            <Box width={1} className={className}>
-                <KeyboardEventHandler
-                    handleKeys={["enter"]}
-                    onKeyEvent={handleSearch}
-                >
-                    <StyledTextField
-                        onClick={(e) => {
-                            setAnchorEl(e.currentTarget);
-                            setFocused(true);
+        <ClickAwayListener onClickAway={handleClickAway}>
+            <KeyboardEventHandler handleKeys={["esc"]} onKeyEvent={handleClear}>
+                <div className={className}>
+                    <KeyboardEventHandler
+                        handleKeys={["backspace"]}
+                        onKeyEvent={handleBackspace}
+                    >
+                        <StyledTextField
+                            ref={setAnchorEl}
+                            label={label}
+                            inputRef={setInputRef}
+                            value={query}
+                            onChange={handleQueryChange}
+                            focused={focused}
+                            onFocus={handleFocus}
+                            onBlur={handleTextFieldBlur}
+                            InputProps={{
+                                startAdornment: selectedUsers,
+                            }}
+                            className={classes.textField}
+                        />
+                    </KeyboardEventHandler>
+                    <Popper
+                        open={focused && open}
+                        anchorEl={anchorEl}
+                        style={{
+                            width: anchorEl?.clientWidth,
                         }}
-                        inputRef={inputRef}
-                        placeholder={placeholder}
-                        label={label}
-                        value={query}
-                        onChange={handleChangeQuery}
-                        InputProps={{
-                            startAdornment: Object.values(
-                                state.selected
-                            ).map((user) => (
-                                <Chip
-                                    key={user.id}
-                                    label={user.username || user.email}
-                                    onDelete={unselectHandler(user.id)}
-                                />
-                            )),
-                        }}
-                        focused={focused}
-                        type="search"
-                    />
-                </KeyboardEventHandler>
-                <Popper
-                    open={Object.values(state.displayed).length > 0 && focused}
-                    anchorEl={anchorEl}
-                    placement="bottom-start"
-                    className={classes.popper}
-                    style={{
-                        width: anchorEl?.clientWidth,
-                    }}
-                    disablePortal
-                >
-                    <Paper padding={0} className={classes.paper}>
-                        {Object.values(state.displayed).map((user) => (
-                            <MenuItem
-                                dense
-                                key={user.id}
-                                button
-                                onClick={selectHandler(user.id, true)}
-                            >
-                                <ListItemIcon>
-                                    <Checkbox checked={user.selected} onClick={selectHandler(user.id)} />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={user.username || user.email}
-                                    secondary={
-                                        user.username ? user.email : undefined
-                                    }
-                                />
-                            </MenuItem>
-                        ))}
-                    </Paper>
-                </Popper>
-            </Box>
+                        className={classes.popper}
+                    >
+                        <Paper className={classes.paper} padding={0}>
+                            <List disablePadding dense>
+                                {displayedUsers}
+                            </List>
+                        </Paper>
+                    </Popper>
+                </div>
+            </KeyboardEventHandler>
         </ClickAwayListener>
     );
 };
+
+UserSelect.displayName = "UserSelect";
 
 export default UserSelect;

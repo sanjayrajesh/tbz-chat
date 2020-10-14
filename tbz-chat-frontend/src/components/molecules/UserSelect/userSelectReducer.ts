@@ -1,9 +1,11 @@
 import User from "../../../models/User";
 import EntityMap from "../../../util/EntityMap";
+import {v4 as uuid} from 'uuid';
 
 const DISPLAY_QUERY_RESULT = "DISPLAY_QUERY_RESULT";
 const SELECT_USER = "SELECT_USER";
 const UNSELECT_USER = "UNSELECT_USER";
+const UNSELECT_LAST_USER = 'UNSELECT_LAST_USER';
 
 type DisplayQueryResult = {
     type: typeof DISPLAY_QUERY_RESULT;
@@ -26,7 +28,11 @@ type UnselectUser = {
     };
 };
 
-export type UserSelectAction = DisplayQueryResult | SelectUser | UnselectUser;
+type UnselectLastUser = {
+    type: typeof UNSELECT_LAST_USER;
+}
+
+export type UserSelectAction = DisplayQueryResult | SelectUser | UnselectUser | UnselectLastUser;
 
 export const displayQueryResult = (users: User[]): UserSelectAction => ({
     type: DISPLAY_QUERY_RESULT,
@@ -49,6 +55,10 @@ export const unselectUser = (id: string): UserSelectAction => ({
     },
 });
 
+export const unselectLastUser = (): UserSelectAction => ({
+    type: UNSELECT_LAST_USER
+})
+
 export type UserSelectState = {
     displayed: {
         [id: string]: User & {
@@ -58,6 +68,7 @@ export type UserSelectState = {
     selected: {
         [id: string]: User;
     };
+    hash: string;
 };
 
 export const initState = (users: User[]): UserSelectState => {
@@ -68,6 +79,7 @@ export const initState = (users: User[]): UserSelectState => {
     return {
         displayed: {},
         selected,
+        hash: uuid()
     };
 };
 
@@ -112,6 +124,7 @@ const _selectUser = (state: UserSelectState, id: string): UserSelectState => {
     }
 
     return {
+        hash: uuid(),
         selected,
         displayed,
     };
@@ -127,10 +140,21 @@ const _unselectUser = (state: UserSelectState, id: string): UserSelectState => {
     }
 
     return {
+        hash: uuid(),
         selected,
         displayed,
     };
 };
+
+const _unselectLastUser = (state: UserSelectState): UserSelectState => {
+    const keys = Object.keys(state.selected);
+
+    if(keys.length > 0) {
+        return _unselectUser(state, keys[keys.length - 1]);
+    }
+
+    return state;
+}
 
 export const userSelectReducer = (
     state: UserSelectState,
@@ -143,6 +167,8 @@ export const userSelectReducer = (
             return _selectUser(state, action.payload.id);
         case UNSELECT_USER:
             return _unselectUser(state, action.payload.id);
+        case UNSELECT_LAST_USER:
+            return _unselectLastUser(state);
         default:
             return state;
     }

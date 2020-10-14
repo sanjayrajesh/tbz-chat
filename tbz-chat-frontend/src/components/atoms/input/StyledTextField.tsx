@@ -2,7 +2,7 @@ import { InputLabelProps as MuiInputLabelProps, makeStyles, OutlinedInputProps, 
 import clsx from 'clsx';
 import React, { forwardRef } from 'react'
 
-type StyledTextFieldProps = Omit<TextFieldProps, "variant" | "color"> & {
+export type StyledTextFieldProps = Omit<TextFieldProps, "variant" | "color"> & {
     readOnly?: boolean;
 }
 
@@ -33,7 +33,6 @@ const useStyle = makeStyles(theme => {
 }, {name: "TextField"});
 
 const StyledTextField = forwardRef<HTMLDivElement, StyledTextFieldProps>((props: StyledTextFieldProps, ref) => {
-
     const {className, readOnly, InputLabelProps, InputProps, ...rest} = props;
     const classes = useStyle();
 
@@ -48,7 +47,7 @@ const StyledTextField = forwardRef<HTMLDivElement, StyledTextFieldProps>((props:
     }
 
     return (
-        <TextField {...rest} ref={ref} variant="outlined" color="primary" className={clsx({[classes.readonly]: readOnly})} classes={{root: classes.root}} InputLabelProps={_InputLabelProps} InputProps={_InputProps} />
+        <TextField {...rest} ref={ref} variant="outlined" color="primary" className={clsx({[classes.readonly]: readOnly}, className)} classes={{root: classes.root}} InputLabelProps={_InputLabelProps} InputProps={_InputProps} />
     )
 })
 

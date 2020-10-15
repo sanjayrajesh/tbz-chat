@@ -11,19 +11,26 @@ export type UserState = EntityState<User>
 
 const initialState: UserState = createInitialState();
 
+const pureUser = (user: User): User => {
+    return {
+        id: user.id,
+        email: user.email,
+        username: user.username
+    }
+}
+
 const populateFromUserResponse = (state: UserState, response: UserResponse): UserState => {
 
     let byId: EntityMap<User> = {};
 
     response.chats.forEach(chat => {
-        chat.users.forEach(userResponse => {
-            const user: User = {
-                id: userResponse.id,
-                email: userResponse.email,
-                username: userResponse.username
-            }
+        chat.users.forEach(user => {
 
-            byId[user.id] = user;
+            byId[user.id] = pureUser(user);
+        })
+
+        chat.messages.forEach(message => {
+            byId[message.author.id] = pureUser(message.author);
         })
     })
 
@@ -38,15 +45,9 @@ const createChat = (state: UserState, chatResponse: ChatResponse): UserState => 
 
     let byId = {...state.byId};
 
-    chatResponse.users.forEach(userResponse => {
-        if(!byId[userResponse.id]) {
-            const user: User = {
-                id: userResponse.id,
-                email: userResponse.email,
-                username: userResponse.username
-            }
-
-            byId[user.id] = user;
+    chatResponse.users.forEach(user => {
+        if(!byId[user.id]) {
+            byId[user.id] = pureUser(user);
         }
     })
 

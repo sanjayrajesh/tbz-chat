@@ -5,7 +5,10 @@ import ch.tbz.chat.domain.datatransfer.MappingStrategyFactoryAdapter;
 import ch.tbz.chat.domain.datatransfer.user.UserDTO;
 import ch.tbz.chat.domain.datatransfer.userinchat.chat.UserInChatToChatMappingStrategyFactory;
 import ch.tbz.chat.domain.model.UserInChat;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserInChatToUserMappingStrategyFactoryImpl extends MappingStrategyFactoryAdapter<UserDTO, UserInChat, UserInChatToUserMappingConfiguration> implements UserInChatToUserMappingStrategyFactory {
 
     private final UserInChatToUserMapper mapper;
@@ -14,10 +17,6 @@ public class UserInChatToUserMappingStrategyFactoryImpl extends MappingStrategyF
     public UserInChatToUserMappingStrategyFactoryImpl(UserInChatToUserMapper mapper) {
         super(UserInChatToUserMappingConfiguration::new, mapper);
         this.mapper = mapper;
-    }
-
-    public void setChatMappingStrategyFactory(UserInChatToChatMappingStrategyFactory chatMappingStrategyFactory) {
-        this.chatMappingStrategyFactory = chatMappingStrategyFactory;
     }
 
     @Override
@@ -29,5 +28,10 @@ public class UserInChatToUserMappingStrategyFactoryImpl extends MappingStrategyF
         } else {
             return basicStrategy;
         }
+    }
+
+    @Autowired
+    public void setChatMappingStrategyFactory(UserInChatToChatMappingStrategyFactory chatMappingStrategyFactory) {
+        this.chatMappingStrategyFactory = chatMappingStrategyFactory;
     }
 }

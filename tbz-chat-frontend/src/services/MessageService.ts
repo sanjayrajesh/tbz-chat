@@ -1,18 +1,19 @@
 import Entity from "../models/Entity";
 import Message from "../models/Message";
+import User from "../models/User";
 import api from "./api";
 
 export interface MessageResponse extends Entity {
     timestamp: string;
     body: string;
-    authorId: string;
+    author: User;
 }
 
 export interface PostMessageRequest {
     body: string
 }
 
-export interface PostMessageResponse extends Message {
+export interface PostMessageResponse extends MessageResponse {
     chatId: string
 }
 

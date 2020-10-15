@@ -5,6 +5,7 @@ export const MAKE_ADMINISTRATOR = 'MAKE_ADMINISTRATOR'
 export const REMOVE_FROM_CHAT = 'REMOVE_FROM_CHAT'
 export const LEAVE_CHAT = 'LEAVE_CHAT'
 export const CREATE_CHAT = "CREATE_CHAT"
+export const ADD_USERS_TO_CHAT = "ADD_USERS_TO_CHAT"
 
 type SelectChat = {
     type: typeof SELECT_CHAT,

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: TBZ-Chat
   version: 1.0.0
-  description: 'API to create and use chat rooms'
+  description: API to create and use chat rooms
   contact: {}
 servers:
   - url: 'http://localhost:8080'
@@ -58,8 +58,15 @@ paths:
                               timestamp:
                                 type: string
                                 format: date-time
-                              authorId:
-                                type: string
+                              author:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  email:
+                                    type: string
+                                  username:
+                                    type: string
                         users:
                           type: array
                           items:
@@ -156,8 +163,15 @@ paths:
                               timestamp:
                                 type: string
                                 format: date-time
-                              authorId:
-                                type: string
+                              author:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  email:
+                                    type: string
+                                  username:
+                                    type: string
                         users:
                           type: array
                           items:
@@ -315,8 +329,15 @@ paths:
                     format: date-time
                   chatId:
                     type: string
-                  authorId:
-                    type: string
+                  '':
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      username:
+                        type: string
       requestBody:
         content:
           application/json:

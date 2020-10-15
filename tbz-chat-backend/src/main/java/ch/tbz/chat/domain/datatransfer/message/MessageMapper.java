@@ -20,11 +20,9 @@ public interface MessageMapper extends DTOMapper<MessageDTO, Message> {
     @Mapping(target = "chatId", source = "chat.id")
     MessageDTO.WithChatId withChatIdDTO(Message message);
 
-    @Mapping(target = "authorId", source = "author.id")
-    MessageDTO.WithAuthorId withAuthorIdDTO(Message message);
+    MessageDTO.WithAuthor withAuthorDTO(Message message);
 
     @Mapping(target = "chatId", source = "chat.id")
-    @Mapping(target = "authorId", source = "author.id")
     MessageDTO.Full fullDTO(Message message);
 
     Message message(MessageDTO messageDTO);

@@ -6,21 +6,19 @@ import ch.tbz.chat.domain.datatransfer.chat.ChatDTO;
 import ch.tbz.chat.domain.datatransfer.message.MessageMappingStrategyFactory;
 import ch.tbz.chat.domain.datatransfer.userinchat.user.UserInChatToUserMappingStrategyFactory;
 import ch.tbz.chat.domain.model.UserInChat;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserInChatToChatMappingStrategyFactoryImpl extends MappingStrategyFactoryAdapter<ChatDTO, UserInChat, UserInChatToChatMappingConfiguration> implements UserInChatToChatMappingStrategyFactory {
 
     private final UserInChatToChatMapper mapper;
-    private final MessageMappingStrategyFactory messageMappingStrategyFactory;
+    private MessageMappingStrategyFactory messageMappingStrategyFactory;
     private UserInChatToUserMappingStrategyFactory userMappingStrategyFactory;
 
-    public UserInChatToChatMappingStrategyFactoryImpl(UserInChatToChatMapper mapper, MessageMappingStrategyFactory messageMappingStrategyFactory) {
+    public UserInChatToChatMappingStrategyFactoryImpl(UserInChatToChatMapper mapper) {
         super(UserInChatToChatMappingConfiguration::new, mapper);
         this.mapper = mapper;
-        this.messageMappingStrategyFactory = messageMappingStrategyFactory;
-    }
-
-    public void setUserMappingStrategyFactory(UserInChatToUserMappingStrategyFactory userMappingStrategyFactory) {
-        this.userMappingStrategyFactory = userMappingStrategyFactory;
     }
 
     @Override
@@ -34,5 +32,15 @@ public class UserInChatToChatMappingStrategyFactoryImpl extends MappingStrategyF
         } else {
             return basicStrategy;
         }
+    }
+
+    @Autowired
+    public void setMessageMappingStrategyFactory(MessageMappingStrategyFactory messageMappingStrategyFactory) {
+        this.messageMappingStrategyFactory = messageMappingStrategyFactory;
+    }
+
+    @Autowired
+    public void setUserMappingStrategyFactory(UserInChatToUserMappingStrategyFactory userMappingStrategyFactory) {
+        this.userMappingStrategyFactory = userMappingStrategyFactory;
     }
 }

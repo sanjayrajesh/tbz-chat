@@ -6,10 +6,20 @@ import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
 import { RootAction } from "../rootReducer";
 import moment from 'moment';
 import { POST_MESSAGE } from "./messageActionTypes";
+import { MessageResponse } from "../../services/MessageService";
 
 type MessageState = EntityState<Message>
 
 const initialState: MessageState = createInitialState();
+
+const pureMessage = (message: MessageResponse): Message => {
+    return {
+        id: message.id,
+        authorId: message.author.id,
+        body: message.body,
+        timestamp: moment(message.timestamp)
+    }
+}
 
 const populateFromUserResponse = (state: MessageState, response: UserResponse): MessageState => {
 
@@ -17,12 +27,21 @@ const populateFromUserResponse = (state: MessageState, response: UserResponse): 
 
     response.chats.forEach(chat => {
         chat.messages.forEach(message => {
-            byId[message.id] = {
-                ...message,
-                timestamp: moment(message.timestamp)
-            }
+            byId[message.id] = pureMessage(message);
         })
     })
+
+    return {
+        ...state,
+        byId,
+        allIds: Object.keys(byId)
+    }
+}
+
+const postMessage = (state: MessageState, message: MessageResponse): MessageState => {
+    let byId = {...state.byId};
+
+    byId[message.id] = pureMessage(message);
 
     return {
         ...state,
@@ -37,20 +56,7 @@ const messageReducer = (state: MessageState | undefined = initialState, action: 
         case LOGIN_SUCCESS:
             return populateFromUserResponse(state, action.payload.response.data)
         case POST_MESSAGE:
-            const message = action.payload.message
-
-            let byId = state.byId;
-
-            byId[message.id] = {
-                ...message,
-                timestamp: moment(message.timestamp)
-            }
-
-            return {
-                ...state,
-                byId,
-                allIds: Object.keys(byId)
-            }
+            return postMessage(state, action.payload.message);
         default:
             return state;
     }

@@ -12,15 +12,16 @@ import ch.tbz.chat.domain.model.User;
 import ch.tbz.chat.domain.model.UserInChat;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 @Configuration
-public class MappingStrategyBeans {
+public class MappingStrategyConfiguration {
 
     @Bean
     public MappingStrategy<ChatDTO, UserInChat> chatMappingStrategy(UserInChatToChatMappingStrategyFactory chatMappingStrategyFactory) {
         return chatMappingStrategyFactory.getStrategy(
                 conf -> conf.withMessages(
-                        messageConf -> messageConf.withAuthorId()
+                        messageConf -> messageConf.withAuthor()
                 ).withUsers(
                         userConf -> userConf.withRole()
                 )
@@ -32,7 +33,7 @@ public class MappingStrategyBeans {
         return userMappingStrategyFactory.getStrategy(
                 conf -> conf.withChats(
                         chatConf -> chatConf.withMessages(
-                                messageConf -> messageConf.withAuthorId()
+                                messageConf -> messageConf.withAuthor()
                         ).withUsers(
                                 userConf -> userConf.withRole()
                         )
@@ -50,7 +51,7 @@ public class MappingStrategyBeans {
     @Bean
     public MappingStrategy<MessageDTO, Message> messageMappingStrategy(MessageMappingStrategyFactory messageMappingStrategyFactory) {
         return messageMappingStrategyFactory.getStrategy(
-                conf -> conf.withChatId().withAuthorId()
+                conf -> conf.withChatId().withAuthor()
         );
     }
 

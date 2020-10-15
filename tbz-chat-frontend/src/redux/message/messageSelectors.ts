@@ -25,7 +25,7 @@ export const getSelectedChatMessages = createSelector(
 
                 return {
                     ...message,
-                    authorName: author.username || author.email
+                    authorName: author ? author.username || author.email : undefined
                 }
             })
     }

@@ -1,15 +1,15 @@
 import { Moment } from "moment";
 import { createSelector } from "reselect";
-import Chat from "../../models/Chat";
 import Entity from "../../models/Entity";
 import Role from "../../models/Role";
 import User from "../../models/User";
 import { momentCompare } from "../../util/dateTime";
 import Selector from "../../util/Selector";
 import SelectorCreator from "../../util/SelectorCreator";
+import { RootState } from "../rootReducer";
 
 export interface LatestMessage {
-    authorName: string;
+    authorName?: string;
     timestamp: Moment;
     body: string;
 }
@@ -36,7 +36,7 @@ const getLatestMessage: SelectorCreator<LatestMessage | undefined, string[]> = (
 
         return {
             ...message,
-            authorName: author.username || author.email,
+            authorName: author ? author.username || author.email : undefined,
         };
     }
 };
@@ -82,12 +82,9 @@ export const getFilteredChatPreviews = createSelector(
     (previews) => previews
 );
 
-const _getSelectedChat: Selector<Chat | undefined> = (state) =>
-    state.chats.selected ? state.chats.byId[state.chats.selected] : undefined;
-
 export const getSelectedChat = createSelector(
-    [_getSelectedChat],
-    (chat) => chat
+    [(state: RootState) => state.chats.selected, state => state.chats.byId],
+    (selectedId, byId) => selectedId ? byId[selectedId] : undefined
 );
 
 export interface UserInChat extends User {

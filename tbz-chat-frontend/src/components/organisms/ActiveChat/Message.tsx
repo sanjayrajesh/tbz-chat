@@ -40,7 +40,7 @@ const useStyle = makeStyles((theme) => ({
 type MessageProps = {
     message: {
         body: string;
-        authorName: string;
+        authorName?: string;
         timestamp: Moment;
         authorId: string;
     };

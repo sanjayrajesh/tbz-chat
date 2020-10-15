@@ -1,6 +1,7 @@
 package ch.tbz.chat.domain.datatransfer.message;
 
 import ch.tbz.chat.domain.datatransfer.DTO;
+import ch.tbz.chat.domain.datatransfer.user.UserDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,14 +19,14 @@ public class MessageDTO extends DTO {
     }
 
     @Getter @Setter
-    public static class WithAuthorId extends MessageDTO {
-        protected String authorId;
+    public static class WithAuthor extends MessageDTO {
+        protected UserDTO author;
     }
 
     @Getter @Setter
     public static class Full extends MessageDTO {
         protected String chatId;
-        protected String authorId;
+        protected UserDTO author;
     }
 
 }

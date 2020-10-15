@@ -17,20 +17,16 @@ import React, {
     useEffect,
     useMemo,
     useReducer,
-    useState,
+    useRef,
 } from "react";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import UserService from "../../../services/UserService";
-import useRenderCount from "../../../util/hooks/useRenderCount";
 import StyledTextField from "../../atoms/input/StyledTextField";
 import { TextFieldProps } from "../../atoms/input/TextField";
 import Paper from "../../atoms/Paper";
+import { backspace, blur, changeQuery, clearQuery, clickAway, displayQueryResult, focus, selectUser, unselectUser } from "./actions";
 import {
-    displayQueryResult,
     initState,
-    selectUser,
-    unselectLastUser,
-    unselectUser,
     userSelectReducer,
 } from "./userSelectReducer";
 
@@ -78,8 +74,6 @@ const useStyle = makeStyles(
 
 const UserSelect = (props: UserSelectProps) => {
 
-    useRenderCount("UserSelect");
-
     const { name, className, label } = props;
     const classes = useStyle();
     const [field,, helpers] = useField(name);
@@ -88,40 +82,31 @@ const UserSelect = (props: UserSelectProps) => {
         field.value,
         initState
     );
-    const [query, setQuery] = useState("");
-    const [focused, setFocused] = useState(false);
-    const open = useMemo(() => Object.keys(state.displayed).length > 0, [
-        state.displayed,
-    ]);
-    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
-    const [inputRef, setInputRef] = useState<HTMLDivElement | null>(null);
+    const anchorEl = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleQueryChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
-            setQuery(e.target.value);
+            dispatch(changeQuery(e.target.value));
         },
         []
     );
 
     const handleClear = useCallback(() => {
-        setQuery("");
-        dispatch(displayQueryResult([]));
+        dispatch(clearQuery());
     }, []);
 
     const handleBackspace = useCallback(() => {
-        if(!query) {
-            dispatch(unselectLastUser());
-        }
-    }, [query]);
+        dispatch(backspace());
+    }, []);
 
-    const handleFocus = useCallback((e: any) => {
-        setFocused(true);
+    const handleFocus = useCallback(() => {
+        dispatch(focus());
     }, []);
 
     const handleClickAway = useCallback(
         (e: any) => {
-            setFocused(false);
-            handleClear();
+            dispatch(clickAway());
             field.onBlur({
                 ...e,
                 target: {
@@ -131,38 +116,36 @@ const UserSelect = (props: UserSelectProps) => {
             });
         },
         // eslint-disable-next-line
-        [name, handleClear]
+        [name]
     );
 
     const handleTextFieldBlur = useCallback(
         (e: FocusEvent) => {
-            if (!open) {
+            if(!state.open) {
                 handleClickAway(e);
+            } else {
+                dispatch(blur());
             }
         },
-        [open, handleClickAway]
+        [state.open, handleClickAway]
     );
 
     const getSelectHandler = useCallback(
         (id: string, clearOnSelect: boolean) => (e: any) => {
-            dispatch(selectUser(id));
+            dispatch(selectUser(id, clearOnSelect));
 
-            if (clearOnSelect) {
-                handleClear();
-            }
-
-            inputRef?.focus();
+            inputRef.current?.focus();
         },
-        [handleClear, inputRef]
+        []
     );
 
     const getDeleteHandler = useCallback(
-        (id: string) => (e: any) => {
+        (id: string) => () => {
             dispatch(unselectUser(id));
 
-            inputRef?.focus();
+            inputRef.current?.focus();
         },
-        [inputRef]
+        []
     );
 
     const displayedUsers = useMemo(
@@ -189,7 +172,7 @@ const UserSelect = (props: UserSelectProps) => {
                     </ListItemSecondaryAction>
                 </ListItem>
             )),
-        [state, classes, getSelectHandler]
+        [state.displayed, classes, getSelectHandler]
     );
 
     const selectedUsers = useMemo(
@@ -202,31 +185,33 @@ const UserSelect = (props: UserSelectProps) => {
                     />
                 </div>
             )),
-        [state, getDeleteHandler, classes]
+        [state.selected, getDeleteHandler, classes]
     );
 
     useEffect(() => {
         let isMounted = true;
 
-        if (query.replace(/ /g, "").length > 0) {
-            UserService.search(query).then((res) => {
+        if (state.query.replace(/ /g, "").length > 0) {
+            UserService.search(state.query).then((res) => {
                 if (isMounted) {
                     dispatch(displayQueryResult(res.data));
                 }
             });
-        } else {
-            handleClear();
         }
 
         return () => {
             isMounted = false;
         };
-    }, [query, handleClear]);
+    }, [state.query]);
 
     useEffect(() => {
         helpers.setValue(Object.values(state.selected));
         // eslint-disable-next-line
-    }, [state.hash])
+    }, [state.selected])
+
+    useEffect(() => {
+        console.log(state);
+    }, [state]);
 
     return (
         <ClickAwayListener onClickAway={handleClickAway}>
@@ -237,12 +222,12 @@ const UserSelect = (props: UserSelectProps) => {
                         onKeyEvent={handleBackspace}
                     >
                         <StyledTextField
-                            ref={setAnchorEl}
+                            ref={anchorEl}
                             label={label}
-                            inputRef={setInputRef}
-                            value={query}
+                            inputRef={inputRef}
+                            value={state.query}
                             onChange={handleQueryChange}
-                            focused={focused}
+                            focused={state.focused}
                             onFocus={handleFocus}
                             onBlur={handleTextFieldBlur}
                             InputProps={{
@@ -252,10 +237,10 @@ const UserSelect = (props: UserSelectProps) => {
                         />
                     </KeyboardEventHandler>
                     <Popper
-                        open={focused && open}
-                        anchorEl={anchorEl}
+                        open={state.focused && state.open}
+                        anchorEl={anchorEl.current}
                         style={{
-                            width: anchorEl?.clientWidth,
+                            width: anchorEl.current?.clientWidth,
                         }}
                         className={classes.popper}
                     >

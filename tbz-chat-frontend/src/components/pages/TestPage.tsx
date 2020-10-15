@@ -1,10 +1,8 @@
 import { Box, Container } from "@material-ui/core";
 import { Form, Formik, FormikProps } from "formik";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import User from "../../models/User";
-import StyledTextField, { StyledTextFieldProps } from "../atoms/input/StyledTextField";
 import UserSelect from "../molecules/UserSelect/UserSelect";
-import withRenderCount from "../withRenderCount";
 
 type Values = {
     users: User[];

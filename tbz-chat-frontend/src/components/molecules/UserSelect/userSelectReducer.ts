@@ -1,63 +1,17 @@
 import User from "../../../models/User";
 import EntityMap from "../../../util/EntityMap";
-import {v4 as uuid} from 'uuid';
-
-const DISPLAY_QUERY_RESULT = "DISPLAY_QUERY_RESULT";
-const SELECT_USER = "SELECT_USER";
-const UNSELECT_USER = "UNSELECT_USER";
-const UNSELECT_LAST_USER = 'UNSELECT_LAST_USER';
-
-type DisplayQueryResult = {
-    type: typeof DISPLAY_QUERY_RESULT;
-    payload: {
-        users: User[];
-    };
-};
-
-type SelectUser = {
-    type: typeof SELECT_USER;
-    payload: {
-        id: string;
-    };
-};
-
-type UnselectUser = {
-    type: typeof UNSELECT_USER;
-    payload: {
-        id: string;
-    };
-};
-
-type UnselectLastUser = {
-    type: typeof UNSELECT_LAST_USER;
-}
-
-export type UserSelectAction = DisplayQueryResult | SelectUser | UnselectUser | UnselectLastUser;
-
-export const displayQueryResult = (users: User[]): UserSelectAction => ({
-    type: DISPLAY_QUERY_RESULT,
-    payload: {
-        users,
-    },
-});
-
-export const selectUser = (id: string): UserSelectAction => ({
-    type: SELECT_USER,
-    payload: {
-        id,
-    },
-});
-
-export const unselectUser = (id: string): UserSelectAction => ({
-    type: UNSELECT_USER,
-    payload: {
-        id,
-    },
-});
-
-export const unselectLastUser = (): UserSelectAction => ({
-    type: UNSELECT_LAST_USER
-})
+import {
+    BACKSPACE,
+    BLUR,
+    CHANGE_QUERY,
+    CLEAR_QUERY,
+    CLICK_AWAY,
+    DISPLAY_QUERY_RESULT,
+    FOCUS,
+    SELECT_USER,
+    UNSELECT_USER,
+    UserSelectAction,
+} from "./actionTypes";
 
 export type UserSelectState = {
     displayed: {
@@ -68,7 +22,9 @@ export type UserSelectState = {
     selected: {
         [id: string]: User;
     };
-    hash: string;
+    open: boolean;
+    focused: boolean;
+    query: string;
 };
 
 export const initState = (users: User[]): UserSelectState => {
@@ -79,15 +35,17 @@ export const initState = (users: User[]): UserSelectState => {
     return {
         displayed: {},
         selected,
-        hash: uuid()
+        open: false,
+        focused: false,
+        query: "",
     };
 };
 
-const _displayQueryResult = (
+const displayQueryResult = (
     state: UserSelectState,
     users: User[]
 ): UserSelectState => {
-    let displayed: EntityMap<User & {selected: boolean}> = {}
+    let displayed: EntityMap<User & { selected: boolean }> = {};
 
     users.forEach((user) => {
         if (state.selected[user.id]) {
@@ -106,12 +64,17 @@ const _displayQueryResult = (
     return {
         ...state,
         displayed,
+        open: users.length > 0,
     };
 };
 
-const _selectUser = (state: UserSelectState, id: string): UserSelectState => {
-    let selected = state.selected;
-    let displayed = state.displayed;
+const selectUser = (
+    state: UserSelectState,
+    id: string,
+    close: boolean
+): UserSelectState => {
+    let selected = { ...state.selected };
+    let displayed = { ...state.displayed };
 
     if (selected[id]) {
         delete selected[id];
@@ -124,15 +87,17 @@ const _selectUser = (state: UserSelectState, id: string): UserSelectState => {
     }
 
     return {
-        hash: uuid(),
+        ...state,
+        open: !close,
+        query: close ? "" : state.query,
         selected,
         displayed,
     };
 };
 
-const _unselectUser = (state: UserSelectState, id: string): UserSelectState => {
-    let selected = state.selected;
-    let displayed = state.displayed;
+const unselectUser = (state: UserSelectState, id: string): UserSelectState => {
+    let selected = { ...state.selected };
+    let displayed = { ...state.displayed };
 
     delete selected[id];
     if (displayed[id]) {
@@ -140,21 +105,75 @@ const _unselectUser = (state: UserSelectState, id: string): UserSelectState => {
     }
 
     return {
-        hash: uuid(),
+        ...state,
+        focused: true,
         selected,
         displayed,
     };
 };
 
-const _unselectLastUser = (state: UserSelectState): UserSelectState => {
-    const keys = Object.keys(state.selected);
+const focus = (state: UserSelectState): UserSelectState => {
+    return {
+        ...state,
+        focused: true,
+    };
+};
 
-    if(keys.length > 0) {
-        return _unselectUser(state, keys[keys.length - 1]);
+const blur = (state: UserSelectState): UserSelectState => {
+    if (!state.open) {
+        return clickAway(state);
+    } else {
+        return state;
+    }
+};
+
+const clickAway = (state: UserSelectState): UserSelectState => {
+    if(state.focused) {
+        return {
+            ...state,
+            focused: false,
+            open: false,
+            query: "",
+            displayed: {},
+        };
+    } else return state;
+};
+
+const changeQuery = (
+    state: UserSelectState,
+    query: string
+): UserSelectState => {
+    return {
+        ...state,
+        query,
+        displayed: query.replace(/ /g, "").length > 0 ? state.displayed : {},
+    };
+};
+
+const clearQuery = (state: UserSelectState): UserSelectState => {
+    if (state.query.replace(/ /g, "").length > 0) {
+        return changeQuery(state, "");
+    } else {
+        return {
+            ...state,
+            query: "",
+            displayed: {},
+            open: false,
+        };
+    }
+};
+
+const backspace = (state: UserSelectState): UserSelectState => {
+    if (!state.query) {
+        const keys = Object.keys(state.selected);
+
+        if (keys.length > 0) {
+            return unselectUser(state, keys[keys.length - 1]);
+        }
     }
 
     return state;
-}
+};
 
 export const userSelectReducer = (
     state: UserSelectState,
@@ -162,13 +181,23 @@ export const userSelectReducer = (
 ): UserSelectState => {
     switch (action.type) {
         case DISPLAY_QUERY_RESULT:
-            return _displayQueryResult(state, action.payload.users);
+            return displayQueryResult(state, action.payload.users);
         case SELECT_USER:
-            return _selectUser(state, action.payload.id);
+            return selectUser(state, action.payload.id, action.payload.close);
         case UNSELECT_USER:
-            return _unselectUser(state, action.payload.id);
-        case UNSELECT_LAST_USER:
-            return _unselectLastUser(state);
+            return unselectUser(state, action.payload.id);
+        case FOCUS:
+            return focus(state);
+        case BLUR:
+            return blur(state);
+        case CLICK_AWAY:
+            return clickAway(state);
+        case CHANGE_QUERY:
+            return changeQuery(state, action.payload.query);
+        case CLEAR_QUERY:
+            return clearQuery(state);
+        case BACKSPACE:
+            return backspace(state);
         default:
             return state;
     }

@@ -18,6 +18,7 @@ export interface ChatResponse extends Entity {
     role: Role;
     messages: MessageResponse[];
     users: (User & {role: Role})[];
+    createdAt: string;
 }
 
 const create = (chat: CreateChatRequest) => api.post<ChatResponse>("/chats", chat);

@@ -1,7 +1,5 @@
 import { RootState } from "../redux/rootReducer";
 
-interface Selector<T> {
-    (state: RootState): T
-}
+type Selector<T> = (state: RootState) => T;
 
-export default Selector
+export default Selector;

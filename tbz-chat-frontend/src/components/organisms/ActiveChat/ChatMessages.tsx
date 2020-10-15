@@ -1,7 +1,7 @@
 import { Box, Typography } from "@material-ui/core";
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { getSelectedChatMessages } from "../../../redux/message/messageSelectors";
+import { getSelectedChatMessages } from "../../../redux/chat/chatSelectors";
 import useLanguage from "../../../util/hooks/useLanguage";
 import Center from "../../atoms/Center";
 import Message from "./Message";

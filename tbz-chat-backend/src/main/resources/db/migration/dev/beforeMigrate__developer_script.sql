@@ -29,7 +29,8 @@ create table verification_token
 create table chat
 (
     id   character varying(36) not null unique,
-    name character varying(36) not null unique
+    name character varying(36) not null,
+    created_at timestamp not null default current_timestamp
 );
 
 create table message

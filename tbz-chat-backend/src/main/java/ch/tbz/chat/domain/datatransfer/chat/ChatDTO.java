@@ -14,6 +14,7 @@ public class ChatDTO extends DTO {
 
     protected String name;
     protected String role;
+    protected String createdAt;
 
     @Getter @Setter
     public static class Creation {

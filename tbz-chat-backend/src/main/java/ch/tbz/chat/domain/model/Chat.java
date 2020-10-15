@@ -1,12 +1,15 @@
 package ch.tbz.chat.domain.model;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.annotation.PersistenceConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +27,19 @@ public class Chat extends DomainEntity {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Message> messages = new ArrayList<>();
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
     public Chat() {}
 
     @PersistenceConstructor
-    public Chat(String id, String name, List<UserInChat> userInChats, List<Message> messages) {
+    public Chat(String id, String name, List<UserInChat> userInChats, List<Message> messages, LocalDateTime createdAt) {
         super(id);
         this.name = name;
         this.userInChats = userInChats;
         this.messages = messages;
+        this.createdAt = createdAt;
     }
 
     public String getName() {
@@ -58,6 +66,15 @@ public class Chat extends DomainEntity {
 
     public Chat setMessages(List<Message> messages) {
         this.messages = messages;
+        return this;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public Chat setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
         return this;
     }
 }

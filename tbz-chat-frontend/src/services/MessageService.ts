@@ -1,5 +1,4 @@
 import Entity from "../models/Entity";
-import Message from "../models/Message";
 import User from "../models/User";
 import api from "./api";
 

@@ -48,7 +48,7 @@ const useStyle = makeStyles((theme) => ({
         borderLeft: `2px solid ${theme.palette.divider}`,
         width: "40%",
     },
-}), {name: "MuiActiveChat"});
+}), {name: "ActiveChat"});
 
 const ActiveChat = (props: ActiveChatProps) => {
     const { className } = props;
@@ -65,7 +65,8 @@ const ActiveChat = (props: ActiveChatProps) => {
         }
 
         setDetailsOpen(false);
-    }, [chat]);
+        // eslint-disable-next-line
+    }, [chat?.id]);
 
     return (
         <Box className={className} display="flex">

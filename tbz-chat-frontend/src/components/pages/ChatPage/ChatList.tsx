@@ -7,7 +7,7 @@ import {
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectChat } from "../../../redux/chat/chatActions";
-import { getFilteredChatPreviews } from "../../../redux/chat/chatSelectors";
+import { getChatPreviews } from "../../../redux/chat/chatSelectors";
 import { RootState } from "../../../redux/rootReducer";
 import useLanguage from "../../../util/hooks/useLanguage";
 import useThunkDispatch from "../../../util/hooks/useThunkDispatch";
@@ -19,7 +19,7 @@ type ChatListProps = {
 
 const ChatList = (props: ChatListProps) => {
     const { className, filter } = props;
-    const chats = useSelector(getFilteredChatPreviews(filter));
+    const chats = useSelector((state: RootState) => getChatPreviews(state, filter));
     const getString = useLanguage();
     const dispatch = useThunkDispatch();
     const selected = useSelector((state: RootState) => state.chats.selected);

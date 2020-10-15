@@ -1,3 +1,4 @@
+import { Moment } from "moment";
 import Entity from "./Entity";
 import Role from "./Role";
 
@@ -12,7 +13,8 @@ interface Chat extends Entity {
     messageIds: string[],
     users: {
         [userId: string]: Role
-    }
+    },
+    createdAt: Moment;
 }
 
 export default Chat;

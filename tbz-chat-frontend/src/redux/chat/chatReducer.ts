@@ -17,8 +17,8 @@ export type ChatState = EntityState<Chat> & {
 
 const initialState: ChatState = createInitialState();
 
-const getLatestTimestamp = (chat: ChatResponse): Moment | undefined => {
-    if(chat.messages.length === 0) return undefined
+const getLatestTimestamp = (chat: ChatResponse): Moment => {
+    if(chat.messages.length === 0) return moment(chat.createdAt);
 
     return chat.messages.map(message => ({
         ...message, timestamp: moment(message.timestamp)
@@ -54,7 +54,8 @@ const populateFromUserResponse = (state: ChatState, response: UserResponse): Cha
             name: chatResponse.name,
             role: chatResponse.role,
             messageIds: [],
-            users: {}
+            users: {},
+            createdAt: moment(chatResponse.createdAt)
         }
 
         chatResponse.users.forEach(userResponse => {
@@ -73,6 +74,22 @@ const populateFromUserResponse = (state: ChatState, response: UserResponse): Cha
         byId,
         allIds: Object.keys(byId),
         selected: getLatestChat(response.chats)
+    }
+}
+
+const makeAdministrator = (state: ChatState, chatId: string, userId: string): ChatState => {
+    return {
+        ...state,
+        byId: {
+            ...state.byId,
+            [chatId]: {
+                ...state.byId[chatId],
+                users: {
+                    ...state.byId[chatId].users,
+                    [userId]: ADMINISTRATOR
+                }
+            }
+        }
     }
 }
 
@@ -129,7 +146,8 @@ const createChat = (state: ChatState, chatResponse: ChatResponse): ChatState => 
     const chat: Chat = {
         ...chatResponse,
         users: {},
-        messageIds: []
+        messageIds: [],
+        createdAt: moment(chatResponse.createdAt)
     }
 
     chatResponse.users.forEach(user => {
@@ -141,7 +159,8 @@ const createChat = (state: ChatState, chatResponse: ChatResponse): ChatState => 
     return {
         ...state,
         byId,
-        allIds: Object.keys(byId)
+        allIds: Object.keys(byId),
+        selected: chat.id
     };
 }
 
@@ -156,16 +175,7 @@ const chatReducer = (state: ChatState | undefined = initialState, action: RootAc
                 selected: action.payload.id
             }
         case MAKE_ADMINISTRATOR:
-            const {userId, chatId} = action.payload
-
-            let byId = state.byId;
-
-            byId[chatId].users[userId] = ADMINISTRATOR;
-
-            return {
-                ...state,
-                byId
-            }
+            return makeAdministrator(state, action.payload.chatId, action.payload.userId);
         case REMOVE_FROM_CHAT:
             return removeUser(state, action.payload);
         case POST_MESSAGE:

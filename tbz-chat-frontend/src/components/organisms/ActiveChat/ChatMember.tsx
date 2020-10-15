@@ -13,7 +13,7 @@ import {
     makeAdministrator,
     removeFromChat,
 } from "../../../redux/chat/chatActions";
-import { getSelectedChat, UserInChat } from "../../../redux/chat/chatSelectors";
+import { getSelectedChat, ChatMember as UserInChat } from "../../../redux/chat/chatSelectors";
 import useLanguage from "../../../util/hooks/useLanguage";
 import useThunkDispatch from "../../../util/hooks/useThunkDispatch";
 

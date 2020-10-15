@@ -1,5 +1,12 @@
+import Entity from "../models/Entity";
 import Message from "../models/Message";
 import api from "./api";
+
+export interface MessageResponse extends Entity {
+    timestamp: string;
+    body: string;
+    authorId: string;
+}
 
 export interface PostMessageRequest {
     body: string

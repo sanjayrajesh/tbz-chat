@@ -26,6 +26,21 @@ const createTheme = (type: "light" | "dark") =>
                         },
                     },
                 },
+                MuiDialogContent: {
+                    root: {
+                        "&:first-child": {
+                            paddingTop: "8px"
+                        }
+                    }
+                },
+                MuiDialogActions: {
+                    root: {
+                        padding: "8px 24px",
+                        "& *": {
+                            flex: 1
+                        }
+                    }
+                }
             },
         })
     );

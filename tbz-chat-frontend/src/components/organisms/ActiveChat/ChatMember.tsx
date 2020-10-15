@@ -6,7 +6,7 @@ import {
     MenuItem,
     Typography,
 } from "@material-ui/core";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { ADMINISTRATOR } from "../../../models/Role";
 import {
@@ -58,16 +58,29 @@ const Actions = (props: ContentProps) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const chat = useSelector(getSelectedChat);
     const dispatch = useThunkDispatch();
+    let isMounted = useRef(true);
 
     const handleClick = (e: any) => setAnchorEl(e.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
     const handleMakeAdministrator = () => {
-        dispatch(makeAdministrator(member.id, chat!.id)).finally(handleClose);
+        dispatch(makeAdministrator(member.id, chat!.id)).finally(() => {
+            if(isMounted.current) {
+                handleClose();
+            }
+        });
     };
     const handleRemoveFromChat = () => {
-        dispatch(removeFromChat(member.id, chat!.id)).finally(handleClose);
+        dispatch(removeFromChat(member.id, chat!.id)).finally(() => {
+            if(isMounted.current) {
+                handleClose();
+            }
+        });
     };
+
+    useEffect(() => () => {
+        isMounted.current = false;
+    })
 
     return (
         <Fragment>

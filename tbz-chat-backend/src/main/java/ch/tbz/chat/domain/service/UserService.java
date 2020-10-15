@@ -8,10 +8,10 @@ import java.util.NoSuchElementException;
 
 public interface UserService extends UserDetailsService, CrudService<User> {
 
-    User activateAccount(String verificationToken, User user) throws NoSuchElementException;
+  User activateAccount(String verificationToken, User user) throws NoSuchElementException;
 
-    void changePassword(User user, String oldPassword, String newPassword);
+  void changePassword(User user, String oldPassword, String newPassword);
 
-    Collection<User> search(String query, boolean excludeAuthenticated, User authenticated, String excludeChatId);
-
+  Collection<User> search(
+      String query, boolean excludeAuthenticated, User authenticated, String excludeChatId);
 }

@@ -144,6 +144,18 @@ const dictionary = {
     "activate.your.account": {
         en: "Activate your account",
         de: "Aktivieren Sie ihren Account"
+    },
+    "create.chat": {
+        en: "Create chat",
+        de: "Neuen Chat erstellen"
+    },
+    "name": {
+        en: "Name",
+        de: "Name"
+    },
+    "create": {
+        en: "Create",
+        de: "Erstellen"
     }
 }
 

@@ -6,6 +6,7 @@ import ActiveChat from "../../organisms/ActiveChat/ActiveChat";
 import Page from "../../Page";
 import ChatList from "./ChatList";
 import ChatSearchBar from "./ChatSearchBar";
+import CreateChatButton from "./CreateChatButton";
 
 const useStyle = makeStyles((theme) => ({
     toolbar: {
@@ -38,6 +39,7 @@ const ChatPage = () => {
                                     filter={filter}
                                     setFilter={setFilter}
                                 />
+                                <CreateChatButton />
                             </Toolbar>
                             <Box clone height={1} maxHeight="calc(100% - 64px)">
                                 <ChatList filter={filter} />

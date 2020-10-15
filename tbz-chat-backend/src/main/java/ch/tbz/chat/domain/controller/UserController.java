@@ -19,44 +19,56 @@ import java.util.Collection;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
-    private final MappingStrategy<UserDTO, User> userMappingStrategy;
-    private final UserMappingStrategyFactory userMappingStrategyFactory;
-    private final UserMapper userMapper;
+  private final UserService userService;
+  private final MappingStrategy<UserDTO, User> userMappingStrategy;
+  private final UserMappingStrategyFactory userMappingStrategyFactory;
+  private final UserMapper userMapper;
 
-    public UserController(UserService userService, MappingStrategy<UserDTO, User> userMappingStrategy, UserMappingStrategyFactory userMappingStrategyFactory, UserMapper userMapper) {
-        this.userService = userService;
-        this.userMappingStrategy = userMappingStrategy;
-        this.userMappingStrategyFactory = userMappingStrategyFactory;
-        this.userMapper = userMapper;
-    }
+  public UserController(
+      UserService userService,
+      MappingStrategy<UserDTO, User> userMappingStrategy,
+      UserMappingStrategyFactory userMappingStrategyFactory,
+      UserMapper userMapper) {
+    this.userService = userService;
+    this.userMappingStrategy = userMappingStrategy;
+    this.userMappingStrategyFactory = userMappingStrategyFactory;
+    this.userMapper = userMapper;
+  }
 
-    @PostMapping
-    public ResponseEntity<UserDTO> register(@RequestBody @Valid UserDTO.Registration userDTO) {
-        User user = userService.create(userMapper.user(userDTO));
+  @PostMapping
+  public ResponseEntity<UserDTO> register(@RequestBody @Valid UserDTO.Registration userDTO) {
+    User user = userService.create(userMapper.user(userDTO));
 
-        return new ResponseEntity<>(userMappingStrategy.map(user), HttpStatus.CREATED);
-    }
+    return new ResponseEntity<>(userMappingStrategy.map(user), HttpStatus.CREATED);
+  }
 
-    @GetMapping("/own")
-    public ResponseEntity<UserDTO> getAuthenticated(@AuthenticationPrincipal(expression = "user") User user) {
-        return new ResponseEntity<>(userMappingStrategy.map(user), HttpStatus.OK);
-    }
+  @GetMapping("/own")
+  public ResponseEntity<UserDTO> getAuthenticated(
+      @AuthenticationPrincipal(expression = "user") User user) {
+    return new ResponseEntity<>(userMappingStrategy.map(user), HttpStatus.OK);
+  }
 
-    @GetMapping("/search")
-    public ResponseEntity<Collection<? extends UserDTO>> search(@RequestParam("q") String query, @RequestParam(required = false) boolean excludeAuthenticated, @RequestParam(required = false) String excludeChatId, @AuthenticationPrincipal(expression = "user") User authenticated) {
-        Collection<User> users = userService.search(query, excludeAuthenticated, authenticated, excludeChatId);
+  @GetMapping("/search")
+  public ResponseEntity<Collection<? extends UserDTO>> search(
+      @RequestParam("q") String query,
+      @RequestParam(required = false) boolean excludeAuthenticated,
+      @RequestParam(required = false) String excludeChatId,
+      @AuthenticationPrincipal(expression = "user") User authenticated) {
+    Collection<User> users =
+        userService.search(query, excludeAuthenticated, authenticated, excludeChatId);
 
-        MappingStrategy<UserDTO, User> mappingStrategy = userMappingStrategyFactory.getStrategy();
+    MappingStrategy<UserDTO, User> mappingStrategy = userMappingStrategyFactory.getStrategy();
 
-        return new ResponseEntity<>(mappingStrategy.map(users), HttpStatus.OK);
-    }
+    return new ResponseEntity<>(mappingStrategy.map(users), HttpStatus.OK);
+  }
 
-    @PutMapping("/own/password")
-    public ResponseEntity<Void> changePassword(@RequestBody @Valid UpdatePasswordDTO updatePassword, @AuthenticationPrincipal(expression = "user") User user) {
-        userService.changePassword(user, updatePassword.getOldPassword(), updatePassword.getNewPassword());
+  @PutMapping("/own/password")
+  public ResponseEntity<Void> changePassword(
+      @RequestBody @Valid UpdatePasswordDTO updatePassword,
+      @AuthenticationPrincipal(expression = "user") User user) {
+    userService.changePassword(
+        user, updatePassword.getOldPassword(), updatePassword.getNewPassword());
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

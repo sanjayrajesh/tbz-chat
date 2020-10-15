@@ -1,7 +1,7 @@
 import moment, { Moment } from "moment";
 import Chat from "../../models/Chat";
-import Entity from "../../models/Entity";
 import { ADMINISTRATOR } from "../../models/Role";
+import { ChatResponse } from "../../services/ChatService";
 import { PostMessageResponse } from "../../services/MessageService";
 import { UserResponse } from "../../services/UserService";
 import EntityMap from "../../util/EntityMap";
@@ -9,19 +9,13 @@ import EntityState, { createInitialState } from "../../util/EntityState";
 import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
 import { POST_MESSAGE } from "../message/messageActionTypes";
 import { RootAction } from "../rootReducer";
-import { LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
+import { CREATE_CHAT, LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
 
 export type ChatState = EntityState<Chat> & {
     selected?: string
 }
 
 const initialState: ChatState = createInitialState();
-
-interface ChatResponse extends Entity {
-    messages: {
-        timestamp: string
-    }[]
-}
 
 const getLatestTimestamp = (chat: ChatResponse): Moment | undefined => {
     if(chat.messages.length === 0) return undefined
@@ -96,7 +90,6 @@ const removeUser = (state: ChatState, payload: {userId: string, chatId: string})
             ...state.byId,
             [chatId]: chat
         },
-        selected: undefined
     }
 }
 
@@ -130,6 +123,28 @@ const leaveChat = (state: ChatState, chatId: string): ChatState => {
     }
 }
 
+const createChat = (state: ChatState, chatResponse: ChatResponse): ChatState => {
+    let byId = {...state.byId};
+
+    const chat: Chat = {
+        ...chatResponse,
+        users: {},
+        messageIds: []
+    }
+
+    chatResponse.users.forEach(user => {
+        chat.users[user.id] = user.role;
+    });
+
+    byId[chat.id] = chat;
+
+    return {
+        ...state,
+        byId,
+        allIds: Object.keys(byId)
+    };
+}
+
 const chatReducer = (state: ChatState | undefined = initialState, action: RootAction): ChatState => {
     switch (action.type) {
         case AUTH_SUCCESS:
@@ -157,6 +172,8 @@ const chatReducer = (state: ChatState | undefined = initialState, action: RootAc
             return addMessage(state, action.payload.message);
         case LEAVE_CHAT:
             return leaveChat(state, action.payload.chatId);
+        case CREATE_CHAT:
+            return createChat(state, action.payload.chat);
         default:
             return state;
     }

@@ -1,7 +1,10 @@
+import { ChatResponse } from "../../services/ChatService"
+
 export const SELECT_CHAT = 'SELECT_CHAT'
 export const MAKE_ADMINISTRATOR = 'MAKE_ADMINISTRATOR'
 export const REMOVE_FROM_CHAT = 'REMOVE_FROM_CHAT'
 export const LEAVE_CHAT = 'LEAVE_CHAT'
+export const CREATE_CHAT = "CREATE_CHAT"
 
 type SelectChat = {
     type: typeof SELECT_CHAT,
@@ -33,6 +36,13 @@ type LeaveChat = {
     }
 }
 
-type ChatAction = SelectChat | MakeAdministrator | RemoveFromChat | LeaveChat;
+type CreateChat = {
+    type: typeof CREATE_CHAT;
+    payload: {
+        chat: ChatResponse;
+    }
+}
+
+type ChatAction = SelectChat | MakeAdministrator | RemoveFromChat | LeaveChat | CreateChat;
 
 export default ChatAction

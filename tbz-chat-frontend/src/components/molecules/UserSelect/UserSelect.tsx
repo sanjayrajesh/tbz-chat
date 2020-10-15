@@ -9,6 +9,7 @@ import {
     makeStyles,
     Popper,
 } from "@material-ui/core";
+import clsx from "clsx";
 import { useField } from "formik";
 import React, {
     ChangeEvent,
@@ -30,10 +31,16 @@ import {
     userSelectReducer,
 } from "./userSelectReducer";
 
-type UserSelectProps = Pick<TextFieldProps, "className" | "label" | "name">;
+type UserSelectProps = Pick<TextFieldProps, "className" | "label" | "name"> & {
+    excludeChatId?: string;
+    excludeAuthenticated?: boolean;
+};
 
 const useStyle = makeStyles(
     (theme) => ({
+        root: {
+            maxWidth: "100%"
+        },
         paper: {
             width: "100%",
             marginTop: theme.spacing(1),
@@ -53,9 +60,11 @@ const useStyle = makeStyles(
         },
         listItemText: {},
         textField: {
+            maxWidth: "100%",
             "& .MuiInputBase-root": {
-                display: "flex",
+                display: "inline-flex",
                 flexWrap: "wrap",
+                maxWidth: "100%",
                 padding: theme.spacing(1.5, "14px"),
                 "& .MuiInputBase-input": {
                     flexGrow: 1,
@@ -66,7 +75,7 @@ const useStyle = makeStyles(
             },
         },
         selectedUser: {
-            paddingRight: theme.spacing(1),
+            paddingRight: theme.spacing(1)
         },
     }),
     { name: "UserSelect" }
@@ -74,7 +83,7 @@ const useStyle = makeStyles(
 
 const UserSelect = (props: UserSelectProps) => {
 
-    const { name, className, label } = props;
+    const { name, className, label, excludeChatId, excludeAuthenticated } = props;
     const classes = useStyle();
     const [field,, helpers] = useField(name);
     const [state, dispatch] = useReducer(
@@ -192,7 +201,7 @@ const UserSelect = (props: UserSelectProps) => {
         let isMounted = true;
 
         if (state.query.replace(/ /g, "").length > 0) {
-            UserService.search(state.query).then((res) => {
+            UserService.search(state.query, excludeChatId, excludeAuthenticated).then((res) => {
                 if (isMounted) {
                     dispatch(displayQueryResult(res.data));
                 }
@@ -202,21 +211,17 @@ const UserSelect = (props: UserSelectProps) => {
         return () => {
             isMounted = false;
         };
-    }, [state.query]);
+    }, [state.query, excludeChatId, excludeAuthenticated]);
 
     useEffect(() => {
         helpers.setValue(Object.values(state.selected));
         // eslint-disable-next-line
     }, [state.selected])
 
-    useEffect(() => {
-        console.log(state);
-    }, [state]);
-
     return (
         <ClickAwayListener onClickAway={handleClickAway}>
             <KeyboardEventHandler handleKeys={["esc"]} onKeyEvent={handleClear}>
-                <div className={className}>
+                <div className={clsx(classes.root, className)}>
                     <KeyboardEventHandler
                         handleKeys={["backspace"]}
                         onKeyEvent={handleBackspace}
@@ -231,7 +236,7 @@ const UserSelect = (props: UserSelectProps) => {
                             onFocus={handleFocus}
                             onBlur={handleTextFieldBlur}
                             InputProps={{
-                                startAdornment: selectedUsers,
+                                startAdornment: selectedUsers.length > 0 ? selectedUsers : undefined,
                             }}
                             className={classes.textField}
                         />
@@ -257,5 +262,8 @@ const UserSelect = (props: UserSelectProps) => {
 };
 
 UserSelect.displayName = "UserSelect";
+UserSelect.defaultProps = {
+    excludeAuthenticated: true
+} as UserSelectProps;
 
 export default UserSelect;

@@ -12,6 +12,6 @@ public interface UserService extends UserDetailsService, CrudService<User> {
 
     void changePassword(User user, String oldPassword, String newPassword);
 
-    Collection<User> search(String query);
+    Collection<User> search(String query, boolean excludeAuthenticated, User authenticated, String excludeChatId);
 
 }

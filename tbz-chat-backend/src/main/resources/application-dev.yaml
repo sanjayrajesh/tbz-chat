@@ -27,5 +27,5 @@ invitation:
     subject: Welcome to TBZ-Chat
 logging:
     level:
-        org.hibernate.SQL: ERROR
-        org.hibernate.type: ERROR
+        org.hibernate.SQL: DEBUG
+        org.hibernate.type: TRACE

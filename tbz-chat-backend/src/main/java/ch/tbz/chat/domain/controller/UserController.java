@@ -44,8 +44,8 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Collection<? extends UserDTO>> search(@RequestParam("q") String query, @RequestParam(required = false) String excludeChatId) {
-        Collection<User> users = userService.search(query);
+    public ResponseEntity<Collection<? extends UserDTO>> search(@RequestParam("q") String query, @RequestParam(required = false) boolean excludeAuthenticated, @RequestParam(required = false) String excludeChatId, @AuthenticationPrincipal(expression = "user") User authenticated) {
+        Collection<User> users = userService.search(query, excludeAuthenticated, authenticated, excludeChatId);
 
         MappingStrategy<UserDTO, User> mappingStrategy = userMappingStrategyFactory.getStrategy();
 

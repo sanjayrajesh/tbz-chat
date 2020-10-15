@@ -99,14 +99,12 @@ public class UserServiceImpl extends CrudServiceImpl<User, UserRepository> imple
     }
 
     @Override
-    public Collection<User> search(String query) {
-
-        logger.debug("======================================= Query: {} ===========================================", query);
+    public Collection<User> search(String query, boolean excludeAuthenticated, User authenticated, String excludeChatId) {
 
         if(query.isBlank()) {
             query = null;
         }
 
-        return repository.findAllByEmailOrUsername(query);
+        return repository.findAllByEmailOrUsername(query, excludeChatId, excludeAuthenticated ? authenticated.getId() : null);
     }
 }

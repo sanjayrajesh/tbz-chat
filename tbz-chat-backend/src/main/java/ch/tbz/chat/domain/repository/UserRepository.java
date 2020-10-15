@@ -21,7 +21,7 @@ public interface UserRepository extends DomainEntityRepository<User> {
 
     Optional<User> findByIdAndEnabledTrue(String id);
 
-    @Query("FROM User WHERE (LOWER(email) LIKE concat('%', :query, '%') OR LOWER(username) LIKE concat('%', :query, '%')) AND :query IS NOT NULL")
-    Collection<User> findAllByEmailOrUsername(@Param("query") String query);
+    @Query("from User u join UserInChat uic on uic.user.id = u.id where ((:excludedUserId is null and u.id is not null) or u.id <> :excludedUserId) and ((:excludeChatId is null and uic.chat.id is not null) or uic.chat.id <> :excludeChatId) and (lower(u.email) like concat('%', :query, '%') or lower(u.username) like concat('%', :query, '%')) and :query is not null")
+    Collection<User> findAllByEmailOrUsername(String query, String excludeChatId, String excludedUserId);
 
 }

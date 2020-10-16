@@ -90,6 +90,7 @@ const userCompare: Comparator<User> = (a, b) => {
 
 const memberCompare = (ownId: string): Comparator<ChatMember> => (a, b) => {
     if(a.id === ownId) return -1;
+    else if (b.id === ownId) return 1;
     else if(a.role === b.role) return userCompare(a, b);
     else if (a.role === ADMINISTRATOR) return -1;
     else return 1

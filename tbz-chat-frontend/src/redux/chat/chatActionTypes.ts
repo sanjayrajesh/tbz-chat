@@ -6,6 +6,7 @@ export const REMOVE_FROM_CHAT = 'REMOVE_FROM_CHAT'
 export const LEAVE_CHAT = 'LEAVE_CHAT'
 export const CREATE_CHAT = "CREATE_CHAT"
 export const ADD_CHAT_MEMBERS = "ADD_CHAT_MEMBERS"
+export const UPDATE_CHATS = "UPDATE_CHATS"
 
 type SelectChat = {
     type: typeof SELECT_CHAT,
@@ -52,6 +53,13 @@ type AddChatMembers = {
     }
 }
 
-type ChatAction = SelectChat | MakeAdministrator | RemoveFromChat | LeaveChat | CreateChat | AddChatMembers;
+type UpdateChats = {
+    type: typeof UPDATE_CHATS;
+    payload: {
+        chats: ChatResponse[];
+    }
+}
+
+type ChatAction = SelectChat | MakeAdministrator | RemoveFromChat | LeaveChat | CreateChat | AddChatMembers | UpdateChats;
 
 export default ChatAction

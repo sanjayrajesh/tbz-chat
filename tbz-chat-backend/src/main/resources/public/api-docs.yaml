@@ -455,5 +455,61 @@ paths:
           description: No Content
       tags:
         - User - Chats
+  /users/own/chats:
+    get:
+      summary: Get own Chats
+      tags:
+        - User - Chats
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    createdAt:
+                      type: string
+                    users:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          email:
+                            type: string
+                          username:
+                            type: string
+                          role:
+                            type: string
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          body:
+                            type: string
+                          timestamp:
+                            type: string
+                          author:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              email:
+                                type: string
+                              username:
+                                type: string
+      operationId: get-users-own-chats
+      description: ''
 components:
   schemas: {}

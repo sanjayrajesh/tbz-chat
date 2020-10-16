@@ -2,7 +2,7 @@ import { ThunkAction } from "redux-thunk";
 import User from "../../models/User";
 import ChatService, { AddChatMembersResponse, ChatResponse, CreateChatRequest } from "../../services/ChatService";
 import { RootAction, RootState } from "../rootReducer";
-import ChatAction, { ADD_CHAT_MEMBERS, CREATE_CHAT, LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
+import ChatAction, { ADD_CHAT_MEMBERS, CREATE_CHAT, LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT, UPDATE_CHATS } from "./chatActionTypes";
 
 export const selectChat = (id: string): ChatAction => ({
     type: SELECT_CHAT,
@@ -46,6 +46,13 @@ const _addChatMembers = (chatId: string, users: AddChatMembersResponse): ChatAct
     payload: {
         chatId,
         users
+    }
+})
+
+export const updateChats = (chats: ChatResponse[]): ChatAction => ({
+    type: UPDATE_CHATS,
+    payload: {
+        chats
     }
 })
 

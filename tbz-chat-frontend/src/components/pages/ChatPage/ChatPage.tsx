@@ -1,6 +1,11 @@
 import { Box, makeStyles, Toolbar } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { getOwnId } from "../../../redux/auth/authSelectors";
+import { updateChats } from "../../../redux/chat/chatActions";
+import ChatService from "../../../services/ChatService";
 import useLanguage from "../../../util/hooks/useLanguage";
+import useThunkDispatch from "../../../util/hooks/useThunkDispatch";
 import Paper from "../../atoms/Paper";
 import ActiveChat from "../../organisms/ActiveChat/ActiveChat";
 import Page from "../../Page";
@@ -19,6 +24,24 @@ const ChatPage = () => {
     const getString = useLanguage();
     const classes = useStyle();
     const [filter, setFilter] = useState("");
+    const ownId = useSelector(getOwnId);
+    const dispatch = useThunkDispatch();
+
+    useEffect(() => {
+        let isMounted = true;
+        const updateInterval = setInterval(() => {
+            ChatService.getOwn().then(res => {
+                if(isMounted) {
+                    dispatch(updateChats(res.data));
+                }
+            })
+        }, 3000)
+
+        return () => {
+            clearInterval(updateInterval);
+            isMounted = false;
+        }
+    }, [ownId, dispatch]);
 
     return (
         <Page title={getString("chats")}>

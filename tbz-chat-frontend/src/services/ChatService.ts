@@ -29,6 +29,8 @@ export interface ChatResponse extends Entity {
     createdAt: string;
 }
 
+const getOwn = () => api.get<ChatResponse[]>("/users/own/chats");
+
 const create = (chat: CreateChatRequest) => api.post<ChatResponse>("/chats", chat);
 
 const addMembers = (chatId: string, userIds: AddChatMembersRequest) => api.post<AddChatMembersResponse>(`/chats/${chatId}/users`, userIds);
@@ -40,6 +42,7 @@ const removeFromChat = (userId: string, chatId: string) => api.delete<undefined>
 const leaveChat = (chatId: string) => api.delete<undefined>(`users/own/chats/${chatId}`);
 
 const ChatService = {
+    getOwn,
     create,
     addMembers,
     makeAdministrator,

@@ -7,6 +7,8 @@ import { RootAction } from "../rootReducer";
 import moment from 'moment';
 import { POST_MESSAGE } from "./messageActionTypes";
 import { MessageResponse } from "../../services/MessageService";
+import { ChatResponse } from "../../services/ChatService";
+import { UPDATE_CHATS } from "../chat/chatActionTypes";
 
 type MessageState = EntityState<Message>
 
@@ -34,7 +36,21 @@ const populateFromUserResponse = (state: MessageState, response: UserResponse): 
     return {
         ...state,
         byId,
-        allIds: Object.keys(byId)
+        allIds: Object.keys(byId).sort()
+    }
+}
+
+const updateChats = (state: MessageState, chats: ChatResponse[]): MessageState => {
+    let byId: EntityMap<Message> = {};
+
+    chats.forEach(chat => chat.messages.forEach(message => {
+        byId[message.id] = pureMessage(message);
+    }))
+
+    return {
+        ...state,
+        byId,
+        allIds: Object.keys(byId).sort()
     }
 }
 
@@ -46,7 +62,7 @@ const postMessage = (state: MessageState, message: MessageResponse): MessageStat
     return {
         ...state,
         byId,
-        allIds: Object.keys(byId)
+        allIds: Object.keys(byId).sort()
     }
 }
 
@@ -55,6 +71,8 @@ const messageReducer = (state: MessageState | undefined = initialState, action: 
         case AUTH_SUCCESS:
         case LOGIN_SUCCESS:
             return populateFromUserResponse(state, action.payload.response.data)
+        case UPDATE_CHATS:
+            return updateChats(state, action.payload.chats);
         case POST_MESSAGE:
             return postMessage(state, action.payload.message);
         default:

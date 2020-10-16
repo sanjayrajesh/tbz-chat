@@ -9,13 +9,22 @@ import EntityState, { createInitialState } from "../../util/EntityState";
 import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
 import { POST_MESSAGE } from "../message/messageActionTypes";
 import { RootAction } from "../rootReducer";
-import { ADD_CHAT_MEMBERS, CREATE_CHAT, LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
+import { ADD_CHAT_MEMBERS, CREATE_CHAT, LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT, UPDATE_CHATS } from "./chatActionTypes";
 
 export type ChatState = EntityState<Chat> & {
     selected?: string
 }
 
 const initialState: ChatState = createInitialState();
+
+const pureChat = (chat: Chat): Chat => ({
+    id: chat.id,
+    name: chat.name,
+    users: chat.users,
+    messageIds: chat.messageIds,
+    role: chat.role,
+    createdAt: chat.createdAt
+})
 
 const getLatestTimestamp = (chat: ChatResponse): Moment => {
     if(chat.messages.length === 0) return moment(chat.createdAt);
@@ -72,8 +81,37 @@ const populateFromUserResponse = (state: ChatState, response: UserResponse): Cha
     return {
         ...state,
         byId,
-        allIds: Object.keys(byId),
+        allIds: Object.keys(byId).sort(),
         selected: getLatestChat(response.chats)
+    }
+}
+
+const updateChats = (state: ChatState, chats: ChatResponse[]): ChatState => {
+    let byId: EntityMap<Chat> = {};
+
+    chats.forEach(chatResponse => {
+        const chat: Chat = {
+            ...chatResponse,
+            messageIds: [],
+            users: {},
+            createdAt: moment(chatResponse.createdAt)
+        }
+
+        chatResponse.users.forEach(user => {
+            chat.users[user.id] = user.role;
+        })
+
+        chatResponse.messages.forEach(message => {
+            chat.messageIds.push(message.id);
+        })
+
+        byId[chat.id] = pureChat(chat);
+    })
+
+    return {
+        ...state,
+        byId,
+        allIds: Object.keys(byId).sort()
     }
 }
 
@@ -133,7 +171,7 @@ const leaveChat = (state: ChatState, chatId: string): ChatState => {
 
     delete byId[chatId];
 
-    const allIds = Object.keys(byId);
+    const allIds = Object.keys(byId).sort();
 
     return {
         ...state,
@@ -162,7 +200,7 @@ const createChat = (state: ChatState, chatResponse: ChatResponse): ChatState => 
     return {
         ...state,
         byId,
-        allIds: Object.keys(byId),
+        allIds: Object.keys(byId).sort(),
         selected: chat.id
     };
 }
@@ -193,6 +231,8 @@ const chatReducer = (state: ChatState | undefined = initialState, action: RootAc
         case AUTH_SUCCESS:
         case LOGIN_SUCCESS:
             return populateFromUserResponse(state, action.payload.response.data)
+        case UPDATE_CHATS:
+            return updateChats(state, action.payload.chats);
         case SELECT_CHAT:
             return {
                 ...state,

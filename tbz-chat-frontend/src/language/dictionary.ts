@@ -97,6 +97,14 @@ const dictionary = {
         en: "Members",
         de: "Mitglieder"
     },
+    "add.members": {
+        en: "Add members",
+        de: "Mitglieder hinzufügen"
+    },
+    add: {
+        en: "Add",
+        de: "Hinzufügen"
+    },
     administrator: {
         en: "Administrator",
         de: "Administrator"

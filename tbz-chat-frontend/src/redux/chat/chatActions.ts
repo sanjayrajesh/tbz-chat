@@ -1,7 +1,8 @@
 import { ThunkAction } from "redux-thunk";
-import ChatService, { ChatResponse, CreateChatRequest } from "../../services/ChatService";
+import User from "../../models/User";
+import ChatService, { AddChatMembersResponse, ChatResponse, CreateChatRequest } from "../../services/ChatService";
 import { RootAction, RootState } from "../rootReducer";
-import ChatAction, { CREATE_CHAT, LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
+import ChatAction, { ADD_CHAT_MEMBERS, CREATE_CHAT, LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
 
 export const selectChat = (id: string): ChatAction => ({
     type: SELECT_CHAT,
@@ -40,11 +41,25 @@ const _createChat = (chat: ChatResponse): ChatAction => ({
     }
 })
 
-export const makeAdministrator: (userId: string, chatId: string) => ThunkAction<Promise<void>, RootState, void, RootAction> = (userId, chatId) => dispatch => ChatService.makeAdministrator(userId, chatId).then(() => {
+const _addChatMembers = (chatId: string, users: AddChatMembersResponse): ChatAction => ({
+    type: ADD_CHAT_MEMBERS,
+    payload: {
+        chatId,
+        users
+    }
+})
+
+export const makeAdministrator: (userId: string, chatId: string, beforeDispatch?: () => void) => ThunkAction<Promise<void>, RootState, void, RootAction> = (userId, chatId, beforeDispatch) => dispatch => ChatService.makeAdministrator(userId, chatId).then(() => {
+    if(beforeDispatch) {
+        beforeDispatch();
+    }
     dispatch(_makeAdministrator(userId, chatId));
 })
 
-export const removeFromChat: (userId: string, chatId: string) => ThunkAction<Promise<void>, RootState, void, RootAction> = (userId, chatId) => dispatch => ChatService.removeFromChat(userId, chatId).then(() => {
+export const removeFromChat: (userId: string, chatId: string, beforeDispatch?: () => void) => ThunkAction<Promise<void>, RootState, void, RootAction> = (userId, chatId, beforeDispatch) => dispatch => ChatService.removeFromChat(userId, chatId).then(() => {
+    if(beforeDispatch) {
+        beforeDispatch();
+    }
     dispatch(_removeFromChat(userId, chatId));
 })
 
@@ -54,4 +69,11 @@ export const leaveChat: (chatId: string) => ThunkAction<Promise<void>, RootState
 
 export const createChat: (chat: CreateChatRequest) => ThunkAction<Promise<void>, RootState, void, RootAction> = chat => dispatch => ChatService.create(chat).then(res => {
     dispatch(_createChat(res.data))
+})
+
+export const addChatMembers: (chatId: string, users: User[], beforeDispatch?: () => void) => ThunkAction<Promise<void>, RootState, void, RootAction> = (chatId, users, beforeDispatch) => dispatch => ChatService.addMembers(chatId, users.map(user => user.id)).then(res => {
+    if(beforeDispatch) {
+        beforeDispatch();
+    }
+    dispatch(_addChatMembers(chatId, res.data))
 })

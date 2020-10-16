@@ -6,6 +6,11 @@ const createTheme = (type: "light" | "dark") =>
             palette: {
                 type: type,
             },
+            props: {
+                MuiDialog: {
+                    fullWidth: true
+                }
+            },
             overrides: {
                 MuiLink: {
                     root: {
@@ -25,6 +30,9 @@ const createTheme = (type: "light" | "dark") =>
                             borderRadius: "4px",
                         },
                     },
+                },
+                MuiDialog: {
+
                 },
                 MuiDialogContent: {
                     root: {

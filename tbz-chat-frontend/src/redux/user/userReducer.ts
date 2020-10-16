@@ -1,10 +1,10 @@
 import User from "../../models/User";
-import { ChatResponse } from "../../services/ChatService";
+import { AddChatMembersResponse, ChatResponse } from "../../services/ChatService";
 import { UserResponse } from "../../services/UserService";
 import EntityMap from "../../util/EntityMap";
 import EntityState, { createInitialState } from "../../util/EntityState";
 import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
-import { CREATE_CHAT } from "../chat/chatActionTypes";
+import { ADD_CHAT_MEMBERS, CREATE_CHAT } from "../chat/chatActionTypes";
 import { RootAction } from "../rootReducer";
 
 export type UserState = EntityState<User>
@@ -58,6 +58,26 @@ const createChat = (state: UserState, chatResponse: ChatResponse): UserState => 
     }
 }
 
+const addChatMembers = (state: UserState, members: AddChatMembersResponse): UserState => {
+    if(members.length === 0) return state;
+
+    let byId = {
+        ...state.byId
+    }
+
+    members.forEach(member => {
+        if(!(member.id in byId)) {
+            byId[member.id] = pureUser(member);
+        }
+    })
+
+    return {
+        ...state,
+        byId,
+        allIds: Object.keys(byId)
+    }
+}
+
 const userReducer = (state: UserState | undefined = initialState, action: RootAction): UserState => {
     switch (action.type) {
         case AUTH_SUCCESS:
@@ -65,6 +85,8 @@ const userReducer = (state: UserState | undefined = initialState, action: RootAc
             return populateFromUserResponse(state, action.payload.response.data)
         case CREATE_CHAT:
             return createChat(state, action.payload.chat);
+        case ADD_CHAT_MEMBERS:
+            return addChatMembers(state, action.payload.users);
         default:
             return state;
     }

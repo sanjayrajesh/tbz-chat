@@ -1,7 +1,7 @@
 import moment, { Moment } from "moment";
 import Chat from "../../models/Chat";
 import { ADMINISTRATOR } from "../../models/Role";
-import { ChatResponse } from "../../services/ChatService";
+import { AddChatMembersResponse, ChatResponse } from "../../services/ChatService";
 import { PostMessageResponse } from "../../services/MessageService";
 import { UserResponse } from "../../services/UserService";
 import EntityMap from "../../util/EntityMap";
@@ -9,7 +9,7 @@ import EntityState, { createInitialState } from "../../util/EntityState";
 import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
 import { POST_MESSAGE } from "../message/messageActionTypes";
 import { RootAction } from "../rootReducer";
-import { CREATE_CHAT, LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
+import { ADD_CHAT_MEMBERS, CREATE_CHAT, LEAVE_CHAT, MAKE_ADMINISTRATOR, REMOVE_FROM_CHAT, SELECT_CHAT } from "./chatActionTypes";
 
 export type ChatState = EntityState<Chat> & {
     selected?: string
@@ -97,15 +97,18 @@ const removeUser = (state: ChatState, payload: {userId: string, chatId: string})
 
     const {userId, chatId} = payload;
 
-    const chat = state.byId[chatId];
+    const users = {...state.byId[chatId].users};
 
-    delete chat.users[userId];
+    delete users[userId];
 
     return {
         ...state,
         byId: {
             ...state.byId,
-            [chatId]: chat
+            [chatId]: {
+                ...state.byId[chatId],
+                users
+            }
         },
     }
 }
@@ -164,6 +167,27 @@ const createChat = (state: ChatState, chatResponse: ChatResponse): ChatState => 
     };
 }
 
+const addChatMembers = (state: ChatState, chatId: string, members: AddChatMembersResponse): ChatState => {
+    if(members.length === 0) return state;
+
+    let users = {...state.byId[chatId].users}
+
+    members.forEach(user => {
+        users[user.id] = user.role
+    })
+
+    return {
+        ...state,
+        byId: {
+            ...state.byId,
+            [chatId]: {
+                ...state.byId[chatId],
+                users
+            }
+        }
+    }
+}
+
 const chatReducer = (state: ChatState | undefined = initialState, action: RootAction): ChatState => {
     switch (action.type) {
         case AUTH_SUCCESS:
@@ -184,6 +208,8 @@ const chatReducer = (state: ChatState | undefined = initialState, action: RootAc
             return leaveChat(state, action.payload.chatId);
         case CREATE_CHAT:
             return createChat(state, action.payload.chat);
+        case ADD_CHAT_MEMBERS:
+            return addChatMembers(state, action.payload.chatId, action.payload.users);
         default:
             return state;
     }

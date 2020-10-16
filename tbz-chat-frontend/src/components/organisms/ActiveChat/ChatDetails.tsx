@@ -19,6 +19,7 @@ import useAuthState from "../../../util/hooks/useAuthState";
 import useLanguage from "../../../util/hooks/useLanguage";
 import useThunkDispatch from "../../../util/hooks/useThunkDispatch";
 import DangerAction from "../../molecules/DangerAction";
+import AddMembersButton from "./AddMembersButton";
 import ChatMember from "./ChatMember";
 
 type ChatDetailsProps = {
@@ -27,19 +28,22 @@ type ChatDetailsProps = {
     };
 };
 
-const useStyle = makeStyles((theme) => ({
-    dangerButton: {
-        color: theme.palette.error.main,
-        textTransform: "none",
-        width: "100%",
-        padding: theme.spacing(1, 2),
-        fontSize: theme.typography.h6.fontSize,
-        borderRadius: 0,
-        "& .MuiButton-label": {
-            justifyContent: "flex-start"
-        }
-    },
-}), {name: "MuiChatDetails"});
+const useStyle = makeStyles(
+    (theme) => ({
+        dangerButton: {
+            color: theme.palette.error.main,
+            textTransform: "none",
+            width: "100%",
+            padding: theme.spacing(1, 2),
+            fontSize: theme.typography.h6.fontSize,
+            borderRadius: 0,
+            "& .MuiButton-label": {
+                justifyContent: "flex-start",
+            },
+        },
+    }),
+    { name: "ChatDetails" }
+);
 
 const ChatDetails = (props: ChatDetailsProps) => {
     const getString = useLanguage();
@@ -51,7 +55,7 @@ const ChatDetails = (props: ChatDetailsProps) => {
 
     const handleLeaveChat = () => {
         dispatch(leaveChat(chat!.id));
-    }
+    };
 
     return (
         <>
@@ -60,10 +64,15 @@ const ChatDetails = (props: ChatDetailsProps) => {
             </Toolbar>
             <Grid container direction="column" spacing={3}>
                 <Grid item>
-                    <Box py={1} px={2}>
-                        <Typography variant="h6">
-                            {getString("members")}
-                        </Typography>
+                    <Box py={1} px={2} display="flex" m={-1} alignItems="center">
+                        <Box p={1} flexGrow={1}>
+                            <Typography variant="h6">
+                                {getString("members")}
+                            </Typography>
+                        </Box>
+                        <Box p={1}>
+                            <AddMembersButton />
+                        </Box>
                     </Box>
                     <Divider />
                     <List disablePadding>
@@ -81,7 +90,14 @@ const ChatDetails = (props: ChatDetailsProps) => {
                     </List>
                 </Grid>
                 <Grid item>
-                    <DangerAction action={handleLeaveChat} confirmationBody={getString("confirm.leave.chat", chat!.name)} className={classes.dangerButton}>
+                    <DangerAction
+                        action={handleLeaveChat}
+                        confirmationBody={getString(
+                            "confirm.leave.chat",
+                            chat!.name
+                        )}
+                        className={classes.dangerButton}
+                    >
                         {getString("leave.chat")}
                     </DangerAction>
                 </Grid>

@@ -13,6 +13,9 @@ const useStyle = makeStyles((theme) => ({
         flexDirection: "row",
         "&$own": {
             flexDirection: "row-reverse",
+            "& $content": {
+                background: theme.palette.success.dark
+            }
         }
     },
     content: {
@@ -21,11 +24,7 @@ const useStyle = makeStyles((theme) => ({
         borderRadius: theme.spacing(1),
         background: theme.palette.info.main
     },
-    own: {
-        "& $content": {
-            background: theme.palette.success.dark
-        }
-    },
+    own: {},
     authorName: {
         fontWeight: theme.typography.fontWeightBold,
     },
@@ -33,7 +32,8 @@ const useStyle = makeStyles((theme) => ({
         textAlign: "right",
     },
     body: {
-        whiteSpace: "pre-wrap",
+        maxWidth: "100%",
+        wordWrap: "break-word"
     },
 }), {name: "Message"});
 

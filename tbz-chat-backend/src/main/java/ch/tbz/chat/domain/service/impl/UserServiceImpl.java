@@ -115,4 +115,9 @@ public class UserServiceImpl extends CrudServiceImpl<User, UserRepository> imple
     return repository.findAllByEmailOrUsername(
         query, excludeChatId, excludeAuthenticated ? authenticated.getId() : null);
   }
+
+  @Override
+  public boolean existsByEmail(String email, boolean excludeAuthenticated, User authenticated) {
+    return repository.existsByEmail(email, excludeAuthenticated ? authenticated.getId() : null);
+  }
 }

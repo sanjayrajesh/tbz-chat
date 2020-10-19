@@ -10,9 +10,8 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends DomainEntityRepository<User> {
 
-  boolean existsByEmail(String email);
-
-  boolean existsByUsername(String username);
+  @Query("select (case when count(id) > 0 then true else false end) from User where ((:excludedUserId is null and id is not null) or id <> :excludedUserId) and email = :email and :email is not null")
+  boolean existsByEmail(String email, String excludedUserId);
 
   Collection<User> findAllByEnabledTrue();
 

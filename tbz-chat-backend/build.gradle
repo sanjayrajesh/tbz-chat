@@ -65,3 +65,7 @@ compileJava {
             '-Amapstruct.defaultComponentModel=spring'
     ]
 }
+
+bootJar {
+    enabled true
+}

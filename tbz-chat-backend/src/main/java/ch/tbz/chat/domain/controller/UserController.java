@@ -6,13 +6,17 @@ import ch.tbz.chat.domain.datatransfer.user.UserDTO;
 import ch.tbz.chat.domain.datatransfer.user.UserMapper;
 import ch.tbz.chat.domain.datatransfer.user.UserMappingStrategyFactory;
 import ch.tbz.chat.domain.model.User;
+import ch.tbz.chat.domain.model.UserDetailsImpl;
 import ch.tbz.chat.domain.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Collection;
 
 @RestController
@@ -33,6 +37,10 @@ public class UserController {
     this.userMappingStrategy = userMappingStrategy;
     this.userMappingStrategyFactory = userMappingStrategyFactory;
     this.userMapper = userMapper;
+  }
+
+  public boolean isEmailCheckAllowed(boolean excludeAuthenticated, Authentication authentication) {
+    return !excludeAuthenticated || authentication.getPrincipal() instanceof UserDetailsImpl;
   }
 
   @PostMapping
@@ -60,6 +68,23 @@ public class UserController {
     MappingStrategy<UserDTO, User> mappingStrategy = userMappingStrategyFactory.getStrategy();
 
     return new ResponseEntity<>(mappingStrategy.map(users), HttpStatus.OK);
+  }
+
+  @GetMapping("/exists")
+  @PreAuthorize("@userController.isEmailCheckAllowed(#excludeAuthenticated, authentication)")
+  public ResponseEntity<Boolean> existsByEmail(
+          @RequestParam String email,
+          @RequestParam(required = false) boolean excludeAuthenticated,
+          @AuthenticationPrincipal Principal principal) {
+    boolean exists;
+
+    if(excludeAuthenticated) {
+      exists = userService.existsByEmail(email, true, ((UserDetailsImpl) principal).getUser());
+    } else {
+      exists = userService.existsByEmail(email, false, null);
+    }
+
+    return new ResponseEntity<>(exists, HttpStatus.OK);
   }
 
   @PutMapping("/own/password")

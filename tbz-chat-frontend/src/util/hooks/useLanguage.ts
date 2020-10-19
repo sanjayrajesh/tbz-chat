@@ -1,21 +1,30 @@
-import { useCallback, useContext } from 'react';
-import LanguageContext from '../../components/context/LanguageContext';
-import dictionary from '../../language/dictionary';
-
-type Key = keyof typeof dictionary;
+import { useCallback, useContext } from "react";
+import LanguageContext from "../../components/context/LanguageContext";
+import dictionary from "../../language/dictionary";
 
 const useLanguage = () => {
-    const {language} = useContext(LanguageContext);
+    const { language } = useContext(LanguageContext);
 
-    const getString = useCallback((key: Key, ...args: string[]) => {
-        let value = dictionary[key][language];
+    const getString = useCallback(
+        (key: string, ...args: string[]) => {
+            const langObject = dictionary[key];
 
-        args.forEach(arg => value = value.replace("{}", arg));
+            if (langObject) {
+                let value = langObject[language];
 
-        return value;
-    }, [language]);
+                if (value) {
+                    args.forEach((arg) => (value = value.replace("{}", arg)));
 
-    return getString
-}
+                    return value;
+                }
+            }
+
+            return `?${key}?`;
+        },
+        [language]
+    );
+
+    return getString;
+};
 
 export default useLanguage;

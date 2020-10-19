@@ -26,10 +26,13 @@ const getOwn = () => api.get<UserResponse>("/users/own");
 
 const search = (query: string, excludeChatId?: string, excludeAuthenticated?: boolean) => api.get<User[]>("/users/search", {params: {q: query, excludeChatId, excludeAuthenticated}})
 
+const isEmailAvailable = (email?: string, excludeAuthenticated?: boolean) => email ? api.get<boolean>("/users/exists", {params: {email, excludeAuthenticated}}).then(res => !res.data) : Promise.resolve(true);
+
 const UserService = {
     create,
     getOwn,
-    search
+    search,
+    isEmailAvailable
 };
 
 export default UserService;

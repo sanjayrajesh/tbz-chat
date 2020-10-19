@@ -3,7 +3,11 @@ info:
   title: TBZ-Chat
   version: 1.0.0
   description: API to create and use chat rooms
-  contact: {}
+  contact:
+    name: 'Severin Weigold, Noël Monnerat'
+    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO'
+    email: noreply.tbz.chat@gmail.com
+  termsOfService: 'https://pornub.com'
 servers:
   - url: 'http://localhost:8080'
 tags:
@@ -511,5 +515,28 @@ paths:
                                 type: string
       operationId: get-users-own-chats
       description: ''
+  /users/exists:
+    get:
+      summary: Check if User exists by email
+      tags:
+        - User
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: get-users-exists
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: email
+          required: true
+        - schema:
+            type: boolean
+          in: query
+          name: excludeAuthenticated
 components:
   schemas: {}

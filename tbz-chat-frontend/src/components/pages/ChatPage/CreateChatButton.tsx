@@ -11,13 +11,15 @@ import React, { Fragment, useCallback } from "react";
 import AddIcon from "@material-ui/icons/Add";
 import useDialog from "../../../util/hooks/useDialog";
 import useLanguage from "../../../util/hooks/useLanguage";
-import { Form, Formik, FormikHelpers } from "formik";
+import { FormikHelpers } from "formik";
 import User from "../../../models/User";
 import TextField from "../../atoms/input/TextField";
 import UserSelect from "../../molecules/UserSelect/UserSelect";
 import ActionButton from "../../atoms/ActionButton";
 import useThunkDispatch from "../../../util/hooks/useThunkDispatch";
 import { createChat } from "../../../redux/chat/chatActions";
+import Form from "../../common/Form/Form";
+import * as yup from "yup";
 
 type Values = {
     name: string;
@@ -29,6 +31,13 @@ const initialValues: Values = {
     users: [],
 };
 
+const validationSchema = yup.object({
+    name: yup.string().required("validation.required"),
+    users: yup.array(yup.object({
+        id: yup.string().required()
+    })).min(1, "validation.users.required")
+})
+
 const CreateChatButton = () => {
     const [open, openDialog, closeDialog] = useDialog();
     const getString = useLanguage();
@@ -36,9 +45,14 @@ const CreateChatButton = () => {
 
     const handleSubmit = useCallback(
         (values: Values, helpers: FormikHelpers<Values>) => {
-            dispatch(createChat({...values, userIds: values.users.map(user => user.id)}))
+            dispatch(
+                createChat({
+                    ...values,
+                    userIds: values.users.map((user) => user.id),
+                })
+            )
                 .then(closeDialog)
-                .finally(() => helpers.setSubmitting(false))
+                .finally(() => helpers.setSubmitting(false));
         },
         [closeDialog, dispatch]
     );
@@ -50,9 +64,13 @@ const CreateChatButton = () => {
             </IconButton>
             <Dialog open={open} onClose={closeDialog}>
                 <DialogTitle>{getString("create.chat")}</DialogTitle>
-                <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                    {({isSubmitting}) => (
-                        <Form>
+                <Form
+                    initialValues={initialValues}
+                    onSubmit={handleSubmit}
+                    validationSchema={validationSchema}
+                >
+                    {({ isSubmitting }) => (
+                        <Fragment>
                             <DialogContent>
                                 <Grid container spacing={2}>
                                     <Grid item xs={12}>
@@ -80,9 +98,9 @@ const CreateChatButton = () => {
                                     {getString("create")}
                                 </ActionButton>
                             </DialogActions>
-                        </Form>
+                        </Fragment>
                     )}
-                </Formik>
+                </Form>
             </Dialog>
         </Fragment>
     );

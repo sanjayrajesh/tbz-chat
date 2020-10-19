@@ -1,5 +1,6 @@
 import { Box, Grid } from "@material-ui/core";
-import { Form, Formik, FormikHelpers } from "formik";
+import Form from "../../common/Form/Form";
+import { FormikHelpers } from "formik";
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { login } from "../../../redux/globalActions";
@@ -13,6 +14,7 @@ import TextField from "../../atoms/input/TextField";
 import Paper from "../../atoms/Paper";
 import Page from "../../Page";
 import { useStyle } from "../LoginPage";
+import * as yup from "yup";
 
 type Params = {
     token: string;
@@ -30,12 +32,18 @@ const initialValues: FormValues = {
     confirmPassword: "",
 };
 
+const validationSchema = yup.object({
+    username: yup.string(),
+    password: yup.string().required("validation.required").equals([yup.ref("confirmPassword")], "validation.password.match"),
+    confirmPassword: yup.string().required("validation.required").equals([yup.ref("password")], "validation.password.match")
+})
+
 const AccountActivationPage = () => {
-    const { token } = useParams<Params>();
     const getString = useLanguage();
     const classes = useStyle();
     const dispatch = useThunkDispatch();
     const history = useHistory();
+    const {token} = useParams<Params>();
 
     const handleSubmit = (
         values: FormValues,
@@ -63,55 +71,48 @@ const AccountActivationPage = () => {
                             title={getString("activate.your.account")}
                             className={classes.paper}
                         >
-                            <Formik
+                            <Form
                                 initialValues={initialValues}
                                 onSubmit={handleSubmit}
+                                validationSchema={validationSchema}
                             >
                                 {({ isSubmitting }) => (
-                                    <Form>
-                                        <Grid
-                                            container
-                                            direction="column"
-                                            spacing={2}
-                                        >
-                                            <Grid item>
-                                                <TextField
-                                                    name="username"
-                                                    label={getString(
-                                                        "username"
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid item>
-                                                <PasswordField
-                                                    name="password"
-                                                    label={getString(
-                                                        "password"
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid item>
-                                                <PasswordField
-                                                    name="confirmPassword"
-                                                    label={getString(
-                                                        "confirm.password"
-                                                    )}
-                                                />
-                                            </Grid>
-                                            <Grid item>
-                                                <ActionButton
-                                                    fullWidth
-                                                    loading={isSubmitting}
-                                                >
-                                                    {getString(
-                                                        "activate.account"
-                                                    )}
-                                                </ActionButton>
-                                            </Grid>
+                                    <Grid
+                                        container
+                                        direction="column"
+                                        spacing={1}
+                                    >
+                                        <Grid item>
+                                            <TextField
+                                                name="username"
+                                                label={getString("username")}
+                                            />
                                         </Grid>
-                                    </Form>
+                                        <Grid item>
+                                            <PasswordField
+                                                name="password"
+                                                label={getString("password")}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <PasswordField
+                                                name="confirmPassword"
+                                                label={getString(
+                                                    "confirm.password"
+                                                )}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <ActionButton
+                                                fullWidth
+                                                loading={isSubmitting}
+                                            >
+                                                {getString("activate.account")}
+                                            </ActionButton>
+                                        </Grid>
+                                    </Grid>
                                 )}
-                            </Formik>
+                            </Form>
                         </Paper>
                     </Center>
                 </Paper>

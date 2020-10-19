@@ -1,22 +1,25 @@
 import React, { forwardRef } from 'react'
-import {TextFieldProps as MuiTextFieldProps} from '@material-ui/core';
 import { useField } from 'formik';
-import StyledTextField from './StyledTextField';
+import StyledTextField, { StyledTextFieldProps } from './StyledTextField';
+import { useFormContext } from '../../common/Form/Form';
+import useLanguage from '../../../util/hooks/useLanguage';
 
-export type TextFieldProps = Omit<MuiTextFieldProps, "value" | "onChange" | "onBlur"> & {
+export type TextFieldProps = Omit<StyledTextFieldProps, "value" | "onChange" | "onBlur" | "validated"> & {
     name: string
 }
 
 const TextField = forwardRef<HTMLDivElement, TextFieldProps>((props: TextFieldProps, ref) => {
 
     const [field, meta] = useField(props.name);
+    const {disableValidation} = useFormContext();
+    const getString = useLanguage();
 
     const error = Boolean(meta.touched && meta.error);
 
-    const helperText = error ? meta.error : props.helperText;
+    const helperText = error ? getString(meta.error!) : props.helperText;
 
     return (
-        <StyledTextField {...field}  {...props} error={error} helperText={helperText} ref={ref} />
+        <StyledTextField {...field}  {...props} error={error} helperText={helperText} ref={ref} validated={!disableValidation} />
     )
 })
 

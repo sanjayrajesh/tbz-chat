@@ -13,7 +13,6 @@ import clsx from "clsx";
 import { useField } from "formik";
 import React, {
     ChangeEvent,
-    FocusEvent,
     useCallback,
     useEffect,
     useMemo,
@@ -22,16 +21,18 @@ import React, {
 } from "react";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import UserService from "../../../services/UserService";
+import useLanguage from "../../../util/hooks/useLanguage";
 import StyledTextField from "../../atoms/input/StyledTextField";
 import { TextFieldProps } from "../../atoms/input/TextField";
 import Paper from "../../atoms/Paper";
+import { useFormContext } from "../../common/Form/Form";
 import { backspace, blur, changeQuery, clearQuery, clickAway, displayQueryResult, focus, selectUser, unselectUser } from "./actions";
 import {
     initState,
     userSelectReducer,
 } from "./userSelectReducer";
 
-type UserSelectProps = Pick<TextFieldProps, "className" | "label" | "name"> & {
+type UserSelectProps = Pick<TextFieldProps, "className" | "label" | "name" | "helperText"> & {
     excludeChatId?: string;
     excludeAuthenticated?: boolean;
 };
@@ -85,7 +86,11 @@ const UserSelect = (props: UserSelectProps) => {
 
     const { name, className, label, excludeChatId, excludeAuthenticated } = props;
     const classes = useStyle();
-    const [field,, helpers] = useField(name);
+    const getString = useLanguage();
+    const [field, meta, helpers] = useField(name);
+    const {disableValidation} = useFormContext();
+    const error = Boolean(meta.touched && meta.error);
+    const helperText = error ? getString(meta.error!) : props.helperText;
     const [state, dispatch] = useReducer(
         userSelectReducer,
         field.value,
@@ -114,24 +119,20 @@ const UserSelect = (props: UserSelectProps) => {
     }, []);
 
     const handleClickAway = useCallback(
-        (e: any) => {
+        () => {
             dispatch(clickAway());
-            field.onBlur({
-                ...e,
-                target: {
-                    ...e.target,
-                    name,
-                },
-            });
+            if(state.focused) {
+                helpers.setTouched(true, true);
+            }
         },
         // eslint-disable-next-line
-        [name]
+        [state.focused]
     );
 
     const handleTextFieldBlur = useCallback(
-        (e: FocusEvent) => {
+        () => {
             if(!state.open) {
-                handleClickAway(e);
+                handleClickAway();
             } else {
                 dispatch(blur());
             }
@@ -140,7 +141,7 @@ const UserSelect = (props: UserSelectProps) => {
     );
 
     const getSelectHandler = useCallback(
-        (id: string, clearOnSelect: boolean) => (e: any) => {
+        (id: string, clearOnSelect: boolean) => () => {
             dispatch(selectUser(id, clearOnSelect));
 
             inputRef.current?.focus();
@@ -214,7 +215,7 @@ const UserSelect = (props: UserSelectProps) => {
     }, [state.query, excludeChatId, excludeAuthenticated]);
 
     useEffect(() => {
-        helpers.setValue(Object.values(state.selected));
+        helpers.setValue(Object.values(state.selected), true);
         // eslint-disable-next-line
     }, [state.selected])
 
@@ -227,6 +228,7 @@ const UserSelect = (props: UserSelectProps) => {
                         onKeyEvent={handleBackspace}
                     >
                         <StyledTextField
+                            validated={!disableValidation}
                             ref={anchorEl}
                             label={label}
                             inputRef={inputRef}
@@ -239,6 +241,8 @@ const UserSelect = (props: UserSelectProps) => {
                                 startAdornment: selectedUsers.length > 0 ? selectedUsers : undefined,
                             }}
                             className={classes.textField}
+                            error={error}
+                            helperText={helperText}
                         />
                     </KeyboardEventHandler>
                     <Popper

@@ -11,13 +11,15 @@ import {
 import useDialog from "../../../util/hooks/useDialog";
 import User from "../../../models/User";
 import useLanguage from "../../../util/hooks/useLanguage";
-import { Form, Formik, FormikHelpers } from "formik";
+import { FormikHelpers } from "formik";
 import UserSelect from "../../molecules/UserSelect/UserSelect";
 import ActionButton from "../../atoms/ActionButton";
 import { useSelector } from "react-redux";
 import { getSelectedChatId } from "../../../redux/chat/chatSelectors";
 import useThunkDispatch from "../../../util/hooks/useThunkDispatch";
 import { addChatMembers } from "../../../redux/chat/chatActions";
+import Form from "../../common/Form/Form";
+import * as yup from "yup";
 
 type Values = {
     users: User[];
@@ -27,6 +29,12 @@ const initialValues: Values = {
     users: [],
 };
 
+const validationSchema = yup.object({
+    users: yup.array(yup.object({
+        id: yup.string()
+    })).min(1, "validation.users.required")
+})
+
 const AddMembersButton = () => {
     const [open, openDialog, closeDialog] = useDialog();
     const getString = useLanguage();
@@ -35,8 +43,9 @@ const AddMembersButton = () => {
 
     const handleSubmit = useCallback(
         (values: Values, helpers: FormikHelpers<Values>) => {
-            dispatch(addChatMembers(selectedChatId!, values.users, closeDialog))
-                .finally(() => helpers.setSubmitting(false));
+            dispatch(
+                addChatMembers(selectedChatId!, values.users, closeDialog)
+            ).finally(() => helpers.setSubmitting(false));
         },
         [dispatch, selectedChatId, closeDialog]
     );
@@ -49,9 +58,13 @@ const AddMembersButton = () => {
 
             <Dialog open={open} onClose={closeDialog}>
                 <DialogTitle>{getString("add.members")}</DialogTitle>
-                <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                <Form
+                    initialValues={initialValues}
+                    onSubmit={handleSubmit}
+                    validationSchema={validationSchema}
+                >
                     {({ isSubmitting }) => (
-                        <Form>
+                        <Fragment>
                             <DialogContent>
                                 <UserSelect
                                     name="users"
@@ -70,9 +83,9 @@ const AddMembersButton = () => {
                                     {getString("add")}
                                 </ActionButton>
                             </DialogActions>
-                        </Form>
+                        </Fragment>
                     )}
-                </Formik>
+                </Form>
             </Dialog>
         </Fragment>
     );

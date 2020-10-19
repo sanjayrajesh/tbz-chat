@@ -18,8 +18,8 @@ const ChatMessages = (props: ChatMessagesProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        scrollRef.current?.scrollIntoView({behavior: "smooth"}); //TODO imperative handle for external scrolling
-    }, [messages]);
+        scrollRef.current?.scrollIntoView({behavior: "smooth"});
+    }, [messages.length]);
 
     if (!messages)
         return (

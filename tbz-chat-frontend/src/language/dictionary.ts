@@ -1,6 +1,12 @@
 import { Language } from "./language";
 
-const dictionary = {
+type Dictionary = {
+    [key: string]: {
+        [Lang in Language]: string;
+    }
+}
+
+const dictionary: Dictionary = {
     email: {
         en: "Email",
         de: "E-Mail"
@@ -164,13 +170,27 @@ const dictionary = {
     "create": {
         en: "Create",
         de: "Erstellen"
+    },
+    "validation.required": {
+        en: "This field is required",
+        de: "Bitte füllen Sie dieses Feld aus"
+    },
+    "validation.email": {
+        en: "Please provide a valid email",
+        de: "Bitte geben Sie eine gültige E-Mail Adresse ein"
+    },
+    "validation.email.not.available": {
+        en: "Email is already in use",
+        de: "E-Mail Adresse wird bereits verwendet"
+    },
+    "validation.password.match": {
+        en: "Password and confirmation must match",
+        de: "Passwort und Bestätigung müssen übereinstimmen"
+    },
+    "validation.users.required": {
+        en: "Please select at least one user",
+        de: "Bitte wählen Sie mindestens einen Benutzer"
     }
 }
 
-export type Dictionary = {
-    [K in keyof typeof dictionary]: {
-        [L in Language]: string
-    }
-}
-
-export default dictionary as Dictionary
+export default dictionary

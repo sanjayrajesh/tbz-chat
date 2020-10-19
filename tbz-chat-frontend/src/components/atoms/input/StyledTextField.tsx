@@ -4,6 +4,7 @@ import React, { forwardRef } from 'react'
 
 export type StyledTextFieldProps = Omit<TextFieldProps, "variant" | "color"> & {
     readOnly?: boolean;
+    validated?: boolean;
 }
 
 const useStyle = makeStyles(theme => {
@@ -11,9 +12,12 @@ const useStyle = makeStyles(theme => {
 
     return {
         root: {
-            "& label, label.Mui-focused": {
-                //color: theme.palette.primary.contrastText
+            "&$validated .MuiInputBase-root:not(.Mui-error)": {
+                marginBottom: "22px"
             },
+            "& .MuiFormHelperText-root": {
+                //fontSize: "1rem"
+            }
         },
         readonly: {
             "& .MuiOutlinedInput-root": {
@@ -29,11 +33,12 @@ const useStyle = makeStyles(theme => {
                 }
             },
         },
+        validated: {}
     }
 }, {name: "TextField"});
 
 const StyledTextField = forwardRef<HTMLDivElement, StyledTextFieldProps>((props: StyledTextFieldProps, ref) => {
-    const {className, readOnly, InputLabelProps, InputProps, ...rest} = props;
+    const {className, readOnly, InputLabelProps, InputProps, validated, ...rest} = props;
     const classes = useStyle();
 
     const _InputLabelProps: Partial<MuiInputLabelProps> = {
@@ -47,7 +52,7 @@ const StyledTextField = forwardRef<HTMLDivElement, StyledTextFieldProps>((props:
     }
 
     return (
-        <TextField {...rest} ref={ref} variant="outlined" color="primary" className={clsx({[classes.readonly]: readOnly}, className)} classes={{root: classes.root}} InputLabelProps={_InputLabelProps} InputProps={_InputProps} />
+        <TextField {...rest} ref={ref} variant="outlined" color="primary" className={clsx({[classes.readonly]: readOnly, [classes.validated]: validated}, className)} classes={{root: classes.root}} InputLabelProps={_InputLabelProps} InputProps={_InputProps} />
     )
 })
 

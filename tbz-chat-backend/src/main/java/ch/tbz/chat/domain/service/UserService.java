@@ -14,4 +14,6 @@ public interface UserService extends UserDetailsService, CrudService<User> {
 
   Collection<User> search(
       String query, boolean excludeAuthenticated, User authenticated, String excludeChatId);
+
+  boolean existsByEmail(String email, boolean excludeAuthenticated, User authenticated);
 }

@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@material-ui/core";
-import { Form, Formik, FormikHelpers } from "formik";
+import { FormikHelpers } from "formik";
 import React, { useCallback, useState } from "react";
 import UserService, { CreateUserRequest } from "../../../services/UserService";
 import useLanguage from "../../../util/hooks/useLanguage";
@@ -10,6 +10,8 @@ import Link from "../../atoms/Link";
 import Paper from "../../atoms/Paper";
 import Page from "../../Page";
 import { useStyle } from "../LoginPage";
+import useValidationSchema from "./validationSchema";
+import Form from "../../common/Form/Form";
 
 const ENTER_EMAIL = "ENTER_EMAIL";
 const REGISTER_SUCCESS = "REGISTER_SUCCESS";
@@ -30,6 +32,7 @@ const initialValues: CreateUserRequest = {
 
 const RegisterPage = () => {
     const getString = useLanguage();
+    const validationSchema = useValidationSchema();
     const [{ status, email }, setState] = useState<State>({
         status: ENTER_EMAIL,
     });
@@ -71,12 +74,12 @@ const RegisterPage = () => {
                             className={classes.paper}
                         >
                             {status === ENTER_EMAIL ? (
-                                <Formik
+                                <Form
                                     initialValues={initialValues}
                                     onSubmit={handleSubmit}
+                                    validationSchema={validationSchema}
                                 >
                                     {({ isSubmitting }) => (
-                                        <Form>
                                             <Grid
                                                 container
                                                 direction="column"
@@ -88,6 +91,7 @@ const RegisterPage = () => {
                                                         label={getString(
                                                             "email"
                                                         )}
+                                                        required
                                                     />
                                                 </Grid>
                                                 <Grid item>
@@ -107,9 +111,8 @@ const RegisterPage = () => {
                                                     </Link>
                                                 </Grid>
                                             </Grid>
-                                        </Form>
                                     )}
-                                </Formik>
+                                </Form>
                             ) : (
                                 <Typography>
                                     {getString("invitation.sent.1")}

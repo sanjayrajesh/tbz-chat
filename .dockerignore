@@ -1,0 +1,5 @@
+.gradle
+tbz-chat-frontend/node_modules
+tbz-chat-frontend/yarn.lock
+tbz-chat-backend/.gradle
+tbz-chat-backend/build

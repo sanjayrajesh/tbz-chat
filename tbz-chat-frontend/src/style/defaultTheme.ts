@@ -9,7 +9,10 @@ const createTheme = (type: "light" | "dark") =>
             props: {
                 MuiDialog: {
                     fullWidth: true
-                }
+                },
+                MuiLink: {
+                    color: "textPrimary"
+                },
             },
             overrides: {
                 MuiLink: {

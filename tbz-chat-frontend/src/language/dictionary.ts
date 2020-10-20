@@ -3,7 +3,7 @@ import { Language } from "./language";
 type Dictionary = {
     [key: string]: {
         [Lang in Language]: string;
-    }
+    } | string;
 }
 
 const dictionary: Dictionary = {
@@ -190,6 +190,12 @@ const dictionary: Dictionary = {
     "validation.users.required": {
         en: "Please select at least one user",
         de: "Bitte wählen Sie mindestens einen Benutzer"
+    },
+    german: "Deutsch",
+    english: "English",
+    language: {
+        en: "Language",
+        de: "Sprache"
     }
 }
 

@@ -10,10 +10,18 @@ const useLanguage = () => {
             const langObject = dictionary[key];
 
             if (langObject) {
-                let value = langObject[language];
+                let value: string;
 
-                if (value) {
-                    args.forEach((arg) => (value = value.replace("{}", arg)));
+                if (typeof langObject === "string") {
+                    value = langObject;
+                } else {
+                    value = langObject[language];
+                }
+
+                if (value.length > 0) {
+                    args.forEach(
+                        (arg) => (value = value.replace("{}", arg))
+                    );
 
                     return value;
                 }

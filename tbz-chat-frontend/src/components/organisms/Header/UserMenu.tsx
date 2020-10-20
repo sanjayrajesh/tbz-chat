@@ -30,6 +30,11 @@ const useStyle = makeStyles((theme) => ({
         color: theme.palette.primary.contrastText,
         textTransform: "none",
         fontSize: theme.typography.h6.fontSize,
+        "&:hover": {
+            background: "none"
+        },
+        fontWeight: theme.typography.fontWeightRegular,
+        padding: 0
     },
 }));
 

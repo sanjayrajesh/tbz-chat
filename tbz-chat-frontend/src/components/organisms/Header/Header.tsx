@@ -7,6 +7,7 @@ import {
 import React from "react";
 import useAuthState from "../../../util/hooks/useAuthState";
 import { APP_NAME } from "../../Page";
+import LanguageMenu from "./LanguageMenu";
 import UserMenu from "./UserMenu";
 
 type HeaderProps = {
@@ -28,6 +29,7 @@ const Header = (props: HeaderProps) => {
                             <UserMenu user={user!} />
                         ) : null}
                     </div>
+                    <LanguageMenu />
                 </Toolbar>
             </Box>
         </AppBar>

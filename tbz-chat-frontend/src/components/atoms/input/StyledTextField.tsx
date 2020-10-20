@@ -32,6 +32,9 @@ const useStyle = makeStyles(theme => {
                     cursor: "text",
                 }
             },
+            "& .MuiFormLabel-root": {
+                color: borderColor
+            }
         },
         validated: {}
     }

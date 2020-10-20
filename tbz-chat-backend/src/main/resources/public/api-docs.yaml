@@ -191,6 +191,81 @@ paths:
                                 type: string
       operationId: get-users-own
       description: Returns the currently authenticated User
+    put:
+      summary: Update authenticated User
+      operationId: put-users-own
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  chats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        role:
+                          type: string
+                        messages:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              body:
+                                type: string
+                              timestamp:
+                                type: string
+                              author:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  email:
+                                    type: string
+                                  username:
+                                    type: string
+                        users:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              email:
+                                type: string
+                              username:
+                                type: string
+                              role:
+                                type: string
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+              required:
+                - email
   /users/own/password:
     put:
       summary: Change password

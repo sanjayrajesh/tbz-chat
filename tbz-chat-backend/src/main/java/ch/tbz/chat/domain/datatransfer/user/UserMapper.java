@@ -19,6 +19,8 @@ public interface UserMapper extends DTOMapper<UserDTO, User> {
     @IterableMapping(qualifiedByName = "dto")
     Collection<UserDTO> dto(Collection<User> users);
 
+    User user(UserDTO userDTO);
+
     User user(UserDTO.WithPassword userDTO);
 
     User user(UserDTO.Registration userDTO);

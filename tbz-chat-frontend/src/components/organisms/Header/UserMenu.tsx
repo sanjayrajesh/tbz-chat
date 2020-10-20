@@ -85,7 +85,7 @@ const UserMenu = (props: UserMenuProps) => {
                         vertical: "bottom",
                     }}
                 >
-                    <MenuItem onClick={handleProfile}>
+                    <MenuItem selected={history.location.pathname === "/profile"} disabled={history.location.pathname === "/profile"} onClick={handleProfile}>
                         <ListItemIcon>
                             <AccountCircleIcon fontSize="small" />
                         </ListItemIcon>

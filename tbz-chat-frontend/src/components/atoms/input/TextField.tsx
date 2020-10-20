@@ -11,7 +11,7 @@ export type TextFieldProps = Omit<StyledTextFieldProps, "value" | "onChange" | "
 const TextField = forwardRef<HTMLDivElement, TextFieldProps>((props: TextFieldProps, ref) => {
 
     const [field, meta] = useField(props.name);
-    const {disableValidation} = useFormContext();
+    const {disableValidation, readOnly} = useFormContext();
     const getString = useLanguage();
 
     const error = Boolean(meta.touched && meta.error);
@@ -19,7 +19,7 @@ const TextField = forwardRef<HTMLDivElement, TextFieldProps>((props: TextFieldPr
     const helperText = error ? getString(meta.error!) : props.helperText;
 
     return (
-        <StyledTextField {...field}  {...props} error={error} helperText={helperText} ref={ref} validated={!disableValidation} />
+        <StyledTextField {...field}  {...props} error={error} helperText={helperText} ref={ref} validated={!disableValidation} readOnly={readOnly} />
     )
 })
 

@@ -1,7 +1,7 @@
 import User from "../../models/User";
 import { UserResponse } from "../../services/UserService";
 import { RootAction } from "../rootReducer";
-import { AUTH_FAILURE, AUTH_SUCCESS, LOGIN_FAILURE, LOGIN_SUCCESS, LOGOUT } from "./authActionTypes";
+import { AUTH_FAILURE, AUTH_SUCCESS, LOGIN_FAILURE, LOGIN_SUCCESS, LOGOUT, UPDATE_AUTHENTICATED } from "./authActionTypes";
 
 const AUTH_TOKEN_KEY = '0e272236-e76c-4022-8475-7540e794fd44';
 
@@ -34,6 +34,13 @@ const handleSuccess = (user: UserResponse): AuthState => {
     }
 }
 
+const updateAuthenticated = (user: User): AuthState => {
+    return {
+        status: "AUTHENTICATED",
+        user
+    }
+}
+
 const authReducer = (state: AuthState | undefined = initialState, action: RootAction): AuthState => {
     switch (action.type) {
         case LOGIN_SUCCESS:
@@ -59,6 +66,8 @@ const authReducer = (state: AuthState | undefined = initialState, action: RootAc
             return {
                 status: 'AUTH_FAILURE'
             }
+        case UPDATE_AUTHENTICATED:
+            return updateAuthenticated(action.payload.user);
         default:
             return state;
     }

@@ -3,7 +3,7 @@ import { AddChatMembersResponse, ChatResponse } from "../../services/ChatService
 import { UserResponse } from "../../services/UserService";
 import EntityMap from "../../util/EntityMap";
 import EntityState, { createInitialState } from "../../util/EntityState";
-import { AUTH_SUCCESS, LOGIN_SUCCESS } from "../auth/authActionTypes";
+import { AUTH_SUCCESS, LOGIN_SUCCESS, UPDATE_AUTHENTICATED } from "../auth/authActionTypes";
 import { ADD_CHAT_MEMBERS, CREATE_CHAT, UPDATE_CHATS } from "../chat/chatActionTypes";
 import { RootAction } from "../rootReducer";
 
@@ -98,6 +98,17 @@ const addChatMembers = (state: UserState, members: AddChatMembersResponse): User
     }
 }
 
+const updateAuthenticated = (state: UserState, user: User): UserState => {
+    let byId = {...state.byId};
+
+    byId[user.id] = user;
+
+    return {
+        ...state,
+        byId
+    }
+}
+
 const userReducer = (state: UserState | undefined = initialState, action: RootAction): UserState => {
     switch (action.type) {
         case AUTH_SUCCESS:
@@ -109,6 +120,8 @@ const userReducer = (state: UserState | undefined = initialState, action: RootAc
             return createChat(state, action.payload.chat);
         case ADD_CHAT_MEMBERS:
             return addChatMembers(state, action.payload.users);
+        case UPDATE_AUTHENTICATED:
+            return updateAuthenticated(state, action.payload.user);
         default:
             return state;
     }

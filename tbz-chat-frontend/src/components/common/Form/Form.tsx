@@ -9,6 +9,7 @@ import { FormikContextType } from "formik";
 
 type ExtraProps = {
     disableValidation?: boolean;
+    readOnly?: boolean;
 };
 
 type FormProps<Values extends FormikValues = FormikValues> = Omit<
@@ -17,8 +18,9 @@ type FormProps<Values extends FormikValues = FormikValues> = Omit<
 > &
     ExtraProps;
 
-type FormContextType<Values> = FormikContextType<Values> & {
+type FormContextType<Values extends FormikValues> = FormikContextType<Values> & {
     disableValidation: boolean;
+    readOnly: boolean;
 };
 
 const FormContext = createContext<FormContextType<any>>(undefined as any);
@@ -29,18 +31,18 @@ export const useFormContext = () => {
     return context;
 };
 
-const isRenderFunction = (
+const isRenderFunction = <Values extends FormikValues>(
     children: any
-): children is (props: FormContextType<FormikValues>) => JSX.Element => {
+): children is ((props: FormContextType<Values>) => JSX.Element) => {
     return typeof children === "function";
 };
 
 const Form = <Values extends FormikValues = FormikValues>(
     props: FormProps<Values> & {
-        children: (props: FormContextType<Values>) => JSX.Element | JSX.Element;
+        children: ((props: FormContextType<Values>) => JSX.Element) | JSX.Element;
     }
 ) => {
-    const { disableValidation, children, validationSchema, ...rest } = props;
+    const { disableValidation, readOnly, children, validationSchema, ...rest } = props;
 
     return (
         <Formik
@@ -50,13 +52,14 @@ const Form = <Values extends FormikValues = FormikValues>(
             {formikProps => {
                 const contextValue: FormContextType<Values> = {
                     ...formikProps,
-                    disableValidation: !validationSchema || !!disableValidation
+                    disableValidation: !validationSchema || !!disableValidation,
+                    readOnly: Boolean(readOnly)
                 }
 
                 return (
                     <FormContext.Provider value={contextValue}>
                         <FormikForm>
-                        {isRenderFunction(children) ? children(contextValue) : children}
+                        {isRenderFunction<Values>(children) ? children(contextValue) : children}
                         </FormikForm>
                     </FormContext.Provider>
                 )

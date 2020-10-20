@@ -87,10 +87,6 @@ const dictionary: Dictionary = {
         en: "Profile",
         de: "Profil"
     },
-    "my.profile": {
-        en: "My profile",
-        de: "Mein Profil"
-    },
     "search.chats": {
         en: "Search chats",
         de: "Chats suchen"
@@ -212,6 +208,30 @@ const dictionary: Dictionary = {
     dark: {
         en: "dark",
         de: "dunklem"
+    },
+    edit: {
+        en: "Edit",
+        de: "Bearbeiten"
+    },
+    save: {
+        en: "Save",
+        de: "Speichern"
+    },
+    "change.password": {
+        en: "Change password",
+        de: "Passwort ändern"
+    },
+    "old.password": {
+        en: "Old password",
+        de: "Altes Passwort"
+    },
+    "new.password": {
+        en: "New Password",
+        de: "Neues Passwort"
+    },
+    "incorrect.password": {
+        en: "Incorrect password",
+        de: "Ungültiges Passwort"
     }
 }
 

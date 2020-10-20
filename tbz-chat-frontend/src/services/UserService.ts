@@ -19,10 +19,19 @@ export interface UserResponse {
     chats: ChatResponse[];
 }
 
+export interface UpdatePasswordRequest {
+    oldPassword: string;
+    newPassword: string;
+}
+
 const create = (user: CreateUserRequest) =>
     api.post<CreateUserResponse>("/users", user);
 
 const getOwn = () => api.get<UserResponse>("/users/own");
+
+const updateOwn = (user: User) => api.put<UserResponse>("/users/own", user);
+
+const updatePassword = (request: UpdatePasswordRequest) => api.put<void>("/users/own/password", request);
 
 const search = (query: string, excludeChatId?: string, excludeAuthenticated?: boolean) => api.get<User[]>("/users/search", {params: {q: query, excludeChatId, excludeAuthenticated}})
 
@@ -31,6 +40,8 @@ const isEmailAvailable = (email?: string, excludeAuthenticated?: boolean) => ema
 const UserService = {
     create,
     getOwn,
+    updateOwn,
+    updatePassword,
     search,
     isEmailAvailable
 };

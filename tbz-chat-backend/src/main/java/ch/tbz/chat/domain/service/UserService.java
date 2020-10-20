@@ -10,6 +10,8 @@ public interface UserService extends UserDetailsService, CrudService<User> {
 
   User activateAccount(String verificationToken, User user) throws NoSuchElementException;
 
+  User update(User newUser, User oldUser);
+
   void changePassword(User user, String oldPassword, String newPassword);
 
   Collection<User> search(

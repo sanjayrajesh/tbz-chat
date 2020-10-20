@@ -75,16 +75,23 @@ public class UserController {
   public ResponseEntity<Boolean> existsByEmail(
           @RequestParam String email,
           @RequestParam(required = false) boolean excludeAuthenticated,
-          @AuthenticationPrincipal Principal principal) {
+          @AuthenticationPrincipal UserDetailsImpl userDetails) {
     boolean exists;
 
     if(excludeAuthenticated) {
-      exists = userService.existsByEmail(email, true, ((UserDetailsImpl) principal).getUser());
+      exists = userService.existsByEmail(email, true, userDetails.getUser());
     } else {
       exists = userService.existsByEmail(email, false, null);
     }
 
     return new ResponseEntity<>(exists, HttpStatus.OK);
+  }
+
+  @PutMapping("/own")
+  public ResponseEntity<UserDTO> update(@RequestBody @Valid UserDTO newUser, @AuthenticationPrincipal(expression = "user") User oldUser) {
+    User user = userService.update(userMapper.user(newUser), oldUser);
+
+    return new ResponseEntity<>(userMappingStrategy.map(user), HttpStatus.OK);
   }
 
   @PutMapping("/own/password")

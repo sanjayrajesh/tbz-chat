@@ -7,3 +7,11 @@ export const getOwnId = (state: RootState) => {
         throw new Error("Not authenticated");
     }
 }
+
+export const getAuthUser = (state: RootState) => {
+    if(state.auth.user) {
+        return state.auth.user;
+    } else {
+        throw new Error("Not authenticated");
+    }
+}

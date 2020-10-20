@@ -94,6 +94,14 @@ public class UserServiceImpl extends CrudServiceImpl<User, UserRepository> imple
   }
 
   @Override
+  public User update(User newUser, User oldUser) {
+    oldUser.setUsername(newUser.getUsername());
+    oldUser.setEmail(newUser.getEmail());
+
+    return repository.save(oldUser);
+  }
+
+  @Override
   public void changePassword(User user, String oldPassword, String newPassword) {
     if (passwordEncoder.matches(oldPassword, user.getPassword())) {
       user.setPassword(passwordEncoder.encode(newPassword));

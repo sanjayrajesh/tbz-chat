@@ -1,37 +1,42 @@
 import { MuiThemeProvider } from "@material-ui/core";
 import React, {
     createContext,
+    Dispatch,
     ReactNode,
-    useCallback,
+    SetStateAction,
+    useEffect,
     useState,
 } from "react";
-import defaultTheme from "../../style/defaultTheme";
-import { Variant } from "../../style/themes";
+import theme, { Variant } from "../../style/theme";
+
+const VARIANT_KEY = "variant";
 
 type ThemeContextProps = {
     children: ReactNode;
 };
 
 type ThemeContextValue = {
-    setTheme: (theme: Variant) => void;
+    setVariant: Dispatch<SetStateAction<Variant>>;
+    variant: Variant;
 };
 
 const initialValue: ThemeContextValue = {
-    setTheme: undefined!,
+    setVariant: undefined!,
+    variant: "dark"
 };
 
 const ThemeContext = createContext(initialValue);
 
 export const ThemeContextProvider = (props: ThemeContextProps) => {
-    const [theme, setThemeInternal] = useState(defaultTheme.dark);
+    const [variant, setVariant] = useState<Variant>(() => localStorage.getItem(VARIANT_KEY) as Variant || "dark");
 
-    const setTheme = useCallback((theme: Variant) => {
-        setThemeInternal(defaultTheme[theme]);
-    }, []);
+    useEffect(() => {
+        localStorage.setItem(VARIANT_KEY, variant);
+    }, [variant]);
 
     return (
-        <ThemeContext.Provider value={{ setTheme }}>
-            <MuiThemeProvider theme={theme}>{props.children}</MuiThemeProvider>
+        <ThemeContext.Provider value={{ variant, setVariant }}>
+            <MuiThemeProvider theme={theme[variant]}>{props.children}</MuiThemeProvider>
         </ThemeContext.Provider>
     );
 };

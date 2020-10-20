@@ -26,6 +26,9 @@ export const useStyle = makeStyles(
         paper: {
             width: theme.breakpoints.width("sm") * 0.75,
         },
+        outerPaper: {
+            backgroundColor: theme.palette.type === "dark" ? theme.palette.background.paper : theme.palette.common.white
+        }
     }),
     { name: "LoginPage" }
 );
@@ -50,9 +53,9 @@ const LoginPage = () => {
     return (
         <Page title={getString("sign.in")}>
             <Box clone width={1} height={1}>
-                <Paper square>
+                <Paper square className={classes.outerPaper}>
                     <Center>
-                        <Paper className={classes.paper} elevation={10}>
+                        <Paper className={classes.paper} elevation={10} title={getString("sign.in.with.email.and.password")}>
                             <Form
                                 initialValues={initialValues}
                                 onSubmit={handleSubmit}

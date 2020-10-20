@@ -3,6 +3,7 @@ import {
     List,
     ListItem,
     ListItemText,
+    makeStyles,
 } from "@material-ui/core";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -17,12 +18,19 @@ type ChatListProps = {
     className?: string;
 };
 
+const useStyle = makeStyles(theme => ({
+    chat: {
+        borderBottom: `2px solid ${theme.palette.divider}`,
+    }
+}), {name: "ChatList"});
+
 const ChatList = (props: ChatListProps) => {
     const { className, filter } = props;
     const chats = useSelector((state: RootState) => getChatPreviews(state, filter));
     const getString = useLanguage();
     const dispatch = useThunkDispatch();
     const selected = useSelector((state: RootState) => state.chats.selected);
+    const classes = useStyle();
 
     const handleSelectChat = (id: string) => () => {
         dispatch(selectChat(id));
@@ -32,11 +40,12 @@ const ChatList = (props: ChatListProps) => {
         <Box clone className={className} overflow="auto">
             <List disablePadding>
                 {chats.map((chat) => (
-                    <Box clone border={2} borderTop={0} borderLeft={0} borderRight={0} borderColor="divider" key={chat.id}>
                         <ListItem
+                            key={chat.id}
                             selected={chat.id === selected}
                             button
                             onClick={handleSelectChat(chat.id)}
+                            className={classes.chat}
                         >
                             <ListItemText
                                 primary={chat.name}
@@ -49,7 +58,6 @@ const ChatList = (props: ChatListProps) => {
                                 }
                             />
                         </ListItem>
-                    </Box>
                 ))}
             </List>
         </Box>

@@ -29,7 +29,7 @@ const dictionary: Dictionary = {
     },
     "login.failure": {
         en: "Incorrect email or password",
-        de: "Ungültige E-Mail oder Password"
+        de: "Ungültige E-Mail oder Passwort"
     },
     "show.password": {
         en: "Show password",
@@ -47,6 +47,10 @@ const dictionary: Dictionary = {
         en: "Sign in",
         de: "Anmelden"
     },
+    "sign.in.with.email.and.password": {
+        en: "Sign in with email and password",
+        de: "Mit E-Mail und Passwort anmelden"
+    },
     "sign.in.link": {
         en: "Already have an account? Sign in instead",
         de: "Sie haben bereits einen Account? Melden Sie sich an"
@@ -61,11 +65,11 @@ const dictionary: Dictionary = {
     },
     "sign.up.link": {
         en: "Don't have an account yet? Sign up instead",
-        de: "Sie haben noch keinen Account? Erstellen Sie einen neuen"
+        de: "Sie haben noch keinen Account? Erstellen Sie einen"
     },
     "sign.up.with.email": {
         en: "Sign up with your email address",
-        de: "Registrieren Sie sich mit Ihrer E-Mail Adresse"
+        de: "Mit E-Mail Adresse registrieren"
     },
     "sign.up.success": {
         en: "Sign up successful",
@@ -196,6 +200,18 @@ const dictionary: Dictionary = {
     language: {
         en: "Language",
         de: "Sprache"
+    },
+    "switch.to.theme": {
+        en: "Switch to {} theme",
+        de: "Zu {} Thema wechseln"
+    },
+    light: {
+        en: "light",
+        de: "hellem"
+    },
+    dark: {
+        en: "dark",
+        de: "dunklem"
     }
 }
 

@@ -14,7 +14,7 @@ const useStyle = makeStyles((theme) => ({
         "&$own": {
             flexDirection: "row-reverse",
             "& $content": {
-                background: theme.palette.success.dark
+                background: theme.palette.success[theme.palette.type === "dark" ? "dark" : "main"]
             }
         }
     },
@@ -22,7 +22,7 @@ const useStyle = makeStyles((theme) => ({
         maxWidth: "65%",
         padding: theme.spacing(1),
         borderRadius: theme.spacing(1),
-        background: theme.palette.info.main
+        background: theme.palette.info[theme.palette.type === "dark" ? "main" : "light"]
     },
     own: {},
     authorName: {

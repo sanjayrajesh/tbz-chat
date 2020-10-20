@@ -13,16 +13,21 @@ type MessagePromptProps = {
 }
 
 const useStyle = makeStyles((theme) => ({
+    "@global": {
+        "::placeholder": {
+            color: theme.palette.type === "dark" ? theme.palette.common.white : "default"
+        }
+    },
     root: {
         width: "100%",
-        background: theme.palette.background.paper,
+        background: theme.palette.type === "dark" ? theme.palette.background.paper : theme.palette.grey[200],
         padding: theme.spacing(2),
         display: "flex",
     },
     inputWrapper: {
         borderRadius: theme.spacing(3),
         padding: theme.spacing(1, 2),
-        background: theme.palette.grey[700],
+        background: theme.palette.type === "dark" ? theme.palette.grey[700] : theme.palette.common.white,
         flexGrow: 1,
         display: "flex",
         alignContent: "center",
@@ -32,9 +37,12 @@ const useStyle = makeStyles((theme) => ({
         outline: "none",
         width: "100%",
         background: "transparent",
-        color: theme.palette.primary.contrastText,
+        color: theme.palette.type === "dark" ? theme.palette.primary.contrastText: theme.palette.grey[700],
         fontSize: theme.typography.h6.fontSize,
     },
+    sendButton: {
+        color: theme.palette.type === "dark" ? theme.palette.primary.contrastText : theme.palette.grey[600]
+    }
 }), {name: "MessagePrompt"});
 
 const MessagePrompt = (props: MessagePromptProps) => {
@@ -68,7 +76,7 @@ const MessagePrompt = (props: MessagePromptProps) => {
                         placeholder={getString("type.a.message")}
                     />
                 </div>
-                <IconButton type="submit">
+                <IconButton className={classes.sendButton} type="submit">
                     <SendIcon />
                 </IconButton>
             </form>

@@ -17,7 +17,7 @@ const Route = (props: RouteProps) => {
         )
     } else if (secure && authStatus !== 'AUTHENTICATED') {
         return (
-            <Redirect to="/login" />
+            <Redirect to="/sign-in" />
         )
     } else return (
         <DomRoute {...props} {...{secure: undefined}} />

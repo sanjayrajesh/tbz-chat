@@ -14,6 +14,7 @@ type PaperProps = MuiPaperProps & {
 const useStyle = makeStyles((theme) => ({
   root: {
     padding: (props: PaperProps) => theme.spacing(props.padding!),
+    background: theme.palette.type === "dark" ? theme.palette.grey[800] : theme.palette.common.white
   },
   title: {
       fontWeight: theme.typography.fontWeightMedium,

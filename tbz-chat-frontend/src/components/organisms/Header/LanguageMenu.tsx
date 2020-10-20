@@ -11,7 +11,11 @@ const useStyle = makeStyles(theme => ({
             display: "none"
         },
         fontSize: theme.typography.h6.fontSize,
-        marginLeft: theme.spacing(2)
+        marginLeft: theme.spacing(2),
+        color: theme.palette.primary.contrastText,
+        "& .MuiSelect-icon": {
+            color: theme.palette.primary.contrastText
+        }
     }
 }))
 

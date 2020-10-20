@@ -1,10 +1,14 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 
-const createTheme = (type: "light" | "dark") =>
+export type Variant = "light" | "dark";
+
+const createTheme = (variant: Variant) =>
     responsiveFontSizes(
         createMuiTheme({
             palette: {
-                type: type,
+                type: variant,
+
             },
             props: {
                 MuiDialog: {
@@ -32,6 +36,9 @@ const createTheme = (type: "light" | "dark") =>
                             background: "rgba(0, 0, 0, 0.2)",
                             borderRadius: "4px",
                         },
+                        "body": {
+                            backgroundColor: variant === "dark" ? grey["A400"] : grey[300]
+                        }
                     },
                 },
                 MuiDialog: {
@@ -49,6 +56,13 @@ const createTheme = (type: "light" | "dark") =>
                         padding: "8px 24px",
                         "& *": {
                             flex: 1
+                        }
+                    }
+                },
+                MuiListItem: {
+                    root: {
+                        "&$selected": {
+                            backgroundColor: variant === "dark" ? grey[700] : grey[300]
                         }
                     }
                 }

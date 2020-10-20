@@ -25,6 +25,7 @@ export const LanguageContextProvider = (props: LanguageContextProviderProps) => 
 
     useEffect(() => {
         localStorage.setItem(LANGUAGE_KEY, language);
+        document.querySelector("html")!.lang = language;
     }, [language]);
 
     return (

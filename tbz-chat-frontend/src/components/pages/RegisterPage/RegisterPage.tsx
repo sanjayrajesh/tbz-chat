@@ -104,7 +104,7 @@ const RegisterPage = () => {
                                                     </ActionButton>
                                                 </Grid>
                                                 <Grid item>
-                                                    <Link to="/login">
+                                                    <Link to="/sign-in">
                                                         {getString(
                                                             "sign.in.link"
                                                         )}

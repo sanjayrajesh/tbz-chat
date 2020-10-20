@@ -1,4 +1,5 @@
 import { Box, makeStyles, Toolbar } from "@material-ui/core";
+import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getOwnId } from "../../../redux/auth/authSelectors";
@@ -17,7 +18,14 @@ const useStyle = makeStyles((theme) => ({
     toolbar: {
         borderBottom: `2px solid ${theme.palette.divider}`,
         padding: theme.spacing(0, 2),
+        backgroundColor: theme.palette.type === "dark" ? theme.palette.grey[800] : theme.palette.grey[200]
     },
+    toolbarLeft: {
+        paddingRight: 0
+    },
+    chatSearchBar: {
+        flexGrow: 1
+    }
 }), {name: "ChatPage"});
 
 const ChatPage = () => {
@@ -57,10 +65,11 @@ const ChatPage = () => {
                             flex={1}
                             height={1}
                         >
-                            <Toolbar className={classes.toolbar}>
+                            <Toolbar className={clsx(classes.toolbar, classes.toolbarLeft)}>
                                 <ChatSearchBar
                                     filter={filter}
                                     setFilter={setFilter}
+                                    className={classes.chatSearchBar}
                                 />
                                 <CreateChatButton />
                             </Toolbar>

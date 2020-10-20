@@ -10,6 +10,7 @@ import ChatPage from "./pages/ChatPage/ChatPage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import TestPage from "./pages/TestPage";
 import Route from "./Route";
 
 const App = () => {
@@ -26,13 +27,14 @@ const App = () => {
                 <BrowserRouter>
                     <Switch>
                         <Route secure exact path="/" component={ChatPage} />
-                        <Route path="/login" component={LoginPage} />
+                        <Route path="/sign-in" component={LoginPage} />
                         <Route
                             path="/sign-up"
                             component={RegisterPage}
                         />
                         <Route secure path="/profile" component={ProfilePage} />
                         <Route exact path="/activate-account/:token" component={AccountActivationPage} />
+                        <Route exact path="/test" component={TestPage} />
                     </Switch>
                 </BrowserRouter>
             </LanguageContextProvider>

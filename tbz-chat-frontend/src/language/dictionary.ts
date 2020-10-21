@@ -187,6 +187,14 @@ const dictionary: Dictionary = {
         en: "Password and confirmation must match",
         de: "Passwort und Bestätigung müssen übereinstimmen"
     },
+    "validation.password.length": {
+        en: "Password must contain at least 8 characters",
+        de: "Passwort muss mindestens 8 Zeichen lang sein"
+    },
+    "validation.password.characters": {
+        en: "Password must contain at least 1 lowercase, 1 uppercase and 1 special character",
+        de: "Passwort muss mindestens 1 Gross- und Kleinbuchstaben und Sonderzeichen enthalten"
+    },
     "validation.users.required": {
         en: "Please select at least one user",
         de: "Bitte wählen Sie mindestens einen Benutzer"

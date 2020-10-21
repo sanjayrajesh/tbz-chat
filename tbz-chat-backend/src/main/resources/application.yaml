@@ -9,9 +9,25 @@ spring:
     enabled: true
     baseline-on-migrate: true
   profiles:
-    active: dev
+    active: postgres
 springdoc:
   swagger-ui:
-    url: /api-docs.yaml
+    url: /api/api-docs.yaml
     operations-sorter: method
     tags-sorter: alpha
+mail:
+  debug: false
+  host: smtp.gmail.com
+  port: 587
+  username: noreply.tbz.chat@gmail.com
+  password: tbz-chat
+  smtp:
+    auth: true
+    starttls:
+      enable: true
+  transport:
+    protocol: smtp
+  from: noreply.tbz.chat@gmail.com
+invitation:
+  base-url: http://localhost/activate-account
+  subject: Welcome to TBZ-Chat

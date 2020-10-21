@@ -1,24 +1,21 @@
 version: '3'
 services:
-  database:
-    image: postgres:11-alpine
-    container_name: tbz-chat-database
-    ports:
-      - 5431:5432
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: tbz_chat
+#  database:
+#    image: postgres:11-alpine
+#    container_name: tbz-chat-database
+#    ports:
+#      - 5431:5432
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DB: tbz_chat
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: tbz-chat
     container_name: tbz-chat-app
     ports:
       - 80:80
-    depends_on:
-      - database
     environment:
-      SPRING_DATASOURCE_URL: 'jdbc:postgresql://database:5432/tbz_chat'
+      SPRING_PROFILES_ACTIVE: 'mariadb'
       INVITATION_BASE_URL: 'http://10.0.1.66/activate-account'
-      REACT_APP_BASE_URL: 'http://10.0.1.66/api'
+      REACT_APP_API_URL: 'http://10.0.1.66/api'
+      MAIL_FROM: 'noreply.tbz.chat@gmail.com'

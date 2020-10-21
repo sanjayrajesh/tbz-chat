@@ -18,7 +18,7 @@ const useLanguage = () => {
                     value = langObject[language];
                 }
 
-                if (value.length > 0) {
+                if (typeof value === "string") {
                     args.forEach(
                         (arg) => (value = value.replace("{}", arg))
                     );

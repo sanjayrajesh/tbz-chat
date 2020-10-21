@@ -34,8 +34,8 @@ const initialValues: FormValues = {
 
 const validationSchema = yup.object({
     username: yup.string(),
-    password: yup.string().required("validation.required").equals([yup.ref("confirmPassword")], "validation.password.match"),
-    confirmPassword: yup.string().required("validation.required").equals([yup.ref("password")], "validation.password.match")
+    password: yup.string().required("validation.required").min(8, "validation.password.length").matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[\d])(?=.*?[^\sa-zA-Z0-9]).+$/g, "validation.password.characters"),
+    confirmPassword: yup.string().required("validation.password.match").equals([yup.ref("password")], "validation.password.match")
 })
 
 const AccountActivationPage = () => {

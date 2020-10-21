@@ -23,8 +23,8 @@ const initialValues: Values = {
 
 const validationSchema = yup.object({
     oldPassword: yup.string().required("validation.required"),
-    newPassword: yup.string().required("validation.required").equals([yup.ref("confirmNewPassword")], "validation.password.match"),
-    confirmNewPassword: yup.string().required("validation.required").equals([yup.ref("newPassword")], "validation.password.match")
+    newPassword: yup.string().required("validation.required").min(8, "validation.password.length").matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[\d])(?=.*?[^\sa-zA-Z0-9]).+$/g, "validation.password.characters"),
+    confirmNewPassword: yup.string().equals([yup.ref("newPassword")], "validation.password.match")
 })
 
 const PasswordForm = () => {

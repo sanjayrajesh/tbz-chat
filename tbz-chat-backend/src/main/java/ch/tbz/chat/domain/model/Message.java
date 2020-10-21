@@ -1,6 +1,7 @@
 package ch.tbz.chat.domain.model;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
@@ -10,6 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 public class Message extends DomainEntity {
 
+    @Column(name = "body")
+    @Type(type = "text")
     private String body;
 
     @CreationTimestamp

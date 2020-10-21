@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://host.docker.internal:3306/tbz_chat
+    username: root
+    password: root
+    driver-class-name: org.mariadb.jdbc.Driver
+  flyway:
+    locations: classpath:db/migration/mariadb

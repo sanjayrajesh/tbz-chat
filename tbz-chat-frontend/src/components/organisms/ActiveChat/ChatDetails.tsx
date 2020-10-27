@@ -71,7 +71,9 @@ const ChatDetails = (props: ChatDetailsProps) => {
                             </Typography>
                         </Box>
                         <Box p={1}>
-                            <AddMembersButton />
+                            {chat!.role === ADMINISTRATOR ? (
+                                <AddMembersButton />
+                            ) : null}
                         </Box>
                     </Box>
                     <Divider />

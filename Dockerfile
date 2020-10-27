@@ -23,7 +23,9 @@ RUN javac -version
 COPY tbz-chat-frontend/.env /var/opt/.env
 COPY ConfigureEnv.java /var/opt/ConfigureEnv.java
 COPY configure-env.sh /docker-entrypoint.d/01-configure-env.sh
+RUN chmod 755 /docker-entrypoint.d/01-configure-env.sh
 COPY run-backend.sh /docker-entrypoint.d/02-run-backend.sh
+RUN chmod 755 /docker-entrypoint.d/02-run-backend.sh
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 RUN ls -l /var/opt
 COPY --from=node-build /opt/frontend/build /usr/share/nginx/html

@@ -1,4 +1,5 @@
 use std::fmt::{Debug, Display, Formatter};
+
 use actix_web::ResponseError;
 use lettre::transport::smtp::Error;
 
@@ -16,10 +17,10 @@ impl Display for InternalError {
         match self {
             Sqlx(error) => {
                 write!(f, "Sqlx error: {:?}", error)
-            },
+            }
             Mail(error) => {
                 write!(f, "Mail error: {}", error)
-            },
+            }
             AppData(message) => {
                 write!(f, "Unable to get app data: {}", message)
             }
@@ -27,9 +28,7 @@ impl Display for InternalError {
     }
 }
 
-impl ResponseError for InternalError {
-
-}
+impl ResponseError for InternalError {}
 
 impl From<sqlx::Error> for InternalError {
     fn from(error: sqlx::Error) -> Self {

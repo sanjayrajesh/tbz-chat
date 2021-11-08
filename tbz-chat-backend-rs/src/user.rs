@@ -1,12 +1,14 @@
-use actix_web::{HttpResponse};
+use std::sync::Arc;
+
 use actix_web::web::{Data, Json};
+use actix_web::HttpResponse;
+use log::debug;
 use sqlx::PgPool;
 use uuid::Uuid;
-use log::debug;
+
 use crate::error::InternalError;
 use crate::invitation::InvitationService;
-use crate::mail::MailService;
-use crate::verification_token;
+use crate::verification_token::VerificationTokenService;
 
 #[derive(Debug, sqlx::FromRow)]
 pub struct User {
@@ -49,27 +51,56 @@ impl From<User> for UserDTO {
     }
 }
 
-pub async fn register(user: Json<RegisterUser>, pool: Data<PgPool>, invitation_service: InvitationService) -> Result<HttpResponse, InternalError> {
-    let RegisterUser { email } = user.into_inner();
-    let id = Uuid::new_v4();
-    let enabled = false;
+pub struct UserService {
+    pool: PgPool,
+    invitation_service: Arc<InvitationService>,
+    verification_token_service: Arc<VerificationTokenService>,
+}
 
-    let user: User = sqlx::query_as::<_, User>(
-        r#"
+impl UserService {
+    pub fn new(
+        pool: PgPool,
+        invitation_service: Arc<InvitationService>,
+        verification_token_service: Arc<VerificationTokenService>,
+    ) -> Self {
+        Self {
+            pool,
+            invitation_service,
+            verification_token_service,
+        }
+    }
+
+    pub async fn register(&self, user: RegisterUser) -> Result<User, InternalError> {
+        let RegisterUser { email } = user;
+        let id = Uuid::new_v4();
+        let enabled = false;
+
+        let user: User = sqlx::query_as::<_, User>(
+            r#"
         INSERT INTO users (id, email, enabled)
         VALUES ($1, $2, $3)
         RETURNING *
-        "#
-    )
+        "#,
+        )
         .bind(id)
         .bind(email)
         .bind(enabled)
-        .fetch_one(pool.get_ref())
+        .fetch_one(&self.pool)
         .await?;
 
-    debug!("Created {:?}", &user);
+        debug!("Created {:?}", &user);
 
-    let verification_token = verification_token::create(&user.id, pool.get_ref()).await?;
+        let verification_token = self.verification_token_service.create(&user.id).await?;
+
+        Ok(user)
+    }
+}
+
+pub async fn register(
+    user: Json<RegisterUser>,
+    user_service: Data<UserService>,
+) -> Result<HttpResponse, InternalError> {
+    let user = user_service.register(user.into_inner()).await?;
 
     Ok(HttpResponse::Created().json(UserDTO::from(user)))
 }

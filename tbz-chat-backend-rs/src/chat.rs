@@ -1,4 +1,2 @@
 #[derive(Debug, sqlx::FromRow)]
-pub struct Chat {
-
-}
+pub struct Chat {}

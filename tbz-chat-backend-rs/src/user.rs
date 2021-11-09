@@ -12,11 +12,11 @@ use crate::verification_token::VerificationTokenService;
 
 #[derive(Debug, sqlx::FromRow)]
 pub struct User {
-    id: String,
-    email: String,
-    username: Option<String>,
-    password: Option<String>,
-    enabled: bool,
+    pub id: String,
+    pub email: String,
+    pub username: Option<String>,
+    pub password: Option<String>,
+    pub enabled: bool,
 }
 
 #[derive(Debug, serde::Deserialize)]
@@ -91,6 +91,8 @@ impl UserService {
         debug!("Created {:?}", &user);
 
         let verification_token = self.verification_token_service.create(&user.id).await?;
+
+        self.invitation_service.invite_user(&user, &verification_token).await?;
 
         Ok(user)
     }

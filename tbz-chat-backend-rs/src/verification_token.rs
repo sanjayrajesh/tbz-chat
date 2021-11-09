@@ -4,9 +4,9 @@ use uuid::Uuid;
 
 #[derive(Debug, sqlx::FromRow)]
 pub struct VerificationToken {
-    id: String,
-    token: String,
-    user_id: String,
+    pub id: String,
+    pub token: String,
+    pub user_id: String,
 }
 
 pub struct VerificationTokenService {

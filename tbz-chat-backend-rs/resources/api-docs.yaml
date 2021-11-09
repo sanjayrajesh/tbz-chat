@@ -1,0 +1,617 @@
+openapi: 3.0.1
+info:
+  title: TBZ-Chat
+  version: 1.0.0
+  description: API to create and use chat rooms
+  contact:
+    name: 'Severin Weigold, Noël Monnerat'
+    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO'
+    email: noreply.tbz.chat@gmail.com
+  termsOfService: 'https://pornhub.com'
+servers:
+  - url: 'http://localhost:8080'
+tags:
+  - name: User
+  - name: User - Chats
+  - name: Chat
+  - name: Chat - Users
+  - name: Chat - Messages
+  - name: Verification
+  - name: Login
+paths:
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Login
+      operationId: post-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  username:
+                    type: string
+                  chats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        role:
+                          type: string
+                        messages:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              body:
+                                type: string
+                              timestamp:
+                                type: string
+                                format: date-time
+                              author:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  email:
+                                    type: string
+                                  username:
+                                    type: string
+                        users:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              email:
+                                type: string
+                              username:
+                                type: string
+                              role:
+                                type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+  /users:
+    post:
+      summary: Register
+      operationId: post-users
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  username:
+                    type: string
+                  chats:
+                    type: array
+                    items: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      tags:
+        - User
+  /users/own:
+    get:
+      summary: Get authenticated User
+      tags:
+        - User
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  username:
+                    type: string
+                  chats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        role:
+                          type: string
+                        messages:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              body:
+                                type: string
+                              timestamp:
+                                type: string
+                                format: date-time
+                              author:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  email:
+                                    type: string
+                                  username:
+                                    type: string
+                        users:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              email:
+                                type: string
+                              username:
+                                type: string
+                              role:
+                                type: string
+      operationId: get-users-own
+      description: Returns the currently authenticated User
+    put:
+      summary: Update authenticated User
+      operationId: put-users-own
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  chats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        role:
+                          type: string
+                        messages:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              body:
+                                type: string
+                              timestamp:
+                                type: string
+                              author:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  email:
+                                    type: string
+                                  username:
+                                    type: string
+                        users:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              email:
+                                type: string
+                              username:
+                                type: string
+                              role:
+                                type: string
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+              required:
+                - email
+  /users/own/password:
+    put:
+      summary: Change password
+      operationId: put-users-own-password
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Incorrect password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+      tags:
+        - User
+  '/verification/activate-account/{token}':
+    parameters:
+      - schema:
+          type: string
+        name: token
+        in: path
+        required: true
+    post:
+      summary: Activate account
+      operationId: post-verification-activate-account-token
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  username:
+                    type: string
+                  chats:
+                    type: array
+                    items: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - password
+      tags:
+        - Verification
+  /chats:
+    post:
+      summary: Create chat
+      operationId: post-chats
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  role:
+                    type: string
+                  messages:
+                    type: array
+                    items: {}
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        email:
+                          type: string
+                        username:
+                          type: string
+                        role:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                userIds:
+                  type: array
+                  items:
+                    type: string
+      tags:
+        - Chat
+  '/chats/{chatId}/messages':
+    parameters:
+      - schema:
+          type: string
+        name: chatId
+        in: path
+        required: true
+    post:
+      summary: Add message to chat
+      operationId: post-chats-id-messages
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  body:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+                  chatId:
+                    type: string
+                  '':
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      username:
+                        type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+              required:
+                - body
+      tags:
+        - Chat - Messages
+  '/chats/{chatId}/users':
+    parameters:
+      - schema:
+          type: string
+        name: chatId
+        in: path
+        required: true
+    post:
+      summary: Add users to chat
+      operationId: post-chats-chatId-users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    email:
+                      type: string
+                    username:
+                      type: string
+                    role:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      tags:
+        - Chat - Users
+  '/chats/{chatId}/users/{userId}':
+    parameters:
+      - schema:
+          type: string
+        name: chatId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    delete:
+      summary: Remove user from chat
+      operationId: delete-chats-chatId-users-userId
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - Chat - Users
+  '/chats/{chatId}/users/{userId}/grant-admin-role':
+    parameters:
+      - schema:
+          type: string
+        name: chatId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    put:
+      summary: Grant administrator role to user in chat
+      operationId: put-chats-chatId-users-userId-grant-admin-role
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  username:
+                    type: string
+                  role:
+                    type: string
+      tags:
+        - Chat - Users
+  '/users/own/chats/{chatId}':
+    parameters:
+      - schema:
+          type: string
+        name: chatId
+        in: path
+        required: true
+    delete:
+      summary: Leave a chat
+      operationId: delete-users-own-chats-chatId
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - User - Chats
+  /users/own/chats:
+    get:
+      summary: Get own Chats
+      tags:
+        - User - Chats
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    createdAt:
+                      type: string
+                    users:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          email:
+                            type: string
+                          username:
+                            type: string
+                          role:
+                            type: string
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          body:
+                            type: string
+                          timestamp:
+                            type: string
+                          author:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              email:
+                                type: string
+                              username:
+                                type: string
+      operationId: get-users-own-chats
+      description: ''
+  /users/exists:
+    get:
+      summary: Check if User exists by email
+      tags:
+        - User
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+      operationId: get-users-exists
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: email
+          required: true
+        - schema:
+            type: boolean
+          in: query
+          name: excludeAuthenticated
+components:
+  schemas: {}

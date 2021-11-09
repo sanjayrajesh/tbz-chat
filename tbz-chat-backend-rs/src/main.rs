@@ -1,16 +1,18 @@
 use std::env;
 use std::sync::Arc;
 
-use actix_web::web::{Data, ServiceConfig};
+use actix_web::web::{Data};
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 use sqlx::{postgres::PgPoolOptions, PgPool};
+use swagger_ui::Assets;
 
 use tbz_chat_backend_rs::invitation::InvitationService;
 use tbz_chat_backend_rs::mail::MailService;
 use tbz_chat_backend_rs::user;
 use tbz_chat_backend_rs::user::UserService;
 use tbz_chat_backend_rs::verification_token::VerificationTokenService;
+use tbz_chat_backend_rs::swagger;
 
 async fn create_pool(url: &str) -> PgPool {
     let pool = PgPoolOptions::new().connect(url).await;
@@ -31,7 +33,14 @@ async fn create_pool(url: &str) -> PgPool {
     }
 }
 
-fn configure_services(pool: PgPool) -> impl FnOnce(&mut ServiceConfig) {
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    dotenv().ok();
+
+    env_logger::init();
+
+    let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = create_pool(&db_url).await;
     let mail_service = Arc::new(MailService::new());
     let invitation_service = Arc::new(InvitationService::new(Arc::clone(&mail_service)));
     let verification_token_service = Arc::new(VerificationTokenService::new(pool.clone()));
@@ -41,29 +50,14 @@ fn configure_services(pool: PgPool) -> impl FnOnce(&mut ServiceConfig) {
         Arc::clone(&verification_token_service),
     ));
 
-    |c| {
-        c.app_data(Data::from(mail_service))
-            .app_data(Data::from(invitation_service))
-            .app_data(Data::from(verification_token_service))
-            .app_data(Data::from(user_service))
-            .app_data(Data::new(pool));
-    }
-}
-
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    dotenv().ok();
-
-    env_logger::init();
-
-    let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = create_pool(&db_url).await;
-
     HttpServer::new(move || {
-        let configure = configure_services(pool.clone());
-
         App::new()
-            .configure(configure)
+            .app_data(Data::new(pool.clone()))
+            .app_data(Data::from(mail_service.clone()))
+            .app_data(Data::from(invitation_service.clone()))
+            .app_data(Data::from(verification_token_service.clone()))
+            .app_data(Data::from(user_service.clone()))
+            .configure(swagger::configure)
             .service(web::resource("/users").route(web::post().to(user::register)))
     })
     .bind("127.0.0.1:7878")?

@@ -7,6 +7,7 @@ pub mod role;
 pub mod user;
 pub mod user_in_chat;
 pub mod verification_token;
+pub mod swagger;
 
 #[cfg(test)]
 mod test {

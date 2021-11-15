@@ -9,7 +9,7 @@ info:
     email: noreply.tbz.chat@gmail.com
   termsOfService: 'https://pornhub.com'
 servers:
-  - url: 'http://localhost:8080'
+  - url: 'http://localhost:7878'
 tags:
   - name: User
   - name: User - Chats

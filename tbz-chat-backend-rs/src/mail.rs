@@ -1,8 +1,8 @@
 use std::env;
 
+use lettre::message::SinglePart;
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
-use lettre::message::SinglePart;
 
 use crate::error::InternalError;
 
@@ -19,7 +19,7 @@ impl MailService {
         let credentials = Credentials::new(username, password);
         let from = env::var("MAIL_FROM").expect("MAIL_FROM must be set");
 
-        Self { credentials, from, }
+        Self { credentials, from }
     }
 
     pub async fn send(&self, to: &str, subject: String, html: String) -> Result<(), InternalError> {
@@ -35,5 +35,11 @@ impl MailService {
         mailer.send(message).await?;
 
         Ok(())
+    }
+}
+
+impl Default for MailService {
+    fn default() -> Self {
+        Self::new()
     }
 }

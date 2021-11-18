@@ -483,6 +483,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-web-httpauth"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0c3b11a07a3df3f7970fd8bd38cc66998b5549f507c54cc64c6e843bc82d6358"
+dependencies = [
+ "actix-web 3.3.2",
+ "base64",
+ "futures-util",
+]
+
+[[package]]
+name = "actix-web-swagger-ui"
+version = "0.1.0"
+source = "git+https://github.com/Tarkin25/swagger-ui?branch=feature/actix-web#53e52121b6c5528af6ee0c296cbe7e3a063057a8"
+dependencies = [
+ "actix-files",
+ "actix-utils 3.0.0",
+ "actix-web 4.0.0-beta.10",
+ "serde",
+ "swagger-ui",
+]
+
+[[package]]
 name = "adler"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -700,6 +723,19 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
+name = "chrono"
+version = "0.4.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "670ad68c9088c2a963aaa298cb369688cf3f9465ce5e2d4ca10e6e0098a1ce73"
+dependencies = [
+ "libc",
+ "num-integer",
+ "num-traits",
+ "time 0.1.43",
+ "winapi 0.3.9",
+]
 
 [[package]]
 name = "cipher"
@@ -1032,6 +1068,7 @@ checksum = "a12aa0eb539080d55c3f2d45a67c3b58b6b0773c1a3ca2dfec66d58c97fd66ca"
 dependencies = [
  "futures-channel",
  "futures-core",
+ "futures-executor",
  "futures-io",
  "futures-sink",
  "futures-task",
@@ -1053,6 +1090,17 @@ name = "futures-core"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "88d1c26957f23603395cd326b0ffe64124b818f4449552f960d815cfba83a53d"
+
+[[package]]
+name = "futures-executor"
+version = "0.3.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "45025be030969d763025784f7f355043dc6bc74093e4ecc5000ca4dc50d8745c"
+dependencies = [
+ "futures-core",
+ "futures-task",
+ "futures-util",
+]
 
 [[package]]
 name = "futures-intrusive"
@@ -1374,6 +1422,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "jwt"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98328bb4f360e6b2ceb1f95645602c7014000ef0c3809963df8ad3a3a09f8d99"
+dependencies = [
+ "base64",
+ "crypto-mac",
+ "digest",
+ "hmac",
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
 name = "kernel32-sys"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1680,6 +1743,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f6bb902e437b6d86e03cce10a7e2af662292c5dfef23b65899ea3ac9354ad44"
 dependencies = [
  "winapi 0.3.9",
+]
+
+[[package]]
+name = "num-integer"
+version = "0.1.44"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2cc698a63b549a70bc047073d2949cce27cd1c7b0a4a862d08a8031bc2801db"
+dependencies = [
+ "autocfg",
+ "num-traits",
 ]
 
 [[package]]
@@ -2361,6 +2434,7 @@ dependencies = [
  "bitflags",
  "byteorder",
  "bytes 1.1.0",
+ "chrono",
  "crc",
  "crossbeam-channel",
  "crossbeam-queue",
@@ -2510,8 +2584,7 @@ checksum = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
 [[package]]
 name = "swagger-ui"
 version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e7a59ee5a3b7e7310ec7b20be06090c0ed3019590cfea6e99cb4d26c4c45cc2c"
+source = "git+https://github.com/Tarkin25/swagger-ui?branch=feature/actix-web#53e52121b6c5528af6ee0c296cbe7e3a063057a8"
 dependencies = [
  "rust-embed",
  "serde",
@@ -2537,15 +2610,22 @@ dependencies = [
  "actix-rt 2.4.0",
  "actix-utils 3.0.0",
  "actix-web 4.0.0-beta.10",
+ "actix-web-httpauth",
+ "actix-web-swagger-ui",
  "async-trait",
  "bcrypt",
+ "chrono",
  "dotenv",
  "env_logger",
+ "futures",
+ "hmac",
+ "jwt",
  "lettre",
  "log",
  "mime",
  "mockall",
  "serde",
+ "sha2",
  "sqlx",
  "swagger-ui",
  "uuid",
@@ -2593,6 +2673,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d050e60b33d41c19108b32cea32164033a9013fe3b46cbd4457559bfbf77afaa"
 dependencies = [
  "num_cpus",
+]
+
+[[package]]
+name = "time"
+version = "0.1.43"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ca8a50ef2360fbd1eeb0ecd46795a87a19024eb4b53c5dc916ca1fd95fe62438"
+dependencies = [
+ "libc",
+ "winapi 0.3.9",
 ]
 
 [[package]]

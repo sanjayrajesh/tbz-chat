@@ -14,14 +14,14 @@ pub trait InvitationService: Send + Sync {
     async fn invite_user(&self, email: &str, token: &str) -> Result<(), InternalError>;
 }
 
-pub struct InvitationServiceImpl {
-    mail_service: Arc<MailService>,
+pub struct InvitationServiceImpl<M: MailService> {
+    mail_service: Arc<M>,
     invitation_base_url: String,
     invitation_subject: String,
 }
 
-impl InvitationServiceImpl {
-    pub fn new(mail_service: Arc<MailService>) -> Self {
+impl<M: MailService> InvitationServiceImpl<M> {
+    pub fn new(mail_service: Arc<M>) -> Self {
         let invitation_base_url =
             env::var("INVITATION_BASE_URL").expect("INVITATION_BASE_URL must be set");
         let invitation_subject =
@@ -35,7 +35,7 @@ impl InvitationServiceImpl {
 }
 
 #[async_trait]
-impl InvitationService for InvitationServiceImpl {
+impl<M: MailService> InvitationService for InvitationServiceImpl<M> {
     async fn invite_user(&self, email: &str, token: &str) -> Result<(), InternalError> {
         let activation_url = self.invitation_base_url.clone() + "/" + token;
 

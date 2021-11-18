@@ -1,17 +1,24 @@
 use std::env;
 
+use async_trait::async_trait;
 use lettre::message::SinglePart;
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
 
 use crate::error::InternalError;
 
-pub struct MailService {
+#[cfg_attr(test, mockall::automock)]
+#[async_trait]
+pub trait MailService: Send + Sync {
+    async fn send(&self, to: &str, subject: String, html: String) -> Result<(), InternalError>;
+}
+
+pub struct MailServiceImpl {
     credentials: Credentials,
     from: String,
 }
 
-impl MailService {
+impl MailServiceImpl {
     pub fn new() -> Self {
         let username = env::var("MAIL_USERNAME").expect("MAIL_USERNAME must be set");
         let password = env::var("MAIL_PASSWORD").expect("MAIL_PASSWORD must be set");
@@ -21,8 +28,11 @@ impl MailService {
 
         Self { credentials, from }
     }
+}
 
-    pub async fn send(&self, to: &str, subject: String, html: String) -> Result<(), InternalError> {
+#[async_trait]
+impl MailService for MailServiceImpl {
+    async fn send(&self, to: &str, subject: String, html: String) -> Result<(), InternalError> {
         let message = Message::builder()
             .from(self.from.parse().unwrap())
             .to(to.parse().unwrap())
@@ -38,7 +48,7 @@ impl MailService {
     }
 }
 
-impl Default for MailService {
+impl Default for MailServiceImpl {
     fn default() -> Self {
         Self::new()
     }

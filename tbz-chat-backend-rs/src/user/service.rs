@@ -1,41 +1,49 @@
-use async_trait::async_trait;
-use log::debug;
 use std::sync::Arc;
 
-use super::{RegisterUser, User, UserRepository};
+use async_trait::async_trait;
+use log::debug;
+use sqlx::PgPool;
+
 use crate::error::InternalError;
 use crate::invitation::InvitationService;
+use crate::user::{RegisterUser, UserRepository, UserRepositoryImpl};
+use crate::user::query::{DisabledUser, EnabledUser};
+use crate::user::response::UserResponse;
 use crate::verification_token::VerificationTokenService;
 
+#[cfg_attr(test, mockall::automock)]
 #[async_trait]
 pub trait UserService: Send + Sync {
-    async fn register(&self, user: RegisterUser) -> Result<User, InternalError>;
+    async fn register(&self, user: RegisterUser) -> Result<DisabledUser, InternalError>;
+
+    async fn find_by_email(&self, email: &str) -> Result<Option<EnabledUser>, InternalError>;
+
+    async fn load_response(&self, user: EnabledUser) -> Result<UserResponse, InternalError>;
 }
 
 pub struct UserServiceImpl<R, I, V>
-where
-    R: UserRepository,
-    I: InvitationService,
-    V: VerificationTokenService,
+    where
+        R: UserRepository,
+        I: InvitationService,
+        V: VerificationTokenService,
 {
-    repository: Arc<R>,
+    repository: R,
     invitation_service: Arc<I>,
     verification_token_service: Arc<V>,
 }
 
-impl<R, I, V> UserServiceImpl<R, I, V>
-where
-    R: UserRepository,
-    I: InvitationService,
-    V: VerificationTokenService,
+impl<I, V> UserServiceImpl<UserRepositoryImpl, I, V>
+    where
+        I: InvitationService,
+        V: VerificationTokenService,
 {
     pub fn new(
-        repository: Arc<R>,
+        pool: PgPool,
         invitation_service: Arc<I>,
         verification_token_service: Arc<V>,
     ) -> Self {
         Self {
-            repository,
+            repository: UserRepositoryImpl { pool },
             invitation_service,
             verification_token_service,
         }
@@ -44,15 +52,15 @@ where
 
 #[async_trait]
 impl<R, I, V> UserService for UserServiceImpl<R, I, V>
-where
-    R: UserRepository,
-    I: InvitationService,
-    V: VerificationTokenService,
+    where
+        R: UserRepository,
+        I: InvitationService,
+        V: VerificationTokenService,
 {
-    async fn register(&self, user: RegisterUser) -> Result<User, InternalError> {
+    async fn register(&self, user: RegisterUser) -> Result<DisabledUser, InternalError> {
         let RegisterUser { email } = user;
 
-        let user = self.repository.insert(email).await?;
+        let user = self.repository.insert(&email).await?;
 
         debug!("Created {:?}", &user);
 
@@ -64,15 +72,29 @@ where
 
         Ok(user)
     }
+
+    async fn find_by_email(&self, email: &str) -> Result<Option<EnabledUser>, InternalError> {
+        let user = self.repository.find_by_email(email).await?;
+
+        Ok(user)
+    }
+
+    async fn load_response(&self, user: EnabledUser) -> Result<UserResponse, InternalError> {
+        let response = self.repository.load_response(user).await?;
+
+        Ok(response)
+    }
 }
 
 #[cfg(test)]
 mod test {
-    use super::*;
+    use mockall::predicate::*;
+
     use crate::invitation::MockInvitationService;
     use crate::user::repository::MockUserRepository;
     use crate::verification_token::{MockVerificationTokenService, VerificationToken};
-    use mockall::{predicate::*};
+
+    use super::*;
 
     #[actix_rt::test]
     async fn register_works() {
@@ -83,21 +105,16 @@ mod test {
         let mut repository = MockUserRepository::new();
         repository
             .expect_insert()
-            .with(eq(EMAIL.to_string()))
+            .with(eq(EMAIL))
             .times(1)
             .returning(|email| {
-                let user = User {
+                let user = DisabledUser {
                     id: GENERATED_USER_ID.into(),
-                    email,
-                    username: None,
-                    password: None,
-                    enabled: false,
+                    email: email.into()
                 };
 
                 Ok(user)
             });
-
-        let repository = Arc::new(repository);
 
         let mut token_service = MockVerificationTokenService::new();
         token_service
@@ -125,11 +142,11 @@ mod test {
 
         let invitation_service = Arc::new(invitation_service);
 
-        let user_service = UserServiceImpl::new(
-            Arc::clone(&repository),
-            Arc::clone(&invitation_service),
-            Arc::clone(&verification_token_service),
-        );
+        let user_service = UserServiceImpl {
+            repository,
+            invitation_service,
+            verification_token_service,
+        };
 
         let user = user_service
             .register(RegisterUser {

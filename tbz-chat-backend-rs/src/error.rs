@@ -7,7 +7,6 @@ use lettre::transport::smtp::Error;
 pub enum InternalError {
     Sqlx(sqlx::Error),
     Mail(String),
-    AppData(&'static str),
 }
 
 impl Display for InternalError {
@@ -20,9 +19,6 @@ impl Display for InternalError {
             }
             Mail(error) => {
                 write!(f, "Mail error: {}", error)
-            }
-            AppData(message) => {
-                write!(f, "Unable to get app data: {}", message)
             }
         }
     }

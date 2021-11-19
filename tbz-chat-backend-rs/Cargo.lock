@@ -2606,9 +2606,7 @@ dependencies = [
 name = "tbz-chat-backend-rs"
 version = "0.1.0"
 dependencies = [
- "actix-files",
  "actix-rt 2.4.0",
- "actix-utils 3.0.0",
  "actix-web 4.0.0-beta.10",
  "actix-web-httpauth",
  "actix-web-swagger-ui",
@@ -2622,7 +2620,6 @@ dependencies = [
  "jwt",
  "lettre",
  "log",
- "mime",
  "mockall",
  "serde",
  "sha2",
